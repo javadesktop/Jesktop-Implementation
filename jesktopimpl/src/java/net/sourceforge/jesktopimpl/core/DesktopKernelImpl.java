@@ -11,7 +11,8 @@ import net.sourceforge.jesktopimpl.builtinapps.installer.ConfirmInstallation;
 import net.sourceforge.jesktopimpl.builtinapps.sys.ErrorApp;
 import org.jesktop.services.DesktopKernelService;
 import org.jesktop.services.WindowManagerService;
-import net.sourceforge.jesktopimpl.services.KernelConfigManager;
+import org.jesktop.services.KernelConfigManager;
+import org.jesktop.services.KernelConfigManager;
 import org.jesktop.WindowManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import org.jesktop.appsupport.DropAware;
@@ -90,6 +91,7 @@ public class DesktopKernelImpl
     protected MimeManager mMimeManager;
     private File mBaseDirectory;
     private ThreadPool threadPool;
+    private KernelConfigManager kernelConfigManager;
     private MutablePicoContainer picoContainer;
 
     /**
@@ -99,8 +101,10 @@ public class DesktopKernelImpl
      */
     public DesktopKernelImpl(WindowManagerService windowManager, ObjectRepository repository, ThreadPool threadPool,
                              KernelConfigManager kernelCongigManager, ImageRepository imageRepository,
-                             LaunchableTargetFactory launchableTargetFactory, File baseDirectory) {
+                             LaunchableTargetFactory launchableTargetFactory, KernelConfigManager kernelConfigManager,
+                             File baseDirectory) {
         this.threadPool = threadPool;
+        this.kernelConfigManager = kernelConfigManager;
         propertyChangeSupport = new PropertyChangeSupport(DesktopKernel.class.getName());
         mWindowManager = windowManager;
         mConfigManager = kernelCongigManager;
@@ -586,7 +590,7 @@ public class DesktopKernelImpl
 
             mAppLauncher = new AppLauncherImpl(mWindowManager, mLaunchableTargetFactory, this,
                                               launchedTargets,
-                                              mCurrentDecorator, mBaseDirectory);
+                                              mCurrentDecorator, kernelConfigManager , mAppInstaller, mBaseDirectory);
 
             mWindowManager.setAppLauncher(mAppLauncher);
             mWindowManager.updateComponentTreeUI();
@@ -649,7 +653,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.5 $
+     * @version $Revision: 1.6 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -710,7 +714,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.5 $
+     * @version $Revision: 1.6 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

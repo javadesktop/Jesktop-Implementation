@@ -68,7 +68,7 @@ public class ShutdownConfirmer extends JPanel implements FrimbleAware {
 
                 try {
                     if (choices.getSelectedItem().equals(exitAll)) {
-                        shutdownConfirmer.shutdownAvalon(false);
+                        shutdownConfirmer.shutdownSystem(false);
                     } else {
                         shutdownConfirmer.shutdownJesktopOnly(false);
                     }

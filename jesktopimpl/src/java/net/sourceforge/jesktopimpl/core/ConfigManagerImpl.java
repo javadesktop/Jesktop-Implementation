@@ -9,7 +9,8 @@
 package net.sourceforge.jesktopimpl.core;
 
 import org.jesktop.services.DesktopKernelService;
-import net.sourceforge.jesktopimpl.services.KernelConfigManager;
+import org.jesktop.services.KernelConfigManager;
+import org.jesktop.services.KernelConfigManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import org.jesktop.WindowManager;
 import org.jesktop.Decorator;
@@ -37,7 +38,7 @@ import java.beans.PropertyChangeSupport;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
 

@@ -9,6 +9,7 @@ package net.sourceforge.jesktopimpl.core;
 
 import org.jesktop.services.DesktopKernelService;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
+import org.jesktop.services.KernelConfigManager;
 import org.jesktop.WindowManager;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.frimble.FrimbleAware;
@@ -37,7 +38,7 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
@@ -47,6 +48,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
     private DesktopKernelService mDesktopKernelService;
     private Vector mLaunchedTargets;
     private Decorator mDecorator;
+    private KernelConfigManager kernelConfigManager;
     private MutablePicoContainer picoContainer;
 
     protected AppLauncherImpl(final WindowManager windowManager,
@@ -54,6 +56,8 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                               final DesktopKernelService desktopKernelService,
                               final Vector launchedTargets,
                               final Decorator decorator,
+                              final KernelConfigManager kernelConfigManager,
+                              final AppInstaller appInstaller,
                               final File baseDir) {
         super(baseDir);
         mLaunchableTargetFactory = launchableTargetFactory;
@@ -61,6 +65,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
         mDesktopKernelService = desktopKernelService;
         mLaunchedTargets = launchedTargets;
         mDecorator = decorator;
+        this.kernelConfigManager = kernelConfigManager;
 
         picoContainer = new DefaultPicoContainer();
         picoContainer.registerComponentInstance(windowManager);
@@ -68,6 +73,9 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
         picoContainer.registerComponentInstance(desktopKernelService);
         picoContainer.registerComponentInstance(launchedTargets);
         picoContainer.registerComponentInstance(decorator);
+        picoContainer.registerComponentInstance(kernelConfigManager);
+        picoContainer.registerComponentInstance(appInstaller);
+
     }
 
     protected String getNewTemporaryAppSuffix() {
@@ -207,7 +215,8 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                 cl = classLoader.loadClass(className);
             }
 
-            Object instantiatedApp = new DefaultPicoContainer(picoContainer).registerComponentImplementation(cl).getComponentInstance();
+            DefaultPicoContainer defaultPicoContainer = new DefaultPicoContainer(picoContainer);
+            Object instantiatedApp = defaultPicoContainer.registerComponentImplementation(cl).getComponentInstance();
 
             return launchApp2(classLoader, instantiatedApp, launchableTarget, inHere,
                               fullClosable);
@@ -282,7 +291,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                         mDesktopKernelService.shutdownJesktopOnly(force);
                     }
 
-                    public void shutdownAvalon(boolean force) throws PropertyVetoException {
+                    public void shutdownSystem(boolean force) throws PropertyVetoException {
                         mDesktopKernelService.shutdownSystem(force);
                     }
                 };

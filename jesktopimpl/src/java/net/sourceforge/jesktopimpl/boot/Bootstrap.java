@@ -6,7 +6,7 @@ import net.sourceforge.jesktopimpl.core.DesktopKernelImpl;
 import net.sourceforge.jesktopimpl.core.ImageRepositoryImpl;
 import net.sourceforge.jesktopimpl.core.LaunchableTargetFactoryImpl;
 import net.sourceforge.jesktopimpl.core.ThreadPoolImpl;
-import net.sourceforge.jesktopimpl.services.KernelConfigManager;
+import org.jesktop.services.KernelConfigManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import net.sourceforge.jesktopimpl.windowmanagers.windoze.WindozeWindowManager1;
 import org.jesktop.ImageRepository;
@@ -14,6 +14,7 @@ import org.jesktop.ObjectRepository;
 import org.jesktop.ThreadPool;
 import org.jesktop.services.DesktopKernelService;
 import org.jesktop.services.WindowManagerService;
+import org.jesktop.services.KernelConfigManager;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,7 +32,7 @@ public class Bootstrap {
         ImageRepository ir = new ImageRepositoryImpl(or);
         WindowManagerService wm = new WindozeWindowManager1(ir);
         ThreadPool tp = new ThreadPoolImpl();
-        DesktopKernelService kernel = new DesktopKernelImpl(wm, or, tp, cm, ir, ltf, baseDir);
+        DesktopKernelService kernel = new DesktopKernelImpl(wm, or, tp, cm, ir, ltf, cm, baseDir);
 
     }
 

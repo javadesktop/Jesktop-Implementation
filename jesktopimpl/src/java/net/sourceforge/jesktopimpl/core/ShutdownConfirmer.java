@@ -17,7 +17,7 @@ import java.beans.PropertyVetoException;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface ShutdownConfirmer {
 
@@ -42,4 +42,5 @@ public interface ShutdownConfirmer {
      *
      */
     void shutdownSystem(boolean force) throws PropertyVetoException;
+
 }
