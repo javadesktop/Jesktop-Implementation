@@ -33,14 +33,14 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AppInstallerImpl extends AppBase implements AppInstaller {
 
-    private LaunchableTargetFactory mLaunchableTargetFactory;
-    private PropertyChangeSupport mPropertyChangeSupport;
-    private ImageRepository mImageRepository;
-    private DesktopKernelImpl mDesktopKernelImpl;
+    private LaunchableTargetFactory launchableTargetFactory;
+    private PropertyChangeSupport propertyChangeSupport;
+    private ImageRepository imageRepository;
+    private DesktopKernelImpl desktopKernelImpl;
 
 
     protected AppInstallerImpl(final PropertyChangeSupport propertyChangeSupport,
@@ -49,16 +49,16 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                                final ImageRepository imageRepository,
                                final File baseDir) {
         super(baseDir);
-        mLaunchableTargetFactory = launchableTargetHolder;
-        mPropertyChangeSupport = propertyChangeSupport;
-        mImageRepository = imageRepository;
-        mDesktopKernelImpl = desktopKernelImpl;
+        launchableTargetFactory = launchableTargetHolder;
+        this.propertyChangeSupport = propertyChangeSupport;
+        this.imageRepository = imageRepository;
+        this.desktopKernelImpl = desktopKernelImpl;
     }
 
     private void notifyLaunchableTargetListeners() {
 
-        mPropertyChangeSupport.firePropertyChange(DesktopKernel.LAUNCHABLE_TARGET_CHANGE, null,
-                                                 mLaunchableTargetFactory
+        propertyChangeSupport.firePropertyChange(DesktopKernel.LAUNCHABLE_TARGET_CHANGE, null,
+                                                 launchableTargetFactory
                                                      .getAllLaunchableTargets());
     }
 
@@ -168,7 +168,7 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
     private void applicationInstall(final InputStream[] inputStreams, boolean confirm) {
 
         //System.err.println("install apps from " +inputStreams.length + " jars" );
-        String appFilePrefix = "JesktopApp" + mLaunchableTargetFactory.getNewAppSuffix();
+        String appFilePrefix = "JesktopApp" + launchableTargetFactory.getNewAppSuffix();
         JarSuffixHolder jarSuffix = new JarSuffixHolder();
         Vector jarNames = new Vector();
         for (int f = 0; f < inputStreams.length; f++) {
@@ -180,14 +180,14 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                 LaunchableTarget[] pendInsts = new org.jesktop.launchable.LaunchableTarget[0];
                 pendInsts = this.installApps(appFilePrefix, jarNames, jarSuffix);
                 if (confirm) {
-                  mDesktopKernelImpl.confirmAppInstallation(pendInsts);
+                  desktopKernelImpl.confirmAppInstallation(pendInsts);
                 } else {
                     for (int i = 0; i < pendInsts.length; i++) {
-                        mLaunchableTargetFactory.confirmLaunchableTarget(pendInsts[i]);
+                        launchableTargetFactory.confirmLaunchableTarget(pendInsts[i]);
                     }
                 }
             } catch (JesktopPackagingException jpe) {
-                mDesktopKernelImpl.showErrorApp(jpe);
+                desktopKernelImpl.showErrorApp(jpe);
             }
         } catch (JesktopLaunchException jle) {
             System.err.println("JesktopLaunchException during confirm of app install");
@@ -275,14 +275,14 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                 LaunchableTarget lt = null;
 
                 if (appType.equals("normal")) {
-                    lt = mLaunchableTargetFactory.makeNormalLaunchableTarget(targetName, className,
+                    lt = launchableTargetFactory.makeNormalLaunchableTarget(targetName, className,
                                                                            appFilePrefix,
                                                                            jarFileNames,
                                                                            displayName,
                                                                            singleInstance
                                                                                .equals("true"));
                 } else if (appType.equals("decorator")) {
-                    lt = mLaunchableTargetFactory.makeDecoratorLaunchableTarget(targetName,
+                    lt = launchableTargetFactory.makeDecoratorLaunchableTarget(targetName,
                                                                               className,
                                                                               appFilePrefix,
                                                                               jarFileNames,
@@ -291,7 +291,7 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                                                                                   "configpath",
                                                                                   false));
                 } else if (appType.equals("configlet")) {
-                    lt = mLaunchableTargetFactory.makeConfigletLaunchableTarget(targetName,
+                    lt = launchableTargetFactory.makeConfigletLaunchableTarget(targetName,
                                                                               className,
                                                                               appFilePrefix,
                                                                               jarFileNames,
@@ -337,7 +337,7 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
         try {
             url = tempClassLoader.getResource(icons.getAttribute("icon16"));
 
-            mImageRepository.setImageIcon(ImageRepository.APP + targetName + "_16x16",
+            imageRepository.setImageIcon(ImageRepository.APP + targetName + "_16x16",
                                          new ImageIcon(url));
         } catch (ConfigurationException ce) {
             throw new JesktopPackagingException("Malformed xml segment for icons in jar");
@@ -348,7 +348,7 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
         try {    //todo - method for dupe logic
             url = tempClassLoader.getResource(icons.getAttribute("icon32"));
 
-            mImageRepository.setImageIcon(ImageRepository.APP + targetName + "_32x32",
+            imageRepository.setImageIcon(ImageRepository.APP + targetName + "_32x32",
                                          new ImageIcon(url));
         } catch (ConfigurationException ce) {
             throw new JesktopPackagingException("Malformed xml segment for icons in jar");

@@ -28,19 +28,19 @@ import java.io.BufferedInputStream;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class AppBase {
 
     protected static DefaultConfigurationBuilder CONF_BUILDER = null;
-    protected File mBaseDir;
+    protected File baseDir;
 
     static {
         CONF_BUILDER = new DefaultConfigurationBuilder();
     }
 
     protected AppBase(File baseDir) {
-        mBaseDir = baseDir;
+        this.baseDir = baseDir;
     }
     
     protected Configuration getApplicationsDotXML(final String jarName, final URLClassLoader urlClassLoader)
@@ -72,7 +72,7 @@ public abstract class AppBase {
 
         String DIR = "ApplicationStore";
 
-        new File(mBaseDir,DIR).mkdir();
+        new File(baseDir,DIR).mkdir();
 
         if (temporary) {
             DIR = DIR + File.separator + "Temp" + File.separator + "UninstalledApps";
@@ -83,7 +83,7 @@ public abstract class AppBase {
         String jarName = DIR + File.separator + prefix + "_Jar" + suffix.getNewSuffix();
 
         try {
-            File outputFile = new File(mBaseDir,jarName);
+            File outputFile = new File(baseDir,jarName);
             
             outputFile.getParentFile().mkdirs();
 
@@ -104,7 +104,7 @@ public abstract class AppBase {
             fos.close();
             inputStream.close();
 
-            return mBaseDir.getAbsolutePath() + File.separator + jarName;
+            return baseDir.getAbsolutePath() + File.separator + jarName;
             
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -121,7 +121,7 @@ public abstract class AppBase {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.3 $
+     * @version $Revision: 1.4 $
      */
     protected class JarSuffixHolder {
 

@@ -12,8 +12,6 @@ import net.sourceforge.jesktopimpl.builtinapps.sys.ErrorApp;
 import org.jesktop.services.DesktopKernelService;
 import org.jesktop.services.WindowManagerService;
 import org.jesktop.services.KernelConfigManager;
-import org.jesktop.services.KernelConfigManager;
-import org.jesktop.WindowManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import org.jesktop.appsupport.DropAware;
 import org.jesktop.appsupport.DraggedItem;
@@ -65,13 +63,13 @@ public class DesktopKernelImpl
 
     //  protected final static Logger LOGGER = LogKit.getLoggerFor("jesktop-kernel");
     private final Vector launchedTargets = new Vector();
-    private LaunchableTargetFactory mLaunchableTargetFactory;
-    private AppInstallerImpl mAppInstaller;
-    private AppLauncher mAppLauncher;
-    private ImageRepository mImageRepository;
-    private KernelConfigManager mConfigManager;
+    private LaunchableTargetFactory launchableTargetFactory;
+    private AppInstallerImpl appInstaller;
+    private AppLauncher appLauncher;
+    private ImageRepository imageRepository;
+    private KernelConfigManager configManager;
     private DecoratorLaunchableTarget currentDecoratorLaunchableTarget;
-    private Decorator mCurrentDecorator;
+    private Decorator currentDecorator;
     private final KernelFrimbleListener kernelFrimbleListener = new KernelFrimbleListener();
     private final PropertyChangeSupport propertyChangeSupport;
     private LaunchableTarget noRegViewer = new NormalLaunchableTargetImpl("*NoRegisteredViewer*",
@@ -107,9 +105,9 @@ public class DesktopKernelImpl
         this.kernelConfigManager = kernelConfigManager;
         propertyChangeSupport = new PropertyChangeSupport(DesktopKernel.class.getName());
         mWindowManager = windowManager;
-        mConfigManager = kernelCongigManager;
-        mImageRepository = imageRepository;
-        mLaunchableTargetFactory = launchableTargetFactory;
+        configManager = kernelCongigManager;
+        this.imageRepository = imageRepository;
+        this.launchableTargetFactory = launchableTargetFactory;
         mBaseDirectory = baseDirectory;
 
         picoContainer = new DefaultPicoContainer();
@@ -121,19 +119,19 @@ public class DesktopKernelImpl
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 
         defaultDecorator =
-            (DecoratorLaunchableTarget) mLaunchableTargetFactory.makeDecoratorLaunchableTarget(
+            (DecoratorLaunchableTarget) this.launchableTargetFactory.makeDecoratorLaunchableTarget(
                 DFT_DECORATOR, "net.sourceforge.jesktopimpl.builtinapps.decorators.DefaultDecorator",
                 "Default Decorator", "decorators/default");
 
-        mMimeManager = new MimeManagerImpl(repository, mLaunchableTargetFactory);
-        mAppInstaller = new AppInstallerImpl(propertyChangeSupport, this,
-                                            mLaunchableTargetFactory, mImageRepository, mBaseDirectory);
-        mConfigManager.registerConfigInterest(this, "decorator/currentDecorator");
-        mConfigManager.registerConfigInterest(mWindowManager, "desktop/settings");
+        mMimeManager = new MimeManagerImpl(repository, this.launchableTargetFactory);
+        appInstaller = new AppInstallerImpl(propertyChangeSupport, this,
+                this.launchableTargetFactory, this.imageRepository, mBaseDirectory);
+        configManager.registerConfigInterest(this, "decorator/currentDecorator");
+        configManager.registerConfigInterest(mWindowManager, "desktop/settings");
         setDecoratorLaunchableTarget(defaultDecorator);
 
         initializeDecorator();
-        mConfigManager.notifyObjConfig("decorator/currentDecorator", getClass().getClassLoader());
+        configManager.notifyObjConfig("decorator/currentDecorator", getClass().getClassLoader());
         mWindowManager.setKernelCallback(this);
         mWindowManager
             .setPersistableConfig(new PersistableConfigImpl(repository,
@@ -142,7 +140,7 @@ public class DesktopKernelImpl
                                                                 .getName().hashCode()));
         notifyLaunchableTargetListeners();
         mWindowManager.initializeView();
-        mConfigManager.notifyXMLConfig("desktop/settings", getClass().getClassLoader());
+        configManager.notifyXMLConfig("desktop/settings", getClass().getClassLoader());
 
         new File("Jesktop/Temp").mkdir();
 
@@ -212,7 +210,7 @@ public class DesktopKernelImpl
     public void notifyLaunchableTargetListeners() {
 
         propertyChangeSupport.firePropertyChange(DesktopKernel.LAUNCHABLE_TARGET_CHANGE, null,
-                                                 mLaunchableTargetFactory
+                                                 launchableTargetFactory
                                                      .getAllLaunchableTargets());
     }
 
@@ -235,7 +233,7 @@ public class DesktopKernelImpl
                 try {
                   File jarFile = new File(dir,jars[i]);
                   URL jarURL = jarFile.toURL();
-                  mAppInstaller.installAppWithoutConfirmation(jarURL);
+                  appInstaller.installAppWithoutConfirmation(jarURL);
                   jarFile.delete();
                 } catch (MalformedURLException mufe) {
                     System.out.println(mufe.getMessage());
@@ -349,7 +347,7 @@ public class DesktopKernelImpl
 
         System.out.println( "URL x " + url);
 
-        obj = mAppLauncher.launchApp(getAssociatedViewer(url), inHere);
+        obj = appLauncher.launchApp(getAssociatedViewer(url), inHere);
 
         if (obj instanceof ContentViewer) {
             ContentViewer cv = (ContentViewer) obj;
@@ -396,16 +394,16 @@ public class DesktopKernelImpl
     }
 
     protected ConfigManager getConfigManager() {
-        return mConfigManager;
+        return configManager;
     }
 
     private LaunchableTarget getAssociatedViewer(final URL url) {
         LaunchableTarget retval = null;
         // hack hack hack, till Laurent delivers the Mime Registry :-))
         if (url.toExternalForm().toLowerCase().endsWith(".txt")) {
-            retval = (LaunchableTarget) mLaunchableTargetFactory.getLaunchableTarget("Tools/TextViewer");
+            retval = (LaunchableTarget) launchableTargetFactory.getLaunchableTarget("Tools/TextViewer");
         } else if (url.toExternalForm().toLowerCase().endsWith(".jpg") | url.toExternalForm().toLowerCase().endsWith(".gif")) {
-            retval = (LaunchableTarget) mLaunchableTargetFactory.getLaunchableTarget("Tools/ImageViewer");
+            retval = (LaunchableTarget) launchableTargetFactory.getLaunchableTarget("Tools/ImageViewer");
         }
         if (retval == null) {
             retval = noRegViewer;
@@ -416,15 +414,15 @@ public class DesktopKernelImpl
     protected void confirmAppInstallation(final LaunchableTarget[] launchableTargets)
             throws JesktopLaunchException {
 
-        Object obj = mAppLauncher.launchApp(installationConfirmerTarget);
+        Object obj = appLauncher.launchApp(installationConfirmerTarget);
         InstallationConfirmer ic = new InstallationConfirmer() {
 
             public boolean isRegistered(String targetName) {
-                return mLaunchableTargetFactory.isRegistered(targetName);
+                return launchableTargetFactory.isRegistered(targetName);
             }
 
             public void confirmLaunchableTarget(LaunchableTarget launchableTarget) {
-                mLaunchableTargetFactory.confirmLaunchableTarget(launchableTarget);
+                launchableTargetFactory.confirmLaunchableTarget(launchableTarget);
             }
         };
 
@@ -433,7 +431,7 @@ public class DesktopKernelImpl
 
     protected void showErrorApp(final Exception e) throws JesktopLaunchException {
 
-        ErrorApp errorApp = (ErrorApp) mAppLauncher.launchApp(errorAppTarget);
+        ErrorApp errorApp = (ErrorApp) appLauncher.launchApp(errorAppTarget);
 
         errorApp.setException(e);
     }
@@ -450,9 +448,9 @@ public class DesktopKernelImpl
     public void initiateShutdown(final String shutdownType) throws JesktopLaunchException {
 
         Object ojb =
-            mAppLauncher
-                .launchApp(mLaunchableTargetFactory
-                    .getLaunchableTarget(mLaunchableTargetFactory.SHUTDOWN_APP));
+            appLauncher
+                .launchApp(launchableTargetFactory
+                    .getLaunchableTarget(launchableTargetFactory.SHUTDOWN_APP));
     }
 
     /**
@@ -461,10 +459,9 @@ public class DesktopKernelImpl
      *
      * @param runnable
      *
-     * @throws Exception
      *
      */
-    public void runAsychronously(final Runnable runnable) throws Exception {    // bad to declare throw of Exception
+    public void runAsychronously(final Runnable runnable) {
         threadPool.execute(runnable);
     }
 
@@ -476,7 +473,7 @@ public class DesktopKernelImpl
      *
      */
     public void uninstall(final LaunchableTarget launchableTarget) {
-        mLaunchableTargetFactory.removeLaunchableTarget(launchableTarget.getTargetName());
+        launchableTargetFactory.removeLaunchableTarget(launchableTarget.getTargetName());
         notifyLaunchableTargetListeners();
     }
 
@@ -488,7 +485,7 @@ public class DesktopKernelImpl
      *
      */
     public LaunchableTarget[] getNormalLaunchableTargets() {
-        return mLaunchableTargetFactory.getNormalLaunchableTargets();
+        return launchableTargetFactory.getNormalLaunchableTargets();
     }
 
     /**
@@ -499,7 +496,7 @@ public class DesktopKernelImpl
      *
      */
     public LaunchableTarget[] getAllLaunchableTargets() {
-        return mLaunchableTargetFactory.getAllLaunchableTargets();
+        return launchableTargetFactory.getAllLaunchableTargets();
     }
 
     private void closeApps() throws PropertyVetoException {
@@ -510,7 +507,7 @@ public class DesktopKernelImpl
         while (it.hasNext()) {
             KernelLaunchedTarget klt = (KernelLaunchedTarget) it.next();
 
-            if (klt.getTargetName().equals(mLaunchableTargetFactory.SHUTDOWN_APP)) {
+            if (klt.getTargetName().equals(launchableTargetFactory.SHUTDOWN_APP)) {
                 klt.getFrimble().setClosed(true);
             }
         }
@@ -563,36 +560,36 @@ public class DesktopKernelImpl
                 cLoader = this.getClass().getClassLoader();
                 cl = cLoader.loadClass(dlt.getClassName());
             } else {
-                cLoader = mLaunchableTargetFactory.getClassLoader(dlt);
+                cLoader = launchableTargetFactory.getClassLoader(dlt);
                 cl = cLoader.loadClass(dlt.getClassName());
             }
 
-            Decorator oldDecorator = mCurrentDecorator;
+            Decorator oldDecorator = currentDecorator;
 
             // all fine, put in place decorator
 
-            mCurrentDecorator = (Decorator) new DefaultPicoContainer(picoContainer).registerComponentImplementation(cl).getComponentInstance();
+            currentDecorator = (Decorator) new DefaultPicoContainer(picoContainer).registerComponentImplementation(cl).getComponentInstance();
 
-            if (mCurrentDecorator instanceof ObjConfigurable) {
-                ((ObjConfigurable) mCurrentDecorator)
-                    .setConfig(mConfigManager.getObjConfig(dlt.getConfigPath(), cLoader));
+            if (currentDecorator instanceof ObjConfigurable) {
+                ((ObjConfigurable) currentDecorator)
+                    .setConfig(configManager.getObjConfig(dlt.getConfigPath(), cLoader));
             }
 
             currentDecoratorLaunchableTarget = dlt;
 
             if (oldDecorator instanceof PropertyChangeListener) {
-                mConfigManager.unRegisterConfigInterest(oldDecorator);
+                configManager.unRegisterConfigInterest(oldDecorator);
             }
 
-            if (mCurrentDecorator instanceof PropertyChangeListener) {
-                mConfigManager.registerConfigInterest(mCurrentDecorator,currentDecoratorLaunchableTarget.getConfigPath());
+            if (currentDecorator instanceof PropertyChangeListener) {
+                configManager.registerConfigInterest(currentDecorator,currentDecoratorLaunchableTarget.getConfigPath());
             }
 
-            mAppLauncher = new AppLauncherImpl(mWindowManager, mLaunchableTargetFactory, this,
+            appLauncher = new AppLauncherImpl(mWindowManager, launchableTargetFactory, this,
                                               launchedTargets,
-                                              mCurrentDecorator, kernelConfigManager , mAppInstaller, mBaseDirectory);
+                                              currentDecorator, kernelConfigManager , appInstaller, mBaseDirectory);
 
-            mWindowManager.setAppLauncher(mAppLauncher);
+            mWindowManager.setAppLauncher(appLauncher);
             mWindowManager.updateComponentTreeUI();
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
@@ -601,12 +598,12 @@ public class DesktopKernelImpl
 
     private void initializeDecorator() {
 
-        String targetName = mConfigManager.getStringConfig("decorator/currentDecorator", DFT_DECORATOR);
+        String targetName = configManager.getStringConfig("decorator/currentDecorator", DFT_DECORATOR);
 
         //if (targetName.equals(DFT_DECORATOR)) {
         //    setDecoratorLaunchableTarget(defaultDecorator);
         //} else {
-        //    setDecoratorLaunchableTarget((DecoratorLaunchableTarget) mLaunchableTargetFactory
+        //    setDecoratorLaunchableTarget((DecoratorLaunchableTarget) launchableTargetFactory
         //        .getLaunchableTarget(targetName));
         //}
     }
@@ -619,7 +616,7 @@ public class DesktopKernelImpl
      *
      */
     public DecoratorLaunchableTarget[] getDecoratorLaunchableTargets() {
-        return mLaunchableTargetFactory.getDecoratorLaunchableTargets();
+        return launchableTargetFactory.getDecoratorLaunchableTargets();
     }
 
     /**
@@ -630,7 +627,7 @@ public class DesktopKernelImpl
      *
      */
     public ConfigletLaunchableTarget[] getConfigletLaunchableTargets() {
-        return mLaunchableTargetFactory.getConfigletLaunchableTargets();
+        return launchableTargetFactory.getConfigletLaunchableTargets();
     }
 
     protected void setConfig(final String configPath, final Object config) {
@@ -639,7 +636,7 @@ public class DesktopKernelImpl
             String cfg = (String) config;
 
             if (configPath.equals("decorator/currentDecorator")) {
-                setDecoratorLaunchableTarget((DecoratorLaunchableTarget) mLaunchableTargetFactory
+                setDecoratorLaunchableTarget((DecoratorLaunchableTarget) launchableTargetFactory
                     .getLaunchableTarget(cfg));
             }
         }
@@ -653,7 +650,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.6 $
+     * @version $Revision: 1.7 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -714,7 +711,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.6 $
+     * @version $Revision: 1.7 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

@@ -38,16 +38,16 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
     private static int TEMPAPPSUFFIX = 1;
-    private org.jesktop.WindowManager mWindowManager;
-    private LaunchableTargetFactory mLaunchableTargetFactory;
-    private DesktopKernelService mDesktopKernelService;
-    private Vector mLaunchedTargets;
-    private Decorator mDecorator;
+    private org.jesktop.WindowManager windowManager;
+    private LaunchableTargetFactory launchableTargetFactory;
+    private DesktopKernelService desktopKernelService;
+    private Vector launchedTargets;
+    private Decorator decorator;
     private KernelConfigManager kernelConfigManager;
     private MutablePicoContainer picoContainer;
 
@@ -60,11 +60,11 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                               final AppInstaller appInstaller,
                               final File baseDir) {
         super(baseDir);
-        mLaunchableTargetFactory = launchableTargetFactory;
-        mWindowManager = windowManager;
-        mDesktopKernelService = desktopKernelService;
-        mLaunchedTargets = launchedTargets;
-        mDecorator = decorator;
+        this.launchableTargetFactory = launchableTargetFactory;
+        this.windowManager = windowManager;
+        this.desktopKernelService = desktopKernelService;
+        this.launchedTargets = launchedTargets;
+        this.decorator = decorator;
         this.kernelConfigManager = kernelConfigManager;
 
         picoContainer = new DefaultPicoContainer();
@@ -140,10 +140,10 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                                                                             className,
                                                                             appFilePrefix, jars,
                                                                             displayName, false);
-                Frimble frimble = mWindowManager.createFrimble(displayName);
+                Frimble frimble = windowManager.createFrimble(displayName);
 
                 launchApp(jcl, className, tmpTarget, frimble.getContentPane(), true);
-                mDecorator.decorate(frimble, null);
+                decorator.decorate(frimble, null);
             } else {
 
                 //TODO issue error dialog, not a jar Jesktop recognizes.
@@ -195,7 +195,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                              final boolean fullClosable) throws JesktopLaunchException {
 
         String className = launchableTarget.getClassName();
-        ClassLoader classLoader = mLaunchableTargetFactory.getClassLoader(launchableTarget);
+        ClassLoader classLoader = launchableTargetFactory.getClassLoader(launchableTarget);
 
         return launchApp(classLoader, className, launchableTarget, inHere, fullClosable);
     }
@@ -240,7 +240,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
         java.awt.Container inContainer = inHere;
         if (inContainer == null) {
             if (!(instantiatedApp instanceof JFrimble)) {
-                frimble = mWindowManager.createFrimble(launchableTarget.getDisplayName());
+                frimble = windowManager.createFrimble(launchableTarget.getDisplayName());
             } else {
                 frimble = ((JFrimble) instantiatedApp).getFrimble();
             }
@@ -270,29 +270,29 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
 
             //frimble.pack();
             frimble.setVisible(true);
-            frimble.addFrimbleListener(mDesktopKernelService.getKernelFrimbleListener());
+            frimble.addFrimbleListener(desktopKernelService.getKernelFrimbleListener());
         }
 
         if (fullClosable) {
-            LaunchedTarget lchd = mDesktopKernelService.makeKernelLaunchedTarget(frimble,
+            LaunchedTarget lchd = desktopKernelService.makeKernelLaunchedTarget(frimble,
                                       instantiatedApp, launchableTarget);
 
-            mWindowManager.addLaunchedTarget(lchd);
-            mLaunchedTargets.add(lchd);
+            windowManager.addLaunchedTarget(lchd);
+            launchedTargets.add(lchd);
         }
 
         if (fullClosable && (frimble != null)) {
-            mDecorator.decorate(frimble, launchableTarget);
+            decorator.decorate(frimble, launchableTarget);
 
             if (launchableTarget.getTargetName().equals(LaunchableTargetFactory.SHUTDOWN_APP)) {
                 ShutdownConfirmer sc = new ShutdownConfirmer() {
 
                     public void shutdownJesktopOnly(boolean force) throws PropertyVetoException {
-                        mDesktopKernelService.shutdownJesktopOnly(force);
+                        desktopKernelService.shutdownJesktopOnly(force);
                     }
 
                     public void shutdownSystem(boolean force) throws PropertyVetoException {
-                        mDesktopKernelService.shutdownSystem(force);
+                        desktopKernelService.shutdownSystem(force);
                     }
                 };
 
@@ -316,12 +316,12 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
     public Frimble makeFrimble(final FrimbleAware frimbleAware) {
 
         LaunchableTarget lt =
-            mLaunchableTargetFactory.getLaunchableTarget((JComponent) frimbleAware);
+            launchableTargetFactory.getLaunchableTarget((JComponent) frimbleAware);
 
         if (lt != null) {
-            Frimble frimble = mWindowManager.createFrimble(lt.getDisplayName());
+            Frimble frimble = windowManager.createFrimble(lt.getDisplayName());
 
-            launchApp2(mLaunchableTargetFactory.getClassLoader(lt), (JComponent) frimbleAware, lt,
+            launchApp2(launchableTargetFactory.getClassLoader(lt), (JComponent) frimbleAware, lt,
                        null, true);
 
             return frimble;
@@ -343,7 +343,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
      */
     public Object launchAppByName(final String appTargetName) throws JesktopLaunchException {
 
-        LaunchableTarget[] lts = mLaunchableTargetFactory.getAllLaunchableTargets();
+        LaunchableTarget[] lts = launchableTargetFactory.getAllLaunchableTargets();
 
         for (int f = 0; f < lts.length; f++) {
             if (lts[f].getTargetName().equals(appTargetName)) {
@@ -365,7 +365,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
      */
     public String[] getAllAppList() {
 
-        LaunchableTarget[] lts = mLaunchableTargetFactory.getAllLaunchableTargets();
+        LaunchableTarget[] lts = launchableTargetFactory.getAllLaunchableTargets();
         String[] retval = new String[lts.length];
 
         for (int f = 0; f < lts.length; f++) {
@@ -379,7 +379,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
             throws AlreadyLaunchedException {
 
         if (launchableTarget.isSingleInstanceApp()) {
-            Iterator it = mLaunchedTargets.iterator();
+            Iterator it = launchedTargets.iterator();
 
             while (it.hasNext()) {
                 LaunchedTarget lt = (LaunchedTarget) it.next();

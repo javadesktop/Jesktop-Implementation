@@ -38,25 +38,25 @@ import java.beans.PropertyChangeSupport;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
 
     private final static String CFG = "cfg-";
-    private LaunchableTargetFactory mLaunchableTargetFactory;
+    private LaunchableTargetFactory launchableTargetFactory;
     private ObjectRepository objectRepository;
     private PropertyChangeSupport propChgSupport = new PropertyChangeSupport("DummyBean");
     //private HashMap configListeners = new HashMap();
-    private DocumentBuilderFactory mDocumentBuilderFactory;
-    private DocumentBuilder mDocumentBuilder;
+    private DocumentBuilderFactory documentBuilderFactory;
+    private DocumentBuilder documentBuilder;
  
     public ConfigManagerImpl(DocumentBuilderFactory documentBuilderFactory, LaunchableTargetFactory launchableTargetFactory,
                              ObjectRepository objectRepository) throws ParserConfigurationException {
  
-        mDocumentBuilderFactory = documentBuilderFactory;
-        mLaunchableTargetFactory = launchableTargetFactory;
+        this.documentBuilderFactory = documentBuilderFactory;
+        this.launchableTargetFactory = launchableTargetFactory;
         this.objectRepository = objectRepository;
-        mDocumentBuilder = mDocumentBuilderFactory.newDocumentBuilder(); 
+        documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
     }
 
     /**
@@ -95,7 +95,7 @@ public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
 
             return (Document) objectRepository.get(CFG + configPath, classLoader);
         } else {
-            Document doc = mDocumentBuilder.newDocument();
+            Document doc = documentBuilder.newDocument();
             Element root = doc.createElement("config");
 
             doc.appendChild(root);
@@ -180,7 +180,7 @@ public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
     public void notifyUpdated(final ObjConfiglet clet) {
 
         ConfigletLaunchableTarget clt =
-            (ConfigletLaunchableTarget) mLaunchableTargetFactory
+            (ConfigletLaunchableTarget) launchableTargetFactory
                 .getLaunchableTarget((JComponent) clet);
         Object oldCfg = getObjConfig(clt.getConfigPath(), clet.getClass().getClassLoader());
         Object newCfg = clet.getConfig();
@@ -201,7 +201,7 @@ public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
     public void notifyUpdated(final XMLConfiglet clet) {
 
         ConfigletLaunchableTarget clt =
-            (ConfigletLaunchableTarget) mLaunchableTargetFactory
+            (ConfigletLaunchableTarget) launchableTargetFactory
                 .getLaunchableTarget((JComponent) clet);
         Object oldCfg = getObjConfig(clt.getConfigPath(), clet.getClass().getClassLoader());
         Object newCfg = clet.getConfig();
@@ -223,7 +223,7 @@ public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
     public void notifyUpdatedNoSave(final ObjConfiglet clet) {
 
         ConfigletLaunchableTarget clt =
-            (ConfigletLaunchableTarget) mLaunchableTargetFactory
+            (ConfigletLaunchableTarget) launchableTargetFactory
                 .getLaunchableTarget((JComponent) clet);
         Object oldCfg = getObjConfig(clt.getConfigPath(), clet.getClass().getClassLoader());
         Object newCfg = clet.getConfig();
@@ -243,7 +243,7 @@ public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
     public void notifyUpdatedNoSave(final XMLConfiglet clet) {
 
         ConfigletLaunchableTarget clt =
-            (ConfigletLaunchableTarget) mLaunchableTargetFactory
+            (ConfigletLaunchableTarget) launchableTargetFactory
                 .getLaunchableTarget((JComponent) clet);
         Object oldCfg = getObjConfig(clt.getConfigPath(), clet.getClass().getClassLoader());
         Object newCfg = clet.getConfig();
