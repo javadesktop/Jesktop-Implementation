@@ -360,22 +360,22 @@ public class LaunchableTargetFactoryImpl extends AbstractLogEnabled
     public void setBuiltInApps() {
 
         makeNormalLaunchableTarget(
-            "System/SimpleInstaller", "org.apache.avalon.jesktop.builtinapps.installer.SimpleInstaller",
+            "System/SimpleInstaller", "net.sourceforge.jesktopimpl.builtinapps.installer.SimpleInstaller",
             "Simple Installer Tool", true);
         makeNormalLaunchableTarget(
-            "System/ManageInstalled", "org.apache.avalon.jesktop.builtinapps.installer.ManageInstalled",
+            "System/ManageInstalled", "net.sourceforge.jesktopimpl.builtinapps.installer.ManageInstalled",
             "Installed App Management Tool", true);
         makeNormalLaunchableTarget("System/ControlPanel",
-                                                          "org.apache.avalon.jesktop.builtinapps.config.ControlPanel",
+                                                          "net.sourceforge.jesktopimpl.builtinapps.config.ControlPanel",
                                                           "Control Panel", true);
         makeConfigletLaunchableTarget(
-            "System/DecoratorChooser", "org.apache.avalon.jesktop.builtinapps.installer.DecoratorChooser",
+            "System/DecoratorChooser", "net.sourceforge.jesktopimpl.builtinapps.installer.DecoratorChooser",
             "Chooser for Decorators", "decorator/currentDecorator");
         makeNormalLaunchableTarget(
-            MimeManagerImpl.ALLOWED_TARGET_NAME, "org.apache.avalon.jesktop.builtinapps.mime.MimeConfigurator",
+            MimeManagerImpl.ALLOWED_TARGET_NAME, "net.sourceforge.jesktopimpl.builtinapps.mime.MimeConfigurator",
             "Mimes And Extensions Management", true);
         makeNormalLaunchableTarget(
-            SHUTDOWN_APP, "org.apache.avalon.jesktop.builtinapps.sys.ShutdownConfirmer", "Shutdown", true);
+            SHUTDOWN_APP, "net.sourceforge.jesktopimpl.builtinapps.sys.ShutdownConfirmer", "Shutdown", true);
     }
 
 

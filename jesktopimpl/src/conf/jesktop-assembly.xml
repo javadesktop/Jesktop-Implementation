@@ -41,29 +41,29 @@
   <!--                 -->
 
   
-  <block class="org.apache.avalon.jesktop.core.LaunchableTargetFactoryImpl" name="launchable-target-factory">
+  <block class="net.sourceforge.jesktopimpl.core.LaunchableTargetFactoryImpl" name="launchable-target-factory">
       <provide name="objectstorage" role="org.apache.avalon.cornerstone.services.store.Store"/>
   </block> 
   
-  <block class="org.apache.avalon.jesktop.core.ConfigManagerImpl" name="cfg-mgr">
+  <block class="net.sourceforge.jesktopimpl.core.ConfigManagerImpl" name="cfg-mgr">
       <provide name="dom-builder-factory" role="org.apache.avalon.cornerstone.services.dom.DocumentBuilderFactory" />
       <provide name="objectstorage" role="org.apache.avalon.cornerstone.services.store.Store"/>
-      <provide name="launchable-target-factory" role="org.apache.avalon.jesktop.services.LaunchableTargetFactory"/>
+      <provide name="launchable-target-factory" role="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory"/>
   </block>  
   
-  <block class="org.apache.avalon.jesktop.core.ImageRepositoryImpl" name="image-repository">
+  <block class="net.sourceforge.jesktopimpl.core.ImageRepositoryImpl" name="image-repository">
       <provide name="objectstorage" role="org.apache.avalon.cornerstone.services.store.Store"/>
   </block>       
   
-  <block class="org.apache.avalon.jesktop.windowmanagers.windoze.WindozeWindowManager1"
+  <block class="net.sourceforge.jesktopimpl.windowmanagers.windoze.WindozeWindowManager1"
          name="jesktop-windowmanager"/>         
 
-  <block class="org.apache.avalon.jesktop.core.DesktopKernelImpl" name="jesktop-kernel" >
-    <provide name="cfg-mgr" role="org.apache.avalon.jesktop.services.KernelConfigManager"/>
+  <block class="net.sourceforge.jesktopimpl.core.DesktopKernelImpl" name="jesktop-kernel" >
+    <provide name="cfg-mgr" role="net.sourceforge.jesktopimpl.services.KernelConfigManager"/>
     <provide name="image-repository" role="org.jesktop.api.ImageRepository"/>
-    <provide name="jesktop-windowmanager" role="org.apache.avalon.jesktop.services.WindowManager"/>
+    <provide name="jesktop-windowmanager" role="net.sourceforge.jesktopimpl.services.WindowManager"/>
     <provide name="objectstorage" role="org.apache.avalon.cornerstone.services.store.Store"/>
-    <provide name="launchable-target-factory" role="org.apache.avalon.jesktop.services.LaunchableTargetFactory"/>
+    <provide name="launchable-target-factory" role="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory"/>
     <provide name="thread-manager" role="org.apache.avalon.cornerstone.services.threads.ThreadManager"/>
   </block>
 

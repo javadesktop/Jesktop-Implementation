@@ -9,11 +9,11 @@
 	</block>
 	<!-- services that are offered by this block -->
 	<services>
-		<service name="org.apache.avalon.jesktop.services.DesktopKernelService" version="1.0"/>
+		<service name="net.sourceforge.jesktopimpl.services.DesktopKernelService" version="1.0"/>
 	</services>
 	<dependencies>
 		<dependency>
-			<service name="org.apache.avalon.jesktop.services.WindowManager" version="1.0"/>
+			<service name="net.sourceforge.jesktopimpl.services.WindowManager" version="1.0"/>
 		</dependency>
 		<dependency>
 			<service name="org.apache.avalon.cornerstone.services.store.Store" version="1.0"/>
@@ -22,13 +22,13 @@
 			<service name="org.apache.avalon.cornerstone.services.threads.ThreadManager" version="1.0"/>
 		</dependency>
 		<dependency>
-			<service name="org.apache.avalon.jesktop.services.KernelConfigManager" version="1.0"/>
+			<service name="net.sourceforge.jesktopimpl.services.KernelConfigManager" version="1.0"/>
 		</dependency>
 		<dependency>
 			<service name="org.jesktop.api.ImageRepository" version="1.0"/>
 		</dependency>	
 		<dependency>
-			<service name="org.apache.avalon.jesktop.services.LaunchableTargetFactory" version="1.0"/>
+			<service name="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory" version="1.0"/>
 		</dependency>			
 	</dependencies>
 </blockinfo>

@@ -2,5 +2,5 @@
 <application type="configlet" target="Decorators/Configlets/Backdrop">
   <display-name>Desktop Backdrop</display-name>
   <configpath>desktop/settings</configpath>
-  <class>org.apache.avalon.jesktop.apps.backdrop.BackdropConfiglet</class>
+  <class>net.sourceforge.jesktopimpl.apps.backdrop.BackdropConfiglet</class>
 </application>

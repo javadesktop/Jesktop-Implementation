@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <application type="normal" target="Tools/Explorer">
   <display-name>Directory Explorer</display-name>
-  <class>org.apache.avalon.jesktop.apps.explorer.DirectoryExplorer</class>
+  <class>net.sourceforge.jesktopimpl.apps.explorer.DirectoryExplorer</class>
 </application>  

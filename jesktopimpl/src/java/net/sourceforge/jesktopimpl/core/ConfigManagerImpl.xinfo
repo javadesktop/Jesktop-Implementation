@@ -9,7 +9,7 @@
 	</block>
 	<!-- services that are offered by this block -->
 	<services>
-		<service name="org.apache.avalon.jesktop.services.KernelConfigManager" version="1.0"/>
+		<service name="net.sourceforge.jesktopimpl.services.KernelConfigManager" version="1.0"/>
 	</services>
 	<dependencies>
 		<dependency>
@@ -19,7 +19,7 @@
 			<service name="org.apache.avalon.cornerstone.services.dom.DocumentBuilderFactory" version="1.0"/>
 		</dependency>
 		<dependency>
-			<service name="org.apache.avalon.jesktop.services.LaunchableTargetFactory" version="1.0"/>
+			<service name="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory" version="1.0"/>
 		</dependency>			
 	</dependencies>
 </blockinfo>

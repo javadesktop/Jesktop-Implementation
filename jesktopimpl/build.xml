@@ -41,7 +41,7 @@
        Set the installation variables for Cornerstone/Phoenix
        ===================================================================
   -->
-  <property name="phoenix.home" value="../../../jakarta-avalon-phoenix/dist"/>
+  <property name="phoenix.home" value="phoenix-bin"/>
   <property name="install.dir" value="${phoenix.home}/apps"/>
   <property name="installvar.dir" value="${phoenix.home}/var"/>
 

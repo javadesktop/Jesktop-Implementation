@@ -92,16 +92,16 @@ public class DesktopKernelImpl extends AbstractLogEnabled
     private final KernelFrimbleListener kernelFrimbleListener = new KernelFrimbleListener();
     private final PropertyChangeSupport propertyChangeSupport;
     private LaunchableTarget noRegViewer = new NormalLaunchableTargetImpl("*NoRegisteredViewer*",
-                                               "org.apache.avalon.jesktop.builtinapps.sys.NoRegisteredViewer",
+                                               "net.sourceforge.jesktopimpl.builtinapps.sys.NoRegisteredViewer",
                                                "No Register Viewer - Error", true);
     private LaunchableTarget installationConfirmerTarget =
         new NormalLaunchableTargetImpl("*InstallationConfirmer*",
-                                       "org.apache.avalon.jesktop.builtinapps.installer.ConfirmInstallation",
+                                       "net.sourceforge.jesktopimpl.builtinapps.installer.ConfirmInstallation",
                                        "Please Confirm Installation", false);
     private String DFT_DECORATOR = "*DefaultDecorator*";
     private DecoratorLaunchableTarget defaultDecorator;
     private LaunchableTarget errorAppTarget = new NormalLaunchableTargetImpl("*ErrorApp*",
-                                                  "org.apache.avalon.jesktop.builtinapps.sys.ErrorApp", "Error", false);
+                                                  "net.sourceforge.jesktopimpl.builtinapps.sys.ErrorApp", "Error", false);
     private WindowManager mWindowManager;
     private Store mJesktopStore;
     private ThreadManager       mThreadManager;
@@ -265,7 +265,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
 
             defaultDecorator =
                 (DecoratorLaunchableTarget) mLaunchableTargetFactory.makeDecoratorLaunchableTarget(
-                    DFT_DECORATOR, "org.apache.avalon.jesktop.builtinapps.decorators.DefaultDecorator",
+                    DFT_DECORATOR, "net.sourceforge.jesktopimpl.builtinapps.decorators.DefaultDecorator",
                     "Default Decorator", "decorators/default");
 
             mMimeManager = new MimeManagerImpl(repository);
@@ -795,7 +795,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -856,7 +856,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 
