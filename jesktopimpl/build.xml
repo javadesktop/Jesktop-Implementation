@@ -75,7 +75,6 @@
   <property name="xerces.jar2" value="../../${tools.dir}/lib/xerces.jar"/>  
 
   <property name="dist.name" value="${Name}-${version}"/>
-  <property name="dist.base" value="distributions"/>
 
   <path id="project.class.path">
     <pathelement path="${java.class.path}" /> 
@@ -355,52 +354,49 @@
                  Completely build all dists
        ===================================================================
   -->
-  <target name="dist">
-    <mkdir dir="${dist.base}"/>
+  <target name="dist" depends="jars">
+  
+    <mkdir dir="dist"/>
 
-    <antcall target="dist">
-      <param name="dist.dir" value="${dist.name}" />
-    </antcall>
+    <copy todir="dist" filtering="off">
+      <fileset dir="build/lib">
+        <include name="*.sar"/>
+      </fileset>
+    </copy>
 
-    <zip file="${dist.base}/${dist.name}-bin.zip"
-         basedir="${dist.name}/.."
-         includes="${dist.name}/**"/>
+    <zip zipfile="dist/Phoenix-and-${dist.name}.zip">
+      <zipfileset dir="phoenix-bin" prefix="pheonix-and-jesktop">
+        <exclude name="apps/jesktop/**"/>
+        <exclude name="logs/**"/>
+      </zipfileset>
+    </zip>
 
-    <tar longfile="gnu" tarfile="${dist.base}/${dist.name}-bin.tar">
-      <tarfileset dir="${dist.name}/.." username="avalon" group="avalon">
-        <include name="${dist.name}/**"/>
+    <zip zipfile="dist/${dist.name}-src.zip">
+      <fileset dir=".">
+        <include name="src/**"/>
+	<include name="phoenix-bin/**"/>
+        <exclude name="phoenix-bin/apps/jesktop/**"/>
+        <include name="lib/*"/>
+        <include name="build.xml"/>
+        <include name="LICENSE.txt"/>
+      </fileset>         
+    </zip>         
+
+    <tar longfile="gnu" tarfile="dist/${dist.name}-src.tar" >
+      <tarfileset dir="." username="jesktop" group="jesktop">
+        <include name="src/**"/>
+        <include name="phoenix-bin/**"/>
+        <exclude name="phoenix-bin/apps/jesktop/**"/>
+        <include name="lib/*"/>
+        <include name="build.xml"/>
+        <include name="LICENSE.txt"/>
       </tarfileset>
     </tar>
 
-    <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz"
-          src="${dist.base}/${dist.name}-bin.tar"/>
+    <gzip zipfile="dist/${dist.name}-src.tar.gz"
+          src="dist/${dist.name}-src.tar"/>
+    <delete file="dist/${dist.name}-src.tar"/>
 
-    <delete file="${dist.base}/${dist.name}-bin.tar"/>
-    <delete dir="${dist.name}" />
-
-    <antcall target="src-dist">
-      <param name="src.dist.dir" value="${dist.name}" />
-    </antcall>
-
-    <zip file="${dist.base}/${dist.name}-src.zip"
-         basedir="${dist.name}/.."
-         includes="${dist.name}/**"/>
-
-    <tar longfile="gnu" tarfile="${dist.base}/${dist.name}-src.tar" >
-      <tarfileset dir="${dist.name}/.." mode="755" username="avalon" group="avalon">
-        <include name="${dist.name}/build.sh"/>
-      </tarfileset>
-      <tarfileset dir="${dist.name}/.." username="avalon" group="avalon">
-        <include name="${dist.name}/**"/>
-        <exclude name="${dist.name}/build.sh"/>
-      </tarfileset>
-    </tar>
-
-    <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz"
-          src="${dist.base}/${dist.name}-src.tar"/>
-
-    <delete file="${dist.base}/${dist.name}-src.tar"/>
-    <delete dir="${dist.name}" />
 
   </target>
 
