@@ -258,13 +258,6 @@
 
     </jar>
 
-    <mkdir dir="dist"/>
-
-    <copy todir="dist">
-      <fileset dir="${build.lib}">
-        <include name="**"/>
-      </fileset>
-    </copy>
 
   </target>
 
@@ -360,9 +353,16 @@
 
     <copy todir="dist" filtering="off">
       <fileset dir="build/lib">
-        <include name="*.sar"/>
+        <include name="**"/>
       </fileset>
     </copy>
+    
+    <copy todir="dist" filtering="off">
+      <fileset dir="src/docs">
+        <include name="**"/>
+      </fileset>
+    </copy>
+    
 
     <zip zipfile="dist/Phoenix-and-${dist.name}.zip">
       <zipfileset dir="phoenix-bin" prefix="pheonix-and-jesktop">
