@@ -590,6 +590,7 @@ public class DesktopKernelImpl
             currentDecorator = (Decorator) new DefaultPicoContainer(picoContainer).registerComponentImplementation(cl).getComponentInstance();
 
             if (currentDecorator instanceof ObjConfigurable) {
+                
                 ((ObjConfigurable) currentDecorator)
                     .setConfig(configManager.getObjConfig(dlt.getConfigPath(), cLoader));
             }
@@ -679,7 +680,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.11 $
+     * @version $Revision: 1.12 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -740,7 +741,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.11 $
+     * @version $Revision: 1.12 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

@@ -48,7 +48,7 @@ import java.util.Vector;
  * Class AppInstallerImpl
  *
  * @author Paul Hammant
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class AppInstallerImpl extends AppBase implements AppInstaller {
 
@@ -228,7 +228,7 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                 for (int q = 0; q < additionalJars.getLength(); q++) {
                     Element additionalJar = (Element) additionalJars.item(q);
                     String whereStr = additionalJar.getAttribute("where").toLowerCase();
-                    String jarStr = additionalJar.getNodeValue();
+                    String jarStr = additionalJar.getChildNodes().item(0).getNodeValue();
 
                     if (whereStr.equals("remote")) {
 
@@ -262,6 +262,9 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                 Element appE = (Element) apps.item(q);
                 String appSpecificXml = appE.getAttribute("locn");
                 URL url = tempClassLoader.getResource(appSpecificXml);
+                if (url == null) {
+                    throw new JesktopPackagingException("Appltcation's manifest '" + appSpecificXml + "' is missing from jar");
+                }
                 Document app = null;
                 try {
                     app = dbf.newDocumentBuilder().parse(url.openStream());

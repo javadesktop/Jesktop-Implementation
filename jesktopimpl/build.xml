@@ -19,7 +19,7 @@
 
     <property name="name" value="jesktop"/>
     <property name="Name" value="Jesktop"/>
-    <property name="version" value="2.0"/>
+    <property name="version" value="2.1"/>
     <property name="year" value="2004"/>
     <property name="jar.name" value="jesktop"/>
 
@@ -310,23 +310,39 @@
         </copy>
 
 
-        <zip zipfile="dist/${dist.name}.zip">
+        <zip zipfile="dist/${dist.name}-Groovy.zip">
             <fileset dir=".">
                 <exclude name="build/**"/>
                 <exclude name="build.xml"/>
                 <exclude name="dist/**"/>
                 <exclude name="src/**"/>
                 <exclude name="object-repository/**"/>
+                <exclude name="run.*"/>
+                <exclude name="composition.xml"/>
             </fileset>
         </zip>
+
+        <zip zipfile="dist/${dist.name}-XML.zip">
+            <fileset dir=".">
+                <exclude name="build/**"/>
+                <exclude name="build.xml"/>
+                <exclude name="dist/**"/>
+                <exclude name="lib/Groovy*"/>
+                <exclude name="src/**"/>
+                <exclude name="object-repository/**"/>
+                <exclude name="runWithGroovy.*"/>
+                <exclude name="composition.groovy"/>
+            </fileset>
+        </zip>
+
 
         <zip zipfile="dist/${dist.name}-src.zip">
             <fileset dir=".">
                 <include name="src/**"/>
                 <include name="lib/*"/>
                 <exclude name="lib/jesktop.jar"/>
-                <include name="composition.js"/>
-                <include name="run.bat"/>
+                <include name="composition.*"/>
+                <include name="run*"/>
                 <include name="build.xml"/>
                 <include name="LICENSE.txt"/>
                 <exclude name="build/**"/>

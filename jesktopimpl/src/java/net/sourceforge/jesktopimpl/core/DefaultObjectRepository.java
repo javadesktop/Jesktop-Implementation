@@ -26,6 +26,8 @@ import java.io.ObjectInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.EOFException;
+import java.io.InputStream;
+import java.io.ObjectStreamClass;
 
 public class DefaultObjectRepository implements ObjectRepository {
 
@@ -62,11 +64,15 @@ public class DefaultObjectRepository implements ObjectRepository {
     }
 
     public synchronized Object get(String key) {
+        return get(key,this.getClass().getClassLoader());
+    }
+
+    public synchronized Object get(String key, ClassLoader classLoader) {
         ObjectInputStream ois = null;
         try {
             File file = new File(repoDir, key);
             file.getParentFile().mkdirs();
-            ois = new ObjectInputStream(new FileInputStream(file));
+            ois = new FooObjectInputStream(new FileInputStream(file), classLoader);
             return ois.readObject();
         } catch (EOFException eofe) {
             return null;
@@ -76,7 +82,7 @@ public class DefaultObjectRepository implements ObjectRepository {
             e.printStackTrace();
             throw new RuntimeException("TODO - IO error during read");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("TODO - class not found exception");
+            throw new RuntimeException("TODO - class not found exception : " + e.getMessage());
         } finally{
             try {
                 ois.close();
@@ -85,9 +91,21 @@ public class DefaultObjectRepository implements ObjectRepository {
         }
     }
 
-    public synchronized Object get(String key, ClassLoader classLoader) {
-        return get(key);
-        // TODO should do classloader stuff.
+    class FooObjectInputStream extends ObjectInputStream {
+        private ClassLoader cl;
+
+        public FooObjectInputStream(InputStream in, ClassLoader cl) throws IOException {
+            super(in);
+            this.cl = cl;
+        }
+
+        protected Class resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+            Class clazz = cl.loadClass(desc.getName());
+            if (clazz != null) {
+                return clazz;
+            }
+            return super.resolveClass(desc);
+        }
     }
 
 }
