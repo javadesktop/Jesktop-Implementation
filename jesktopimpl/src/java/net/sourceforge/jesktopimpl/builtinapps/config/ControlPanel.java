@@ -9,7 +9,7 @@ package net.sourceforge.jesktopimpl.builtinapps.config;
 
 import net.sourceforge.jesktopimpl.services.KernelConfigManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.DesktopKernel;
 import org.jesktop.config.ConfigManager;
 import org.jesktop.config.Configlet;
 import org.jesktop.config.ObjConfiglet;
@@ -37,7 +37,7 @@ import java.util.Vector;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ControlPanel extends JFrimble implements PropertyChangeListener {
 
@@ -184,7 +184,7 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     private class OKBtn extends JButton {
 
@@ -219,7 +219,7 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     private class TryBtn extends JButton {
 
@@ -254,7 +254,7 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     private class RevertBtn extends JButton {
 
@@ -298,7 +298,7 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     private class ControlPanelConfigManager implements ConfigManager {
 

@@ -8,9 +8,10 @@
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
 import org.jesktop.launchable.LaunchableTarget;
-import org.jesktop.api.JesktopLaunchException;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.AppLauncher;
+import org.jesktop.JesktopLaunchException;
+import org.jesktop.DesktopKernel;
+import org.jesktop.AppLauncher;
+import org.jesktop.JesktopLaunchException;
 
 import javax.swing.JMenuItem;
 import javax.swing.ImageIcon;
@@ -27,7 +28,7 @@ import java.awt.Point;
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     public class LaunchBarMenuItem extends JMenuItem implements ActionListener {
 

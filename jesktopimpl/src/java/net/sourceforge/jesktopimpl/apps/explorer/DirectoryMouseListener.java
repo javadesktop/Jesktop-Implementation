@@ -10,10 +10,10 @@ package net.sourceforge.jesktopimpl.apps.explorer;
 
 
 
-import org.jesktop.api.JesktopPackagingException;
-import org.jesktop.api.JesktopLaunchException;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.AppLauncher;
+import org.jesktop.JesktopPackagingException;
+import org.jesktop.JesktopLaunchException;
+import org.jesktop.DesktopKernel;
+import org.jesktop.AppLauncher;
 import org.jesktop.appsupport.DraggedItem;
 
 import javax.swing.JComponent;
@@ -30,7 +30,7 @@ import java.io.IOException;
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
 public class DirectoryMouseListener extends MouseAdapter {
 

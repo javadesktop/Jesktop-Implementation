@@ -7,8 +7,9 @@
  */
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
-import org.jesktop.api.AppLauncher;
-import org.jesktop.api.ImageRepository;
+import org.jesktop.AppLauncher;
+import org.jesktop.ImageRepository;
+import org.jesktop.AppLauncher;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.frimble.JFrimble;
 import org.jesktop.frimble.JInternalFrameFrimbleFactory;
@@ -23,7 +24,7 @@ import java.awt.*;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class WindozeWindowManager1 extends WindozeWindowManager {
 
@@ -98,7 +99,7 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     class JInternalFrameFrimbleDesktopPane extends JDesktopPane {
 

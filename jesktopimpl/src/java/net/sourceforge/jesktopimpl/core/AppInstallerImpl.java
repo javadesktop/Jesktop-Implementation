@@ -7,12 +7,11 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-import org.jesktop.api.AppInstaller;
-import org.jesktop.api.ImageRepository;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.JesktopPackagingException;
+import org.jesktop.AppInstaller;
+import org.jesktop.*;
+import org.jesktop.JesktopPackagingException;
 import org.jesktop.launchable.LaunchableTarget;
-import org.jesktop.api.JesktopLaunchException;
+import org.jesktop.JesktopLaunchException;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import org.xml.sax.SAXException;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -34,7 +33,7 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class AppInstallerImpl extends AppBase implements AppInstaller {
 

@@ -7,9 +7,10 @@
  */
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
-import org.jesktop.api.LaunchedTarget;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.ImageRepository;
+import org.jesktop.LaunchedTarget;
+import org.jesktop.DesktopKernel;
+import org.jesktop.ImageRepository;
+import org.jesktop.DesktopKernel;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -23,7 +24,7 @@ import java.awt.Dimension;
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     public class LaunchedButton extends JButton {
 

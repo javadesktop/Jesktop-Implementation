@@ -10,7 +10,7 @@ package net.sourceforge.jesktopimpl.apps.explorer;
 
 
 
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.DesktopKernel;
 
 import javax.swing.SwingUtilities;
 
@@ -24,7 +24,7 @@ import java.awt.Point;
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
 public class DirectoryMouseMotionListener extends MouseMotionAdapter {
 

@@ -27,15 +27,13 @@ import org.jesktop.mime.MimeManager;
 import org.jesktop.launchable.DecoratorLaunchableTarget;
 import org.jesktop.launchable.ConfigletLaunchableTarget;
 import org.jesktop.launchable.LaunchableTarget;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.Decorator;
-import org.jesktop.api.ImageRepository;
-import org.jesktop.api.AppLauncher;
-import org.jesktop.api.LaunchedTarget;
-import org.jesktop.api.JesktopPackagingException;
-import org.jesktop.api.JesktopLaunchException;
-import org.jesktop.ObjectRepository;
-import org.jesktop.ThreadPool;
+import org.jesktop.Decorator;
+import org.jesktop.AppLauncher;
+import org.jesktop.LaunchedTarget;
+import org.jesktop.JesktopPackagingException;
+import org.jesktop.JesktopLaunchException;
+import org.jesktop.ImageRepository;
+import org.jesktop.*;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
 
@@ -649,7 +647,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.3 $
+     * @version $Revision: 1.4 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -710,7 +708,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.3 $
+     * @version $Revision: 1.4 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

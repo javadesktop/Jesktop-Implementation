@@ -7,8 +7,9 @@
  */
 package net.sourceforge.jesktopimpl.services;
 
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.LaunchedTarget;
+import org.jesktop.DesktopKernel;
+import org.jesktop.LaunchedTarget;
+import org.jesktop.LaunchedTarget;
 import org.jesktop.frimble.FrimbleListener;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.launchable.LaunchableTarget;

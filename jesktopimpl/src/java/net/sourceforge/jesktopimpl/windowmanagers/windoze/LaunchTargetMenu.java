@@ -7,8 +7,10 @@
  */
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
-import org.jesktop.api.LaunchedTarget;
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.LaunchedTarget;
+import org.jesktop.DesktopKernel;
+import org.jesktop.DesktopKernel;
+import org.jesktop.LaunchedTarget;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
@@ -20,7 +22,7 @@ import java.awt.event.ActionEvent;
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     public class LaunchTargetMenu extends JPopupMenu implements ActionListener {
 

@@ -7,8 +7,9 @@
  */
 package net.sourceforge.jesktopimpl.services;
 
-import org.jesktop.api.Decorator;
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.Decorator;
+import org.jesktop.DesktopKernel;
+import org.jesktop.Decorator;
 import org.jesktop.config.ConfigManager;
 import org.jesktop.config.Configlet;
 import org.jesktop.config.XMLConfiglet;

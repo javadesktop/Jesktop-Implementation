@@ -8,9 +8,10 @@
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
 import org.jesktop.launchable.LaunchableTarget;
-import org.jesktop.api.ImageRepository;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.AppLauncher;
+import org.jesktop.ImageRepository;
+import org.jesktop.DesktopKernel;
+import org.jesktop.AppLauncher;
+import org.jesktop.AppLauncher;
 
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -23,7 +24,7 @@ import java.awt.Container;
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     public class LaunchBarGroupMenuItem extends JMenu {
     

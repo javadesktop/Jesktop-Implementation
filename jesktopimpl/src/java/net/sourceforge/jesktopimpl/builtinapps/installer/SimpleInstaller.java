@@ -9,10 +9,11 @@ package net.sourceforge.jesktopimpl.builtinapps.installer;
 
 import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.frimble.Frimble;
-import org.jesktop.api.AppInstaller;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.JesktopPackagingException;
+import org.jesktop.JesktopPackagingException;
 import org.jesktop.appsupport.DropAware;
+import org.jesktop.DesktopKernel;
+import org.jesktop.AppInstaller;
+import org.jesktop.*;
 
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -39,7 +40,7 @@ import java.io.File;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class SimpleInstaller extends JPanel
         implements FrimbleAware, ActionListener, DropAware {
@@ -285,7 +286,7 @@ public class SimpleInstaller extends JPanel
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     private class JarFilter extends javax.swing.filechooser.FileFilter {
 
@@ -319,7 +320,7 @@ public class SimpleInstaller extends JPanel
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     private class InstallDoer implements Runnable {
 

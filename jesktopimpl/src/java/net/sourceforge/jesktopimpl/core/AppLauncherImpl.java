@@ -16,6 +16,7 @@ import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.frimble.FrimbleCallback;
 import org.jesktop.frimble.JFrimble;
 import org.jesktop.launchable.LaunchableTarget;
+import org.jesktop.*;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.picocontainer.MutablePicoContainer;
@@ -36,7 +37,7 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
@@ -85,7 +86,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
      * @return
      *
      * @throws JesktopLaunchException
-     * @throws JesktopPackagingException
+     * @throws org.jesktop.JesktopPackagingException
      *
      */
     public Object launchAppWithoutInstallation(final URL jarURL)

@@ -9,10 +9,11 @@ package net.sourceforge.jesktopimpl.builtinapps.mime;
 
 import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.frimble.Frimble;
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.DesktopKernel;
 import org.jesktop.mime.MimeManager;
 import org.jesktop.mime.MimeInfo;
 import org.jesktop.mime.MimeException;
+import org.jesktop.DesktopKernel;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -168,7 +169,7 @@ public class MimeConfigurator extends JPanel
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     class MimeTableModel extends AbstractTableModel {
 
@@ -247,7 +248,7 @@ public class MimeConfigurator extends JPanel
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     class MimeEditor extends JDialog implements ActionListener {
 

@@ -7,11 +7,13 @@
  */
 package net.sourceforge.jesktopimpl.apps.decorators.test;
 
-import org.jesktop.api.Decorator;
-import org.jesktop.api.ImageRepository;
+import org.jesktop.Decorator;
+import org.jesktop.ImageRepository;
 import org.jesktop.config.ObjConfigurable;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.frimble.Frimble;
+import org.jesktop.ImageRepository;
+import org.jesktop.Decorator;
 
 import javax.swing.UIManager;
 

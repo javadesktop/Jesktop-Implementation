@@ -8,10 +8,11 @@
 package net.sourceforge.jesktopimpl.builtinapps.installer;
 
 import org.jesktop.config.ObjConfiglet;
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.DesktopKernel;
 import org.jesktop.launchable.DecoratorLaunchableTarget;
 import org.jesktop.config.ConfigManager;
 import org.jesktop.config.ConfigHelper;
+import org.jesktop.DesktopKernel;
 
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
@@ -28,7 +29,7 @@ import java.beans.PropertyChangeListener;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyChangeListener {
 
@@ -122,7 +123,7 @@ public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyCh
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     private class DecComboBoxModel extends DefaultListModel implements ComboBoxModel {
 

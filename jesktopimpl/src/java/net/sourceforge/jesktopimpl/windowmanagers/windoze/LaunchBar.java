@@ -8,9 +8,10 @@
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
 import org.jesktop.launchable.LaunchableTarget;
-import org.jesktop.api.ImageRepository;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.AppLauncher;
+import org.jesktop.AppLauncher;
+import org.jesktop.ImageRepository;
+import org.jesktop.DesktopKernel;
+import org.jesktop.*;
 
 import javax.swing.JPopupMenu;
 import java.util.HashSet;
@@ -20,7 +21,7 @@ import java.util.HashSet;
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     public class LaunchBar extends JPopupMenu {
 
@@ -35,7 +36,7 @@ import java.util.HashSet;
          *
          *
          */
-        protected LaunchBar(final DesktopKernel desktopKernel, final LaunchableTarget[] launchableTargets, 
+        protected LaunchBar(final DesktopKernel desktopKernel, final LaunchableTarget[] launchableTargets,
                             final ImageRepository imageRepository, final WindozeWindowManager windozeWindowManager,
                             final AppLauncher appLauncher) {
             mLaunchableTargets = launchableTargets;

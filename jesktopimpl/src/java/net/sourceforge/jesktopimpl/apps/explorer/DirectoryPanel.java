@@ -10,13 +10,15 @@ package net.sourceforge.jesktopimpl.apps.explorer;
 
 
 
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.ImageRepository;
-import org.jesktop.api.AppLauncher;
+import org.jesktop.DesktopKernel;
+import org.jesktop.ImageRepository;
+import org.jesktop.AppLauncher;
 import org.jesktop.appsupport.DraggedItem;
 import org.jesktop.appsupport.DropAware;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.frimble.FrimbleAware;
+import org.jesktop.ImageRepository;
+import org.jesktop.AppLauncher;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

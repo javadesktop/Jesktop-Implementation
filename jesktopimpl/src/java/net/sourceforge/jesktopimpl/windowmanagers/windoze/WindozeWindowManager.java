@@ -8,11 +8,9 @@
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
 import net.sourceforge.jesktopimpl.JesktopConstants;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.ImageRepository;
-import org.jesktop.api.LaunchedTarget;
-import org.jesktop.api.AppLauncher;
-import org.jesktop.api.JesktopLaunchException;
+import org.jesktop.DesktopKernel;
+import org.jesktop.LaunchedTarget;
+import org.jesktop.*;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.config.PersistableConfig;
 import org.jesktop.config.ConfigHelper;

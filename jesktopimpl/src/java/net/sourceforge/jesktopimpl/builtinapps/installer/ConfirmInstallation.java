@@ -10,10 +10,11 @@ package net.sourceforge.jesktopimpl.builtinapps.installer;
 
 
 import net.sourceforge.jesktopimpl.core.InstallationConfirmer;
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.DesktopKernel;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.launchable.LaunchableTarget;
+import org.jesktop.DesktopKernel;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -29,7 +30,7 @@ import java.awt.event.ActionListener;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ConfirmInstallation extends JPanel implements FrimbleAware {
 
@@ -108,7 +109,7 @@ public class ConfirmInstallation extends JPanel implements FrimbleAware {
      *
      *
 * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
      */
     private class ApplyExit extends JButton {
 
@@ -138,7 +139,7 @@ public class ConfirmInstallation extends JPanel implements FrimbleAware {
      *
      *
 * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
      */
     private class AppsTableModel extends AbstractTableModel {
 

@@ -10,7 +10,7 @@ package net.sourceforge.jesktopimpl.apps.explorer;
 
 
 
-import org.jesktop.api.ImageRepository;
+import org.jesktop.ImageRepository;
 
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.JTable;
@@ -27,7 +27,7 @@ import java.io.File;
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
 public class DirectoryTableCellRenderer extends DefaultTableCellRenderer {
 

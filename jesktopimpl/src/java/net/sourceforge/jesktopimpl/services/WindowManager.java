@@ -11,8 +11,9 @@ package net.sourceforge.jesktopimpl.services;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.appsupport.DraggedItem;
 import org.jesktop.config.PersistableConfig;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.LaunchedTarget;
+import org.jesktop.DesktopKernel;
+import org.jesktop.LaunchedTarget;
+import org.jesktop.DesktopKernel;
 import org.w3c.dom.Document;
 
 import java.awt.Point;

@@ -7,7 +7,8 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-import org.jesktop.api.LaunchedTarget;
+import org.jesktop.LaunchedTarget;
+import org.jesktop.LaunchedTarget;
 
 
 /**
@@ -15,7 +16,7 @@ import org.jesktop.api.LaunchedTarget;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class LaunchedTargetImpl implements LaunchedTarget {
 

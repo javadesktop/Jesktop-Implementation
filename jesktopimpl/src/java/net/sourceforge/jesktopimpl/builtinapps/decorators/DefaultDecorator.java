@@ -9,10 +9,12 @@ package net.sourceforge.jesktopimpl.builtinapps.decorators;
 
 
 
-import org.jesktop.api.Decorator;
-import org.jesktop.api.ImageRepository;
+import org.jesktop.Decorator;
+import org.jesktop.ImageRepository;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.frimble.Frimble;
+import org.jesktop.ImageRepository;
+import org.jesktop.Decorator;
 
 
 import javax.swing.UIManager;
@@ -24,7 +26,7 @@ import javax.swing.UIManager;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class DefaultDecorator implements Decorator {
 
