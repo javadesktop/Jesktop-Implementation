@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<applications>
-  <appxml locn="JESKTOP-INF/TestDecorator.xml"/>
-  <appxml locn="JESKTOP-INF/TestDecoratorConfiglet.xml"/>
-</applications>

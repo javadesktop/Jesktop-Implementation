@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<application type="decorator" target="Decorators/Test">
-  <display-name>Test Decorator</display-name>
-  <configpath>decorators/test</configpath>    
-  <class>net.jesktop.apps.decorators.test.TestDecorator</class>
-</application>

@@ -241,7 +241,8 @@
       </zipfileset>
 
       <zipfileset dir="lib" prefix="SAR-INF/lib">
-        <include name="*.jar"/>
+        <include name="cornerstone.jar"/>
+        <include name="jesktop-*.jar"/>
       </zipfileset>
 
       <zipfileset dir="${conf.dir}" fullpath="SAR-INF/assembly.xml">
