@@ -10,4 +10,3 @@ pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.window
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.ThreadPoolImpl)
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.DesktopKernelImpl)
 
-pico.start();
