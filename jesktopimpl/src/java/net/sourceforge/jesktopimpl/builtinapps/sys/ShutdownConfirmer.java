@@ -27,13 +27,13 @@ import java.beans.PropertyVetoException;
 public class ShutdownConfirmer extends JPanel implements FrimbleAware {
 
     private Frimble frimble;
-    private final String exitAll = "Shutdown Desktop & Avalon";
+    private final String exitAll = "Shutdown Desktop & System";
     private final String exitJesktop = "Shutdown Desktop Only";
     private final JComboBox choices = new JComboBox(new String[]{ exitAll, exitJesktop });
     private final JButton okBtn = new JButton("OK");
     private final JButton cancelBtn = new JButton("Cancel");
     private final JLabel shutdownWarning = new JLabel(
-        "<html><b>Do you want to close Avalon as well as Jesktop?</b><br>Closing Avalon too will shut down other services such as Mail and Web Servers.</html>");
+        "<html><b>Do you want to shut the system down as well as Jesktop?</b><br>Closing the system too may shut down other services such as Mail and Web Servers.</html>");
     private net.sourceforge.jesktopimpl.core.ShutdownConfirmer shutdownConfirmer;
 
     /**

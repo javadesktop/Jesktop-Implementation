@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Created-By: Apache Avalon Project
+Created-By: Jesktop Project
 
 Name: net/sourceforge/jesktopimpl/core/DesktopKernelImpl.class
 Avalon-Block: true

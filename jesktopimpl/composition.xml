@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<component class='org.picocontainer.defaults.DefaultPicoContainer'>
-    <component class='org.picoextras.testmodel.DefaultWebServerConfig'/>
-    <component key='child1' class='org.picocontainer.defaults.DefaultPicoContainer'>
-        <component key='org.picoextras.testmodel.WebServer' class='org.picoextras.testmodel.WebServerImpl'/>
-    </component>
-</component>
