@@ -1,0 +1,14 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+<!DOCTYPE blockinfo PUBLIC "-//PHOENIX/Block Info DTD Version 1.0//EN" 
+                  "http://jakarta.apache.org/phoenix/blockinfo_1_0.dtd">
+                  
+<blockinfo>
+	<!-- section to describe block -->
+	<block>
+		<version>1.0</version>
+	</block>
+	<!-- services that are offered by this block -->
+	<services>
+		<service name="net.sourceforge.jesktopimpl.services.WindowManager" version="1.0"/>
+	</services>
+</blockinfo>
