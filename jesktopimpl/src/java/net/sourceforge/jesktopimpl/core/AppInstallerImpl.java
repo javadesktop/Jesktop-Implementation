@@ -45,7 +45,7 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class AppInstallerImpl extends AppBase implements AppInstaller {
 
@@ -252,13 +252,15 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                     URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{
                         new File((String) jarFileNames.elementAt(0)).toURL() });
                     URL url = urlClassLoader.getResource(jarStr);
-
-                    jarFileNames.add(internJar(false, url.openStream(), appFilePrefix, suffix));
+                    if (url == null) {
+                        System.out.println("No additional Jar - '" + jarStr + "' in jar");
+                    } else {
+                        jarFileNames.add(internJar(false, url.openStream(), appFilePrefix, suffix));
+                    }
                 }
             }
         } catch (ConfigurationException ce) {
             ce.printStackTrace();
-
             // OK, so there were no additional jars
         } catch (MalformedURLException mfue) {
             mfue.printStackTrace();

@@ -50,7 +50,7 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
@@ -234,13 +234,13 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                               fullClosable);
         } catch (ClassNotFoundException cnfe) {
             throw new JesktopLaunchException("App " + launchableTarget.getTargetName()
-                                             + " can't launch as class "
+                                             + " can't launch as class '"
                                              + launchableTarget.getClassName()
-                                             + " missing from it's jar");
-        } catch (NoClassDefFoundError cndfe) {
-            cndfe.printStackTrace();
+                                             + "' is missing from it's jar");
+        } catch (NoClassDefFoundError ncdfe) {
+            ncdfe.printStackTrace();
             throw new JesktopLaunchException("App " + launchableTarget.getTargetName()
-                                             + " can't launch some dependant/parent class cannot be found. ");
+                                             + " can't launch as class '"+ ncdfe.getMessage() +"' cannot be found. ");
         }
     }
 

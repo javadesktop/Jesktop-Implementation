@@ -40,7 +40,7 @@ import java.awt.Point;
      *
      *
      * @author  Dec 2000.
-     * @version $Revision: 1.5 $
+     * @version $Revision: 1.6 $
      */
     public class LaunchBarMenuItem extends JMenuItem implements ActionListener {
 
@@ -139,6 +139,7 @@ import java.awt.Point;
             try {
                 appLauncher.launchApp(mLaunchableTarget);
             } catch (JesktopLaunchException jle) {
+                //TODO pop a dialog
                 jle.printStackTrace();
             }
         }
