@@ -151,12 +151,8 @@
       <classpath>
         <pathelement path="${project.class.path}"/>
         <pathelement path="${xerces.jar2}" />           
-        <pathelement path="../../build/classes" />
         <fileset dir="lib">
           <include name="*.jar"/>
-        </fileset>
-        <fileset dir="../../lib">
-          <include name="*.jar" />
         </fileset>
       </classpath>
 
@@ -185,7 +181,7 @@
 
     <mkdir dir="${build.lib}"/>
     
-    <jar file="${build.lib}/${jar.name}-explorer.jar">
+    <jar jarfile="${build.lib}/${jar.name}-explorer.jar">
       <zipfileset dir="build/classes">
         <include name="org/apache/avalon/jesktop/apps/explorer/**"/>
       </zipfileset>                  
@@ -198,7 +194,7 @@
       </zipfileset>      
     </jar>
 
-    <jar file="${build.lib}/${jar.name}-apps.jar">
+    <jar jarfile="${build.lib}/${jar.name}-apps.jar">
       <zipfileset dir="build/classes">
         <include name="org/apache/avalon/jesktop/apps/**"/>
         <exclude name="org/apache/avalon/jesktop/apps/explorer/**"/>
@@ -220,7 +216,7 @@
   
     <mkdir dir="${build.lib}"/>
     
-    <jar file="${build.lib}/${jar.name}.jar"
+    <jar jarfile="${build.lib}/${jar.name}.jar"
          manifest="${manifest.dir}/jesktop.mf">
       <zipfileset dir="build/classes">
         <exclude name="org/apache/avalon/jesktop/apps/**"/>
@@ -238,14 +234,10 @@
 
     <mkdir dir="${build.lib}"/>
 
-    <jar file="${build.lib}/${jar.name}.sar">
+    <jar jarfile="${build.lib}/${jar.name}.sar">
 
       <zipfileset dir="${build.lib}" prefix="SAR-INF/lib">
         <include name="jesktop.jar"/>
-      </zipfileset>
-
-      <zipfileset dir="../../build/lib" prefix="SAR-INF/lib">
-        <include name="cornerstone.jar"/>
       </zipfileset>
 
       <zipfileset dir="lib" prefix="SAR-INF/lib">
