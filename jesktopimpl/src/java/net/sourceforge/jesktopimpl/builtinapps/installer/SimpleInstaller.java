@@ -52,7 +52,7 @@ import java.io.File;
  *
  *
  * @author  Dec 2000.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class SimpleInstaller extends JPanel
         implements FrimbleAware, ActionListener, DropAware {
@@ -104,7 +104,7 @@ public class SimpleInstaller extends JPanel
         pnl.add(new JLabel("Via URL:"));
         Box.createHorizontalStrut(2);
 
-        JTextField urlFld = new JTextField();
+        final JTextField urlFld = new JTextField();
 
         pnl.add(urlFld);
         this.add(pnl, BorderLayout.CENTER);
@@ -115,11 +115,9 @@ public class SimpleInstaller extends JPanel
                 try {
                     URL url = new URL(ae.getActionCommand());
 
-                    try {
                         desktopKernel.runAsychronously(new InstallDoer(url));
-                    } catch (Exception e) {    // hmmm, all because workerpool throws it.
-                        e.printStackTrace();
-                    }
+                        urlFld.setText("");
+
                 } catch (MalformedURLException mfue) {
                     mfue.printStackTrace();
                 }
@@ -298,7 +296,7 @@ public class SimpleInstaller extends JPanel
      *
      *
      * @author  Dec 2000.
-     * @version $Revision: 1.5 $
+     * @version $Revision: 1.6 $
      */
     private class JarFilter extends javax.swing.filechooser.FileFilter {
 
@@ -332,7 +330,7 @@ public class SimpleInstaller extends JPanel
      *
      *
      * @author  Dec 2000.
-     * @version $Revision: 1.5 $
+     * @version $Revision: 1.6 $
      */
     private class InstallDoer implements Runnable {
 
