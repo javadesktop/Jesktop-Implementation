@@ -327,7 +327,8 @@
                 <exclude name="build/**"/>
                 <exclude name="build.xml"/>
                 <exclude name="dist/**"/>
-                <exclude name="lib/Groovy*"/>
+                <exclude name="lib/groovy*"/>
+                <exclude name="lib/asm*"/>
                 <exclude name="src/**"/>
                 <exclude name="object-repository/**"/>
                 <exclude name="runWithGroovy.*"/>
