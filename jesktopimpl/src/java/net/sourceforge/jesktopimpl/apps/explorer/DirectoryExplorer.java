@@ -10,22 +10,17 @@ package net.sourceforge.jesktopimpl.apps.explorer;
 
 
 
-import org.jesktop.api.DesktopKernelAware;
 import org.jesktop.api.DesktopKernel;
-import org.jesktop.frimble.FrimbleAware;
-import org.jesktop.frimble.Frimble;
+import org.jesktop.api.ImageRepository;
+import org.jesktop.api.AppLauncher;
 import org.jesktop.appsupport.DropAware;
+import org.jesktop.frimble.Frimble;
+import org.jesktop.frimble.FrimbleAware;
 
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JToolBar;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-
-import java.awt.BorderLayout;
-import java.awt.Point;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 /**
@@ -36,10 +31,10 @@ import java.awt.event.ActionEvent;
  * @version V1.0
  */
 public class DirectoryExplorer extends JPanel
-        implements DesktopKernelAware, FrimbleAware, DropAware {
+        implements FrimbleAware, DropAware {
 
     private JSplitPane mSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-    private DirectoryPanel mDirectoryPanel = new DirectoryPanel();
+    private DirectoryPanel mDirectoryPanel;
     private DirectoryTree mDirectoryTree = new DirectoryTree();
     private JToolBar mToolBar = new JToolBar(JToolBar.HORIZONTAL);
     private JButton mParentBtn = new JButton("Up Dir");
@@ -49,8 +44,9 @@ public class DirectoryExplorer extends JPanel
      *
      *
      */
-    public DirectoryExplorer() {
+    public DirectoryExplorer(DesktopKernel desktopKernel, ImageRepository imageRepository, AppLauncher appLauncher) {
 
+         mDirectoryPanel = new DirectoryPanel(desktopKernel, imageRepository, appLauncher);
         this.setLayout(new BorderLayout());
         this.add(mToolBar, BorderLayout.NORTH);
         this.add(mSplitPane, BorderLayout.CENTER);
@@ -68,19 +64,7 @@ public class DirectoryExplorer extends JPanel
                 }
             }
         });
-    }
 
-    // Javadocs will automatically import from interface.
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param desktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-        mDirectoryPanel.setDesktopKernel(desktopKernel);
     }
 
     // Javadocs will automatically import from interface.

@@ -10,7 +10,7 @@ package net.sourceforge.jesktopimpl.builtinapps.decorators;
 
 
 import org.jesktop.api.Decorator;
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.api.ImageRepository;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.frimble.Frimble;
 
@@ -24,23 +24,13 @@ import javax.swing.UIManager;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class DefaultDecorator implements Decorator {
 
-    private DesktopKernel desktopKernel;
-
-    // Javadocs will automatically import from interface.
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param mDesktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-        this.desktopKernel = desktopKernel;
+    private ImageRepository imageRepository;
+    public DefaultDecorator(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
     }
 
     /**
@@ -53,7 +43,7 @@ public class DefaultDecorator implements Decorator {
      */
 
     // Javadocs will automatically import from interface.
-    public void initDecoratation(Frimble frimble, LaunchableTarget launchableTarget) {
+    public void decorate(Frimble frimble, LaunchableTarget launchableTarget) {
 
         String targetName = "default";
 
@@ -63,7 +53,7 @@ public class DefaultDecorator implements Decorator {
             targetName = launchableTarget.getTargetName();
         }
 
-        frimble.setFrameIcon(desktopKernel.getImageRepository().getAppSmallImageIcon(targetName));
+        frimble.setFrameIcon(imageRepository.getAppSmallImageIcon(targetName));
         frimble.pack();
     }
 }

@@ -32,14 +32,15 @@ public class TestDecoratorConfig extends JPanel implements ObjConfiglet {
     private final JCheckBox bigIcons = new JCheckBox("Big Icons");
     private final JCheckBox motifLnF = new JCheckBox("Motif Look and Feel");
     private Config config;
-    private ConfigManager cm;
+    private final ConfigManager configManager;
 
     /**
      * Constructor TestDecoratorConfig
      *
      *
      */
-    public TestDecoratorConfig() {
+    public TestDecoratorConfig(ConfigManager cm) {
+        this.configManager = cm;
 
         this.setLayout(new BorderLayout());
         this.add(bigIcons, BorderLayout.NORTH);
@@ -50,7 +51,7 @@ public class TestDecoratorConfig extends JPanel implements ObjConfiglet {
 
                 config.bigIcons = bigIcons.getModel().isSelected();
 
-                cm.notifyUpdated(TestDecoratorConfig.this);
+                configManager.notifyUpdated(TestDecoratorConfig.this);
             }
         });
         this.add(motifLnF, BorderLayout.SOUTH);
@@ -61,20 +62,9 @@ public class TestDecoratorConfig extends JPanel implements ObjConfiglet {
 
                 config.motifLnF = motifLnF.getModel().isSelected();
 
-                cm.notifyUpdated(TestDecoratorConfig.this);
+                configManager.notifyUpdated(TestDecoratorConfig.this);
             }
         });
-    }
-
-    /**
-     * Method setConfigManager
-     *
-     *
-     * @param cm
-     *
-     */
-    public void setConfigManager(ConfigManager cm) {
-        this.cm = cm;
     }
 
     /**
@@ -113,7 +103,7 @@ public class TestDecoratorConfig extends JPanel implements ObjConfiglet {
      * Method propertyChange
      *
      *
-     * @param evt
+     * @param event
      *
      */    
     public void propertyChange( PropertyChangeEvent event ) {

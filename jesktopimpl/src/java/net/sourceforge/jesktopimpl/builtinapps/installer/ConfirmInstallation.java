@@ -9,22 +9,17 @@ package net.sourceforge.jesktopimpl.builtinapps.installer;
 
 
 
-import org.jesktop.frimble.FrimbleAware;
-import org.jesktop.frimble.Frimble;
-import org.jesktop.api.DesktopKernelAware;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.launchable.LaunchableTarget;
 import net.sourceforge.jesktopimpl.core.InstallationConfirmer;
+import org.jesktop.api.DesktopKernel;
+import org.jesktop.frimble.Frimble;
+import org.jesktop.frimble.FrimbleAware;
+import org.jesktop.launchable.LaunchableTarget;
 
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 
@@ -34,9 +29,9 @@ import java.awt.event.ActionEvent;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class ConfirmInstallation extends JPanel implements FrimbleAware, DesktopKernelAware {
+public class ConfirmInstallation extends JPanel implements FrimbleAware {
 
     private static final String[] COLS = { "Target Name", "Display Name", "Class Name",
                                            "Is currently installed", "Install" };
@@ -56,7 +51,8 @@ public class ConfirmInstallation extends JPanel implements FrimbleAware, Desktop
      *
      *
      */
-    public ConfirmInstallation() {
+    public ConfirmInstallation(DesktopKernel desktopKernel) {
+        this.desktopKernel = desktopKernel;
 
         this.setLayout(new BorderLayout());
         this.add(new JScrollPane(appTable), BorderLayout.CENTER);
@@ -107,25 +103,12 @@ public class ConfirmInstallation extends JPanel implements FrimbleAware, Desktop
         frimble.pack();
     }
 
-    // Javadocs will automatically import from interface.
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param mDesktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-        this.desktopKernel = desktopKernel;
-    }
-
     /**
      * Class ApplyExit
      *
      *
 * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
      */
     private class ApplyExit extends JButton {
 
@@ -155,7 +138,7 @@ public class ConfirmInstallation extends JPanel implements FrimbleAware, Desktop
      *
      *
 * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
      */
     private class AppsTableModel extends AbstractTableModel {
 

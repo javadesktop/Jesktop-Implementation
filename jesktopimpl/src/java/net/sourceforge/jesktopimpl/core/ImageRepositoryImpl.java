@@ -8,20 +8,7 @@
 package net.sourceforge.jesktopimpl.core;
 
 import org.jesktop.api.ImageRepository;
-import org.apache.avalon.cornerstone.services.store.ObjectRepository;
-import org.apache.avalon.cornerstone.services.store.Store;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.phoenix.Block;
+import org.jesktop.ObjectRepository;
 
 import javax.swing.ImageIcon;
 import java.util.HashMap;
@@ -34,10 +21,9 @@ import java.net.URL;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
-public class ImageRepositoryImpl extends AbstractLogEnabled implements Block, ImageRepository, Contextualizable,
-        Composable, Configurable, Initializable  {
+public class ImageRepositoryImpl implements ImageRepository {
 
     private static final String PATH = "net/sourceforge/jesktopimpl/icons/";
     private static final ImageIcon DEFAULT_APP_ICON_32 = makeImage(PATH
@@ -49,9 +35,11 @@ public class ImageRepositoryImpl extends AbstractLogEnabled implements Block, Im
     private static final ImageIcon DEFAULT_FILE_ICON_16 = makeImage(PATH
                                                                     + "default_file_16x16.gif");
     private HashMap mImages = new HashMap();
-    private ObjectRepository mObjectRepository;
-    private Store mStore;
-    private Configuration mRepository;
+    private ObjectRepository objectRepository;
+
+    public ImageRepositoryImpl(ObjectRepository objectRepository) {
+        this.objectRepository = objectRepository;
+    }
 
     private static ImageIcon makeImage(final String resource) {
 
@@ -59,29 +47,6 @@ public class ImageRepositoryImpl extends AbstractLogEnabled implements Block, Im
             ((URLClassLoader) ImageRepositoryImpl.class.getClassLoader()).getResource(resource);
 
         return new ImageIcon(url);
-    }
-
-    public void contextualize(Context context)
-            throws ContextException {
-    }
-
-    public void compose(ComponentManager componentManager)
-            throws ComponentException {
-        mStore = (Store) componentManager.lookup(Store.class.getName());
-    }
-
-    public void configure(Configuration configuration)
-            throws ConfigurationException {
-        mRepository = configuration.getChild("repository");
-
-    }
-
-    public void initialize()
-            throws Exception {
-        mObjectRepository = (ObjectRepository) mStore.select(mRepository);
-    }
-
-    public ImageRepositoryImpl() {
     }
 
     private void setDefaults() {
@@ -94,8 +59,8 @@ public class ImageRepositoryImpl extends AbstractLogEnabled implements Block, Im
 
     private void setDefault(final String name, final String imgPath) {
 
-        if (!mObjectRepository.containsKey(name)) {
-            mObjectRepository.put(name, makeImage(imgPath));
+        if (!objectRepository.containsKey(name)) {
+            objectRepository.put(name, makeImage(imgPath));
         }
     }
 
@@ -184,8 +149,8 @@ public class ImageRepositoryImpl extends AbstractLogEnabled implements Block, Im
         ImageIcon ii = (ImageIcon) mImages.get(name);
 
         if (ii == null) {
-            if (mObjectRepository.containsKey(name)) {
-                ii = (ImageIcon) mObjectRepository.get(name);
+            if (objectRepository.containsKey(name)) {
+                ii = (ImageIcon) objectRepository.get(name);
             } else {
                 ii = defaultIcon;
             }
@@ -205,7 +170,7 @@ public class ImageRepositoryImpl extends AbstractLogEnabled implements Block, Im
      *
      */
     public void setImageIcon(final String name, final ImageIcon imageIcon) {
-        mObjectRepository.put(name, imageIcon);
+        objectRepository.put(name, imageIcon);
         mImages.put(name, imageIcon);
     }
 }

@@ -7,39 +7,28 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-import org.jesktop.api.AppLauncher;
-import org.jesktop.api.ImageRepository;
-import org.jesktop.api.Decorator;
-import org.jesktop.api.JesktopLaunchException;
-import org.jesktop.api.JesktopPackagingException;
-import org.jesktop.launchable.LaunchableTarget;
-import org.jesktop.api.AlreadyLaunchedException;
-import org.jesktop.api.DesktopKernelAware;
-import org.jesktop.api.LaunchedTarget;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.frimble.FrimbleCallback;
+import net.sourceforge.jesktopimpl.services.DesktopKernelService;
+import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
+import net.sourceforge.jesktopimpl.services.WindowManager;
+import org.jesktop.api.*;
 import org.jesktop.frimble.Frimble;
-import org.jesktop.frimble.JFrimble;
 import org.jesktop.frimble.FrimbleAware;
+import org.jesktop.frimble.FrimbleCallback;
+import org.jesktop.frimble.JFrimble;
+import org.jesktop.launchable.LaunchableTarget;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import net.sourceforge.jesktopimpl.builtinapps.config.ControlPanel;
-import net.sourceforge.jesktopimpl.services.DesktopKernelService;
-import net.sourceforge.jesktopimpl.services.KernelConfigManager;
-import net.sourceforge.jesktopimpl.services.WindowManager;
-import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.defaults.DefaultPicoContainer;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import java.util.Vector;
-import java.util.Iterator;
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLStreamHandlerFactory;
-import java.awt.BorderLayout;
-import java.beans.PropertyVetoException;
+import java.util.Iterator;
+import java.util.Vector;
 
 
 /**
@@ -47,7 +36,7 @@ import java.beans.PropertyVetoException;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
@@ -56,24 +45,28 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
     private LaunchableTargetFactory mLaunchableTargetFactory;
     private DesktopKernelService mDesktopKernelService;
     private Vector mLaunchedTargets;
-    private ImageRepository mImageRepository;
     private Decorator mDecorator;
-    private KernelConfigManager mConfigManager;
+    private MutablePicoContainer picoContainer;
 
     protected AppLauncherImpl(final WindowManager windowManager,
                               final LaunchableTargetFactory launchableTargetFactory,
                               final DesktopKernelService desktopKernelService,
-                              final KernelConfigManager configManager, final Vector launchedTargets,
-                              final ImageRepository imageRepository, final Decorator decorator,
+                              final Vector launchedTargets,
+                              final Decorator decorator,
                               final File baseDir) {
         super(baseDir);
         mLaunchableTargetFactory = launchableTargetFactory;
         mWindowManager = windowManager;
         mDesktopKernelService = desktopKernelService;
-        mConfigManager = configManager;
         mLaunchedTargets = launchedTargets;
-        mImageRepository = imageRepository;
         mDecorator = decorator;
+
+        picoContainer = new DefaultPicoContainer();
+        picoContainer.registerComponentInstance(windowManager);
+        picoContainer.registerComponentInstance(launchableTargetFactory);
+        picoContainer.registerComponentInstance(desktopKernelService);
+        picoContainer.registerComponentInstance(launchedTargets);
+        picoContainer.registerComponentInstance(decorator);
     }
 
     protected String getNewTemporaryAppSuffix() {
@@ -141,7 +134,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                 Frimble frimble = mWindowManager.createFrimble(displayName);
 
                 launchApp(jcl, className, tmpTarget, frimble.getContentPane(), true);
-                mDecorator.initDecoratation(frimble, null);
+                mDecorator.decorate(frimble, null);
             } else {
 
                 //TODO issue error dialog, not a jar Jesktop recognizes.
@@ -213,14 +206,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                 cl = classLoader.loadClass(className);
             }
 
-            Object instantiatedApp = cl.newInstance();
-
-            if (instantiatedApp instanceof ControlPanel) {
-                ((ControlPanel) instantiatedApp)
-                    .setLaunchableTargetFactory(mLaunchableTargetFactory);
-                ((ControlPanel) instantiatedApp).setConfigManager(mConfigManager);
-
-            }
+            Object instantiatedApp = new DefaultPicoContainer(picoContainer).registerComponentImplementation(cl).getComponentInstance();
 
             return launchApp2(classLoader, instantiatedApp, launchableTarget, inHere,
                               fullClosable);
@@ -233,14 +219,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
             cndfe.printStackTrace();
             throw new JesktopLaunchException("App " + launchableTarget.getTargetName()
                                              + " can't launch some dependant/parent class cannot be found. ");
-        } catch (IllegalAccessException iae) {
-            iae.printStackTrace();
-        } catch (InstantiationException ie) {
-            System.out.println("InstantiationException " + ie.getMessage());
-            ie.printStackTrace();
         }
-
-        return new JLabel("No application found, see trace");
     }
 
     private Object launchApp2(final ClassLoader classLoader, final Object instantiatedApp,
@@ -272,11 +251,6 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
             }
         }
 
-        if (instantiatedApp instanceof DesktopKernelAware) {
-            DesktopKernelAware dak = (DesktopKernelAware) instantiatedApp;
-            dak.setDesktopKernel(mDesktopKernelService.getProxy());
-        }
-
         if (frimble != null) {
             if (instantiatedApp instanceof FrimbleAware) {
                 FrimbleAware fa = (FrimbleAware) instantiatedApp;
@@ -298,7 +272,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
         }
 
         if (fullClosable && (frimble != null)) {
-            mDecorator.initDecoratation(frimble, launchableTarget);
+            mDecorator.decorate(frimble, launchableTarget);
 
             if (launchableTarget.getTargetName().equals(LaunchableTargetFactory.SHUTDOWN_APP)) {
                 ShutdownConfirmer sc = new ShutdownConfirmer() {

@@ -9,7 +9,6 @@ package net.sourceforge.jesktopimpl.builtinapps.mime;
 
 import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.frimble.Frimble;
-import org.jesktop.api.DesktopKernelAware;
 import org.jesktop.api.DesktopKernel;
 import org.jesktop.mime.MimeManager;
 import org.jesktop.mime.MimeInfo;
@@ -43,7 +42,7 @@ import java.awt.Container;
  * @version 1.0
  */
 public class MimeConfigurator extends JPanel
-        implements FrimbleAware, ActionListener, DesktopKernelAware {
+        implements FrimbleAware, ActionListener {
 
     private Frimble frimble;
     protected DesktopKernel desktopKernel;
@@ -60,7 +59,17 @@ public class MimeConfigurator extends JPanel
      *
      *
      */
-    public MimeConfigurator() {}
+    public MimeConfigurator(MimeManager mimeManager) {
+        this.mimeManager = mimeManager;
+        try {
+            jbInit();
+            JOptionPane.showMessageDialog(
+                this, "This application is not working yet, it's just for demonstration purpose",
+                "Application not working yet", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // Javadocs will automatically import from interface.
 
@@ -73,30 +82,6 @@ public class MimeConfigurator extends JPanel
      */
     public void setFrimble(Frimble frimble) {
         this.frimble = frimble;
-    }
-
-    // Javadocs will automatically import from interface.
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param mDesktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-
-        this.desktopKernel = desktopKernel;
-        mimeManager = desktopKernel.getMimeManager();
-
-        try {
-            jbInit();
-            JOptionPane.showMessageDialog(
-                this, "This application is not working yet, it's just for demonstration purpose",
-                "Application not working yet", JOptionPane.WARNING_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -183,7 +168,7 @@ public class MimeConfigurator extends JPanel
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     class MimeTableModel extends AbstractTableModel {
 
@@ -262,7 +247,7 @@ public class MimeConfigurator extends JPanel
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     class MimeEditor extends JDialog implements ActionListener {
 

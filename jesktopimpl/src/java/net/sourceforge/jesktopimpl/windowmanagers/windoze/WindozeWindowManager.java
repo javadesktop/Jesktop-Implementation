@@ -7,17 +7,11 @@
  */
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.phoenix.Block;
 import net.sourceforge.jesktopimpl.JesktopConstants;
 import org.jesktop.api.DesktopKernel;
 import org.jesktop.api.ImageRepository;
 import org.jesktop.api.LaunchedTarget;
+import org.jesktop.api.AppLauncher;
 import org.jesktop.api.JesktopLaunchException;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.config.PersistableConfig;
@@ -63,9 +57,8 @@ import java.net.MalformedURLException;
  * This one like Windows...
  *
  */
-public abstract class WindozeWindowManager extends AbstractLogEnabled
-        implements Block, net.sourceforge.jesktopimpl.services.WindowManager, Composable, Contextualizable,
-                   Initializable, PropertyChangeListener {
+public abstract class WindozeWindowManager
+        implements net.sourceforge.jesktopimpl.services.WindowManager, PropertyChangeListener {
 
     protected JPanel bottomBar;
     protected JButton startBtn;
@@ -76,11 +69,10 @@ public abstract class WindozeWindowManager extends AbstractLogEnabled
     protected JLabel mLastLaunchableTargetDraggedLabel;
     protected boolean mRenderLaunchableTargetDrag = true;
     protected JLayeredPane mLayeredPane;
-    protected ComponentManager mComponentManager;
-    protected Context mContext;
     protected LaunchableTarget[] mLaunchableTargets;
     protected DesktopKernel mDesktopKernel;
     protected ImageRepository mImageRepository;
+    private AppLauncher appLauncher;
     protected PersistableConfig mPersistableConfig;
     protected Rectangle bounds;
     protected Image mBackgroundImage;
@@ -91,7 +83,11 @@ public abstract class WindozeWindowManager extends AbstractLogEnabled
      *
      *
      */
-    public WindozeWindowManager() {}
+    public WindozeWindowManager(ImageRepository imageRepository, AppLauncher appLauncher) {
+
+        mImageRepository = imageRepository;
+        this.appLauncher = appLauncher;
+    }
 
     /**
      * Method initialize
@@ -112,7 +108,6 @@ public abstract class WindozeWindowManager extends AbstractLogEnabled
 
         mLayeredPane = frame.getLayeredPane();
 
-        getLogger().info("Windoze Window Manager Initialized");
     }
 
     /**
@@ -124,7 +119,7 @@ public abstract class WindozeWindowManager extends AbstractLogEnabled
      */
     public void addLaunchedTarget(final LaunchedTarget launchedTarget) {
 
-        LaunchedButton btn = new LaunchedButton(launchedTarget, mDesktopKernel);
+        LaunchedButton btn = new LaunchedButton(launchedTarget, mDesktopKernel, mImageRepository);
 
         bottomBar.add(btn);
     }
@@ -168,7 +163,7 @@ public abstract class WindozeWindowManager extends AbstractLogEnabled
      *
      *
      *
-     * @param mDesktopKernel
+     * @param desktopKernel
      *
      */
     public void setKernelCallback(final DesktopKernel desktopKernel) {
@@ -182,7 +177,6 @@ public abstract class WindozeWindowManager extends AbstractLogEnabled
 
         desktopKernel.addPropertyChangeListener(this);
 
-        mImageRepository = desktopKernel.getImageRepository();
     }
 
     /**
@@ -260,28 +254,6 @@ public abstract class WindozeWindowManager extends AbstractLogEnabled
     }
 
     /**
-     * Method compose
-     *
-     *
-     * @param mComponentManager
-     *
-     */
-    public void compose(final ComponentManager comp) {
-        this.mComponentManager = comp;
-    }
-
-    /**
-     * Method contextualize
-     *
-     *
-     * @param mContext
-     *
-     */
-    public void contextualize(final Context context) {
-        this.mContext = context;
-    }
-
-    /**
      * Method updateComponentTreeUI
      *
      *
@@ -300,7 +272,7 @@ public abstract class WindozeWindowManager extends AbstractLogEnabled
      * Method setPersistableConfig
      *
      *
-     * @param mPersistableConfig
+     * @param persistableConfig
      *
      */
     public void setPersistableConfig(final PersistableConfig persistableConfig) {
@@ -433,7 +405,8 @@ public abstract class WindozeWindowManager extends AbstractLogEnabled
 
             public void actionPerformed(ActionEvent ae) {
 
-                LaunchBar lb = new LaunchBar(mDesktopKernel, mLaunchableTargets, mImageRepository, WindozeWindowManager.this);
+                LaunchBar lb = new LaunchBar(mDesktopKernel, mLaunchableTargets, mImageRepository,
+                        WindozeWindowManager.this, appLauncher);
 
                 lb.show((java.awt.Component) ae.getSource(), startBtn.getX() + 3,
                         (startBtn.getY() - (int) lb.getPreferredSize().getHeight()));

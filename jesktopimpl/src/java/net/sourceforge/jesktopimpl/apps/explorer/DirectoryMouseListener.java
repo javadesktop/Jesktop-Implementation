@@ -13,6 +13,7 @@ package net.sourceforge.jesktopimpl.apps.explorer;
 import org.jesktop.api.JesktopPackagingException;
 import org.jesktop.api.JesktopLaunchException;
 import org.jesktop.api.DesktopKernel;
+import org.jesktop.api.AppLauncher;
 import org.jesktop.appsupport.DraggedItem;
 
 import javax.swing.JComponent;
@@ -29,17 +30,19 @@ import java.io.IOException;
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
 public class DirectoryMouseListener extends MouseAdapter {
 
     private DirectoryTableModel mDirectoryTableModel;
-    private DesktopKernel mDesktopKernel;
+    private final DesktopKernel mDesktopKernel;
     private DirectoryPanel mDirectoryPanel;
+    private AppLauncher appLauncher;
 
-    protected DirectoryMouseListener(final DesktopKernel desktopKernel, final DirectoryPanel directoryPanel) {
+    protected DirectoryMouseListener(final DesktopKernel desktopKernel, final DirectoryPanel directoryPanel, AppLauncher appLauncher) {
         mDesktopKernel = desktopKernel;
         mDirectoryPanel = directoryPanel;
+        this.appLauncher = appLauncher;
     }
 
     protected void setDirectoryTableModel(final DirectoryTableModel directoryTableModel) {
@@ -73,8 +76,7 @@ public class DirectoryMouseListener extends MouseAdapter {
                 } else {
                     if (file.getCanonicalPath().toLowerCase().endsWith(".jar")) {
                         try {
-                            mDesktopKernel.getAppLauncher()
-                                .launchAppWithoutInstallation(file.toURL());
+                            appLauncher.launchAppWithoutInstallation(file.toURL());
                         } catch (JesktopPackagingException baxmle) {
                             System.err.println("Jar not executable, reason "
                                                + baxmle.getMessage());

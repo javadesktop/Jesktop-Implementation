@@ -8,6 +8,8 @@
 package net.sourceforge.jesktopimpl.builtinapps.installer;
 
 import javax.swing.JTabbedPane;
+import org.jesktop.api.DesktopKernel;
+import org.jesktop.api.AppInstaller;
 
 
 /**
@@ -15,7 +17,7 @@ import javax.swing.JTabbedPane;
  * NOTE - to be replaced in the future with a more complete tool
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AddRemoveApps extends JTabbedPane {
 
@@ -24,12 +26,12 @@ public class AddRemoveApps extends JTabbedPane {
      *
      *
      */
-    public AddRemoveApps() {
+    public AddRemoveApps(DesktopKernel desktopKernel, AppInstaller appInstaller) {
 
         super(JTabbedPane.TOP);
 
-        this.addTab("Manage Installed Apps", new ManageInstalled());
-        this.addTab("Add new Apps", new SimpleInstaller());
+        this.addTab("Manage Installed Apps", new ManageInstalled(desktopKernel));
+        this.addTab("Add new Apps", new SimpleInstaller(desktopKernel, appInstaller));
 
         //this.addTab("Add JDK Demos", new JDKDemoInstaller());
     }

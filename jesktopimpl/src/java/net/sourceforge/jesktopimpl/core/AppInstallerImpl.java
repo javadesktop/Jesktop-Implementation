@@ -13,10 +13,10 @@ import org.jesktop.api.DesktopKernel;
 import org.jesktop.api.JesktopPackagingException;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.api.JesktopLaunchException;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import org.xml.sax.SAXException;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 
 import javax.swing.ImageIcon;
 import java.beans.PropertyChangeSupport;
@@ -34,7 +34,7 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AppInstallerImpl extends AppBase implements AppInstaller {
 
@@ -164,10 +164,9 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
      *
      * @param inputStreams
      *
-     * @throws JesktopPackagingException
      *
      */
-    private void applicationInstall(final InputStream[] inputStreams, boolean confirm) throws JesktopPackagingException {
+    private void applicationInstall(final InputStream[] inputStreams, boolean confirm) {
 
         //System.err.println("install apps from " +inputStreams.length + " jars" );
         String appFilePrefix = "JesktopApp" + mLaunchableTargetFactory.getNewAppSuffix();
@@ -179,7 +178,8 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
 
         try {
             try {
-                LaunchableTarget[] pendInsts = this.installApps(appFilePrefix, jarNames, jarSuffix);
+                LaunchableTarget[] pendInsts = new org.jesktop.launchable.LaunchableTarget[0];
+                pendInsts = this.installApps(appFilePrefix, jarNames, jarSuffix);
                 if (confirm) {
                   mDesktopKernelImpl.confirmAppInstallation(pendInsts);
                 } else {
@@ -262,7 +262,12 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
             try {
                 String appSpecificXml = apps[q].getAttribute("locn");
                 URL url = tempClassLoader.getResource(appSpecificXml);
-                Configuration app = CONF_BUILDER.build(url.openStream());
+                Configuration app = null;
+                try {
+                    app = CONF_BUILDER.build(url.openStream());
+                } catch (SAXException e) {
+                    throw new JesktopPackagingException(e.getMessage());
+                }
                 String appType = app.getAttribute("type", "normal");
                 String targetName = app.getAttribute("target");
                 String className = getAppElemValue(app, "class", true);
@@ -302,8 +307,6 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
 
                 pendingInstalls.addElement(lt);
                 createIcons(app, targetName, tempClassLoader);
-            } catch (SAXException se) {
-                se.printStackTrace();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             } catch (ConfigurationException ce) {

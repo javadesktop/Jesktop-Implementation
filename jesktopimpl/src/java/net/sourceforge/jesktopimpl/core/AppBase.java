@@ -7,12 +7,11 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-
-
-import org.apache.avalon.framework.configuration.*;
-
 import org.xml.sax.SAXException;
 import org.jesktop.api.JesktopPackagingException;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 
 import java.net.URLClassLoader;
 import java.net.URL;
@@ -23,15 +22,12 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.BufferedInputStream;
 
-
-
-
 /**
  * Class AppBase
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class AppBase {
 
@@ -124,7 +120,7 @@ public abstract class AppBase {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     protected class JarSuffixHolder {
 

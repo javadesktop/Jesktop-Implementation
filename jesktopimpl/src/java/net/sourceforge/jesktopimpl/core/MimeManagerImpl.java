@@ -7,23 +7,17 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-import org.jesktop.mime.MimeManager;
-import org.jesktop.mime.MimeInfo;
-import org.jesktop.mime.MimeAlreadyRegisteredException;
-import org.jesktop.mime.MimeNotRegisteredException;
-import org.jesktop.api.DesktopKernelAware;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.launchable.LaunchableTarget;
-import org.apache.avalon.cornerstone.services.store.ObjectRepository;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
+import org.jesktop.ObjectRepository;
+import org.jesktop.mime.MimeAlreadyRegisteredException;
+import org.jesktop.mime.MimeInfo;
+import org.jesktop.mime.MimeManager;
+import org.jesktop.mime.MimeNotRegisteredException;
 
-import javax.swing.ImageIcon;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.io.Serializable;
 
 
 /**
@@ -38,12 +32,12 @@ public class MimeManagerImpl implements MimeManager, Serializable {
 
     private static final String KEY = "jesktop-registered-mimes";
     protected static final String ALLOWED_TARGET_NAME = "System/MimeConfiguration";
-    private static MimeManagerImpl instance = null;
     private static transient ObjectRepository repository;
     private static transient LaunchableTargetFactory mLaunchableTargetFactory;
     private HashMap registeredMimes;
 
-    protected MimeManagerImpl(ObjectRepository repository) {
+    protected MimeManagerImpl(ObjectRepository repository, LaunchableTargetFactory launchableTargetFactory) {
+        mLaunchableTargetFactory = launchableTargetFactory;
 
         registeredMimes = new HashMap();
         this.repository = repository;

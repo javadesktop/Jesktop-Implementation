@@ -11,6 +11,8 @@ import org.jesktop.frimble.JFrameFrimbleFactory;
 import org.jesktop.frimble.JFrimble;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.launchable.LaunchableTarget;
+import org.jesktop.api.ImageRepository;
+import org.jesktop.api.AppLauncher;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -24,7 +26,7 @@ import java.awt.Graphics;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class WindozeWindowManager2 extends WindozeWindowManager {
 
@@ -36,7 +38,9 @@ public class WindozeWindowManager2 extends WindozeWindowManager {
      *
      *
      */
-    public WindozeWindowManager2() {
+    public WindozeWindowManager2(ImageRepository imageRepository, AppLauncher appLauncher) {
+        super(imageRepository, appLauncher);
+
 
         mFrimbleFactory = new JFrameFrimbleFactory();
 
@@ -91,7 +95,7 @@ public class WindozeWindowManager2 extends WindozeWindowManager {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     class JFrameFrimblePanel extends JPanel {
 

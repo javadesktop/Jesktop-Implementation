@@ -10,6 +10,7 @@ package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.api.JesktopLaunchException;
 import org.jesktop.api.DesktopKernel;
+import org.jesktop.api.AppLauncher;
 
 import javax.swing.JMenuItem;
 import javax.swing.ImageIcon;
@@ -26,15 +27,16 @@ import java.awt.Point;
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     public class LaunchBarMenuItem extends JMenuItem implements ActionListener {
 
         protected LaunchableTarget mLaunchableTarget;
         protected DesktopKernel mDesktopKernel;
         protected WindozeWindowManager mWindozeWindowManager;
+    private AppLauncher appLauncher;
 
-        /**
+    /**
          * Constructor LaunchBarMenuItem
          *
          *
@@ -43,15 +45,18 @@ import java.awt.Point;
          *
          */
         protected LaunchBarMenuItem(final DesktopKernel desktopKernel, final LaunchableTarget launchableTarget, 
-                                    final WindozeWindowManager windozeWindowManager,  final ImageIcon im) {
+                                    final WindozeWindowManager windozeWindowManager,
+                                    final AppLauncher appLauncher,
+                                    final ImageIcon im) {
 
             super(launchableTarget.getDisplayName(), im);
 
             mDesktopKernel = desktopKernel;
             mLaunchableTarget = launchableTarget;
             mWindozeWindowManager = windozeWindowManager;
+        this.appLauncher = appLauncher;
 
-            addActionListener(this);
+        addActionListener(this);
 
 /*this.addMenuDragMouseListener(new MenuDragMouseListener() {
 
@@ -119,7 +124,7 @@ import java.awt.Point;
         public void actionPerformed(final ActionEvent e) {
 
             try {
-                mDesktopKernel.getAppLauncher().launchApp(mLaunchableTarget);
+                appLauncher.launchApp(mLaunchableTarget);
             } catch (JesktopLaunchException jle) {
                 jle.printStackTrace();
             }

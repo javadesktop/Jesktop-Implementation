@@ -41,14 +41,15 @@ public class BackdropConfiglet extends JPanel implements XMLConfiglet {
     private static final String[] TYPES = new String[]{ "Tiled", "Stretched" };
     private final JComboBox typeBox = new JComboBox(TYPES);
     private Document cfgDoc;
-    private ConfigManager cm;
+    private ConfigManager configManager;
 
     /**
      * Constructor BackdropConfiglet
      *
      *
      */
-    public BackdropConfiglet() {
+    public BackdropConfiglet(ConfigManager configManager) {
+        this.configManager = configManager;
 
         this.setLayout(new BorderLayout());
         this.add(backdropLocn, BorderLayout.CENTER);
@@ -107,18 +108,7 @@ public class BackdropConfiglet extends JPanel implements XMLConfiglet {
         String ty = ((String) typeBox.getSelectedItem()).toLowerCase();
 
         bd.setAttribute("type", ty);
-        cm.notifyUpdated(BackdropConfiglet.this);
-    }
-
-    /**
-     * Method setConfigManager
-     *
-     *
-     * @param cm
-     *
-     */
-    public void setConfigManager(ConfigManager cm) {
-        this.cm = cm;
+        configManager.notifyUpdated(BackdropConfiglet.this);
     }
 
     /**
@@ -169,7 +159,7 @@ public class BackdropConfiglet extends JPanel implements XMLConfiglet {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class ImageFilter extends javax.swing.filechooser.FileFilter {
 
@@ -203,7 +193,7 @@ public class BackdropConfiglet extends JPanel implements XMLConfiglet {
      * Method propertyChange
      *
      *
-     * @param evt
+     * @param event
      *
      */    
     public void propertyChange( PropertyChangeEvent event ) {

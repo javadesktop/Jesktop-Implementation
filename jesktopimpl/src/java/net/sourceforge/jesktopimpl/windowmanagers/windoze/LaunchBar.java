@@ -10,6 +10,7 @@ package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.api.ImageRepository;
 import org.jesktop.api.DesktopKernel;
+import org.jesktop.api.AppLauncher;
 
 import javax.swing.JPopupMenu;
 import java.util.HashSet;
@@ -19,7 +20,7 @@ import java.util.HashSet;
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     public class LaunchBar extends JPopupMenu {
 
@@ -27,19 +28,22 @@ import java.util.HashSet;
     protected ImageRepository mImageRepository;
     protected DesktopKernel mDesktopKernel;
     protected WindozeWindowManager mWindozeWindowManager;
-    
-        /**
+    private AppLauncher appLauncher;
+
+    /**
          * Constructor LaunchBar
          *
          *
          */
         protected LaunchBar(final DesktopKernel desktopKernel, final LaunchableTarget[] launchableTargets, 
-                            final ImageRepository imageRepository, final WindozeWindowManager windozeWindowManager) {
+                            final ImageRepository imageRepository, final WindozeWindowManager windozeWindowManager,
+                            final AppLauncher appLauncher) {
             mLaunchableTargets = launchableTargets;
             mImageRepository = imageRepository;
             mDesktopKernel = desktopKernel;
             mWindozeWindowManager = windozeWindowManager;
-            setupStartButton();
+        this.appLauncher = appLauncher;
+        setupStartButton();
         }
 
         private void setupStartButton() {
@@ -56,7 +60,8 @@ import java.util.HashSet;
 
                     // still a menu
                     if (!hs.contains(parts[deep])) {
-                        this.add(new LaunchBarGroupMenuItem(mDesktopKernel, mLaunchableTargets, mWindozeWindowManager, mImageRepository, parts[deep], parts[deep], deep + 1));
+                        this.add(new LaunchBarGroupMenuItem(mDesktopKernel, mLaunchableTargets, mWindozeWindowManager,
+                                mImageRepository, appLauncher, parts[deep], parts[deep], deep + 1));
                         hs.add(parts[deep].intern());
                     }
                 }
@@ -65,7 +70,9 @@ import java.util.HashSet;
 
                     // leaf
                     if (!hs.contains(parts[deep])) {
-                        this.add(new LaunchBarMenuItem(mDesktopKernel, mLaunchableTargets[x], mWindozeWindowManager, mImageRepository
+                        this.add(new LaunchBarMenuItem(mDesktopKernel, mLaunchableTargets[x],
+                                mWindozeWindowManager, appLauncher, 
+                                mImageRepository
                             .getAppSmallImageIcon(mLaunchableTargets[x].getTargetName())));
                     }
                 }

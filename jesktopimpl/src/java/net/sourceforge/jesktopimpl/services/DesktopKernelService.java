@@ -18,8 +18,6 @@ import java.beans.PropertyChangeListener;
 
 public interface DesktopKernelService extends DesktopKernel, PropertyChangeListener {
 
-    DesktopKernel getProxy();
-
     FrimbleListener getKernelFrimbleListener();
 
     LaunchedTarget makeKernelLaunchedTarget(Frimble frimble, Object instantiatedApp, LaunchableTarget launchableTarget);

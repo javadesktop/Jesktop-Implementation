@@ -10,6 +10,7 @@ package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.api.ImageRepository;
 import org.jesktop.api.DesktopKernel;
+import org.jesktop.api.AppLauncher;
 
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -22,7 +23,7 @@ import java.awt.Container;
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     public class LaunchBarGroupMenuItem extends JMenu {
     
@@ -41,7 +42,8 @@ import java.awt.Container;
          *
          */
         protected LaunchBarGroupMenuItem(final DesktopKernel desktopKernel, final LaunchableTarget[] launchableTargets, 
-                                         final WindozeWindowManager windozeWindowManager, final ImageRepository imageRepository, 
+                                         final WindozeWindowManager windozeWindowManager, final ImageRepository imageRepository,
+                                         final AppLauncher appLauncher,
                                          final String path, final String phrase, final int deep) {
 
             super(phrase);
@@ -62,7 +64,8 @@ import java.awt.Container;
                         // still a menu
                         if (!hs.contains(parts[deep])) {
                             LaunchBarGroupMenuItem lbgi =
-                                new LaunchBarGroupMenuItem(mDesktopKernel, mLaunchableTargets, mWindozeWindowManager, mImageRepository, path + "/" + parts[deep], parts[deep],
+                                new LaunchBarGroupMenuItem(mDesktopKernel, mLaunchableTargets,
+                                        mWindozeWindowManager, mImageRepository, appLauncher, path + "/" + parts[deep], parts[deep],
                                                            deep + 1);
 
                             this.add(lbgi);
@@ -75,8 +78,9 @@ import java.awt.Container;
 
                         // leaf
                         if (!hs.contains(parts[deep])) {
-                            this.add(new LaunchBarMenuItem(mDesktopKernel, mLaunchableTargets[x], mWindozeWindowManager, mImageRepository
-                                .getAppSmallImageIcon(mLaunchableTargets[x].getTargetName())));
+                            this.add(new LaunchBarMenuItem(mDesktopKernel, mLaunchableTargets[x],
+                                    mWindozeWindowManager, appLauncher,
+                                mImageRepository.getAppSmallImageIcon(mLaunchableTargets[x].getTargetName())));
                         }
                     }
                 }

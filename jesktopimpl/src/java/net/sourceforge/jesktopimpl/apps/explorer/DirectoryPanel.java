@@ -10,29 +10,18 @@ package net.sourceforge.jesktopimpl.apps.explorer;
 
 
 
-import org.jesktop.api.DesktopKernelAware;
 import org.jesktop.api.DesktopKernel;
 import org.jesktop.api.ImageRepository;
-import org.jesktop.frimble.FrimbleAware;
-import org.jesktop.frimble.Frimble;
-import org.jesktop.appsupport.DropAware;
+import org.jesktop.api.AppLauncher;
 import org.jesktop.appsupport.DraggedItem;
+import org.jesktop.appsupport.DropAware;
+import org.jesktop.frimble.Frimble;
+import org.jesktop.frimble.FrimbleAware;
 
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
+import java.awt.*;
 import java.io.File;
-
-import java.util.Date;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
 
 
 /**
@@ -43,10 +32,8 @@ import java.awt.Point;
  * @version V1.0
  */
 public class DirectoryPanel extends JPanel
-        implements DesktopKernelAware, FrimbleAware, DropAware {
+        implements FrimbleAware, DropAware {
 
-    private DesktopKernel mDesktopKernel;
-    private ImageRepository mImageRepository;
     private DirectoryTableModel mDirectoryTableModel;
     private DirectoryMouseListener mDirectoryMouseListener;
     private JTable mContentsTable;
@@ -56,13 +43,16 @@ public class DirectoryPanel extends JPanel
     private JLabel mDropTargetLabel = new JLabel("?");
     private Frimble mFrimble;
     private ItemPreview mItemPreview = new ItemPreview();
+    private ImageRepository imageRepository;
 
     /**
      * Constructor DirectoryPanel
      *
      *
      */
-    protected DirectoryPanel() {
+    protected DirectoryPanel(DesktopKernel desktopKernel, ImageRepository imageRepository, AppLauncher appLauncher) {
+
+        this.imageRepository = imageRepository;
 
         this.setLayout(new BorderLayout());
 
@@ -77,6 +67,13 @@ public class DirectoryPanel extends JPanel
         add(mScrollPane, BorderLayout.CENTER);
         add(mItemPreview, BorderLayout.WEST);
         add(mDropTargetLabel, BorderLayout.SOUTH);
+
+        mDirectoryMouseListener = new DirectoryMouseListener(desktopKernel, this, appLauncher);
+
+        mContentsTable.addMouseListener(mDirectoryMouseListener);
+        mContentsTable.addMouseMotionListener(new DirectoryMouseMotionListener(desktopKernel, this));
+        setDirectory(new File("C:\\"));
+
     }
 
     protected DraggedItem getCurrentlyDraggedItem() {
@@ -118,25 +115,6 @@ public class DirectoryPanel extends JPanel
      */
     public ItemPreview getItemPreview() {
         return mItemPreview;
-    }
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param desktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-
-        mDesktopKernel = desktopKernel;
-        mImageRepository = desktopKernel.getImageRepository();
-        mDirectoryMouseListener = new DirectoryMouseListener(mDesktopKernel, this);
-
-        mContentsTable.addMouseListener(mDirectoryMouseListener);
-        mContentsTable.addMouseMotionListener(new DirectoryMouseMotionListener(mDesktopKernel,
-                this));
-        setDirectory(new File("C:\\"));
     }
 
     // Javadocs will automatically import from interface.
@@ -191,7 +169,7 @@ public class DirectoryPanel extends JPanel
         mDirectoryMouseListener.setDirectoryTableModel(mDirectoryTableModel);
         mContentsTable.setModel(mDirectoryTableModel);
         mContentsTable.setDefaultRenderer(Object.class,
-                                          new DirectoryTableCellRenderer(mImageRepository));
+                                          new DirectoryTableCellRenderer(imageRepository));
     }
 
     /**

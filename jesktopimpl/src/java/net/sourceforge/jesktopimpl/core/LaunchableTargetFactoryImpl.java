@@ -8,20 +8,7 @@
 package net.sourceforge.jesktopimpl.core;
 
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.phoenix.Block;
-import org.apache.avalon.cornerstone.services.store.Store;
-import org.apache.avalon.cornerstone.services.store.ObjectRepository;
+import org.jesktop.ObjectRepository;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.launchable.DecoratorLaunchableTarget;
 import org.jesktop.launchable.ConfigletLaunchableTarget;
@@ -39,48 +26,22 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.io.File;
 
-public class LaunchableTargetFactoryImpl extends AbstractLogEnabled
-        implements Block, LaunchableTargetFactory, Contextualizable,
-        Composable, Configurable, Initializable  {
+public class LaunchableTargetFactoryImpl
+        implements LaunchableTargetFactory  {
 
-    private ObjectRepository mObjectRepository;
-    private Store mStore;
-    private Configuration mRepository;
+    private ObjectRepository objectRepository;
     private HashMap classloaders;
     private LaunchableTargetHolder mLaunchableTargetHolder;
 
-    public LaunchableTarget[] getAllLaunchableTargets() {
-        Object[] objs = subset(LaunchableTargetImpl.class);
-        LaunchableTarget[] lts = new LaunchableTarget[objs.length];
-        System.arraycopy(objs, 0, lts, 0, objs.length);
-        return lts;
-    }
+    public LaunchableTargetFactoryImpl(ObjectRepository objectRepository) {
+        this.objectRepository = objectRepository;
 
-    public void contextualize(Context context)
-            throws ContextException {
-    }
-
-    public void compose(ComponentManager componentManager)
-            throws ComponentException {
-        mStore = (Store) componentManager.lookup(Store.class.getName());
-    }
-
-    public void configure(Configuration configuration)
-            throws ConfigurationException {
-        mRepository = configuration.getChild("repository");
-
-    }
-
-    public void initialize()
-            throws Exception {
-        mObjectRepository = (ObjectRepository) mStore.select(mRepository);
-
-        boolean alreadySetup = mObjectRepository.containsKey(KEY);
+        boolean alreadySetup = objectRepository.containsKey(KEY);
         boolean appsDone = false;
 
         if (alreadySetup) {
             try {
-                mLaunchableTargetHolder = (LaunchableTargetHolder) mObjectRepository.get(KEY, LaunchableTargetHolder.class.getClassLoader());
+                mLaunchableTargetHolder = (LaunchableTargetHolder) objectRepository.get(KEY, LaunchableTargetHolder.class.getClassLoader());
 
                 appsDone = true;
             } catch (Exception e) {
@@ -113,7 +74,13 @@ public class LaunchableTargetFactoryImpl extends AbstractLogEnabled
             setBuiltInApps();
             save();
         }
+    }
 
+    public LaunchableTarget[] getAllLaunchableTargets() {
+        Object[] objs = subset(LaunchableTargetImpl.class);
+        LaunchableTarget[] lts = new LaunchableTarget[objs.length];
+        System.arraycopy(objs, 0, lts, 0, objs.length);
+        return lts;
     }
 
     public DecoratorLaunchableTarget makeDecoratorLaunchableTarget(final String targetName, final String className,
@@ -317,7 +284,7 @@ public class LaunchableTargetFactoryImpl extends AbstractLogEnabled
     }
 
     private void save() {
-        mObjectRepository.put(KEY, mLaunchableTargetHolder);
+        objectRepository.put(KEY, mLaunchableTargetHolder);
     }
 
     private LaunchableTarget[] subset(Class cls) {
@@ -354,7 +321,6 @@ public class LaunchableTargetFactoryImpl extends AbstractLogEnabled
      * Method setBuiltInApps
      *
      *
-     * @param launchableTargetHolder
      *
      */
     public void setBuiltInApps() {
@@ -377,7 +343,5 @@ public class LaunchableTargetFactoryImpl extends AbstractLogEnabled
         makeNormalLaunchableTarget(
             SHUTDOWN_APP, "net.sourceforge.jesktopimpl.builtinapps.sys.ShutdownConfirmer", "Shutdown", true);
     }
-
-
 
 }

@@ -7,20 +7,13 @@
  */
 package net.sourceforge.jesktopimpl.builtinapps.sys;
 
-import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.frimble.Frimble;
-import org.jesktop.api.DesktopKernelAware;
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.frimble.FrimbleAware;
 
-import javax.swing.JPanel;
-import javax.swing.JComboBox;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 
 
@@ -31,10 +24,9 @@ import java.beans.PropertyVetoException;
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
  * @version %I%, %G%
  */
-public class ShutdownConfirmer extends JPanel implements FrimbleAware, DesktopKernelAware {
+public class ShutdownConfirmer extends JPanel implements FrimbleAware {
 
     private Frimble frimble;
-    private DesktopKernel desktopKernel;
     private final String exitAll = "Shutdown Desktop & Avalon";
     private final String exitJesktop = "Shutdown Desktop Only";
     private final JComboBox choices = new JComboBox(new String[]{ exitAll, exitJesktop });
@@ -114,18 +106,5 @@ public class ShutdownConfirmer extends JPanel implements FrimbleAware, DesktopKe
         this.frimble = frimble;
 
         frimble.pack();
-    }
-
-    // Javadocs will automatically import from interface.
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param mDesktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-        this.desktopKernel = desktopKernel;
     }
 }

@@ -7,29 +7,12 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.phoenix.Block;
-import org.apache.avalon.phoenix.BlockContext;
-import org.apache.avalon.cornerstone.services.store.Store;
-import org.apache.avalon.cornerstone.services.store.ObjectRepository;
-import org.apache.avalon.cornerstone.services.threads.ThreadManager;
 import net.sourceforge.jesktopimpl.builtinapps.installer.ConfirmInstallation;
 import net.sourceforge.jesktopimpl.builtinapps.sys.ErrorApp;
 import net.sourceforge.jesktopimpl.services.DesktopKernelService;
 import net.sourceforge.jesktopimpl.services.KernelConfigManager;
 import net.sourceforge.jesktopimpl.services.WindowManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
-import org.apache.avalon.excalibur.thread.ThreadPool;
-import org.apache.avalon.excalibur.proxy.DynamicProxy;
 import org.jesktop.appsupport.DropAware;
 import org.jesktop.appsupport.DraggedItem;
 import org.jesktop.appsupport.ContentViewer;
@@ -48,10 +31,13 @@ import org.jesktop.api.DesktopKernel;
 import org.jesktop.api.Decorator;
 import org.jesktop.api.ImageRepository;
 import org.jesktop.api.AppLauncher;
-import org.jesktop.api.AppInstaller;
 import org.jesktop.api.LaunchedTarget;
 import org.jesktop.api.JesktopPackagingException;
 import org.jesktop.api.JesktopLaunchException;
+import org.jesktop.ObjectRepository;
+import org.jesktop.ThreadPool;
+import org.picocontainer.defaults.DefaultPicoContainer;
+import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.JComponent;
 import java.util.Vector;
@@ -70,22 +56,19 @@ import java.net.MalformedURLException;
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
  * @version 1.0
  */
-public class DesktopKernelImpl extends AbstractLogEnabled
-        implements Block, DesktopKernelService, DesktopKernel, ShutdownConfirmer, Contextualizable, Composable,
-                   Initializable, Configurable, PropertyChangeListener {
+public class DesktopKernelImpl
+        implements DesktopKernelService, DesktopKernel, ShutdownConfirmer,
+                   PropertyChangeListener {
 
-    private ComponentManager mCompManager;
-    private Configuration phoenixConfiguration;
+    //private ComponentManager mCompManager;
+    //private Configuration phoenixConfiguration;
 
     //  protected final static Logger LOGGER = LogKit.getLoggerFor("jesktop-kernel");
-    private static boolean LOG = true;
     private final Vector launchedTargets = new Vector();
     private LaunchableTargetFactory mLaunchableTargetFactory;
-    private AppInstaller mAppInstallerProxy;
     private AppInstallerImpl mAppInstaller;
-    private AppLauncher mAppLauncherProxy, mAppLauncher;
+    private AppLauncher mAppLauncher;
     private ImageRepository mImageRepository;
-    private ImageRepository mImageRepositoryProxy;
     private KernelConfigManager mConfigManager;
     private DecoratorLaunchableTarget currentDecoratorLaunchableTarget;
     private Decorator mCurrentDecorator;
@@ -103,25 +86,68 @@ public class DesktopKernelImpl extends AbstractLogEnabled
     private LaunchableTarget errorAppTarget = new NormalLaunchableTargetImpl("*ErrorApp*",
                                                   "net.sourceforge.jesktopimpl.builtinapps.sys.ErrorApp", "Error", false);
     private WindowManager mWindowManager;
-    private Store mJesktopStore;
-    private ThreadManager       mThreadManager;
-    private ObjectRepository repository;
     private DropAware currentDropApp;
     private DraggedItem currentDraggedItem;
-    protected BlockContext mBlockContext;
-    private DesktopKernel mDesktopKernelProxy;
     protected MimeManager mMimeManager;
-    protected MimeManager mMimeManagerProxy;
     private File mBaseDirectory;
-    private Configuration mRepository;
+    private ThreadPool threadPool;
+    private MutablePicoContainer picoContainer;
 
     /**
      * Constructor DesktopKernelImpl
      *
      *
      */
-    public DesktopKernelImpl() {
+    public DesktopKernelImpl(WindowManager windowManager, ObjectRepository repository, ThreadPool threadPool,
+                             KernelConfigManager kernelCongigManager, ImageRepository imageRepository,
+                             LaunchableTargetFactory launchableTargetFactory, File baseDirectory) {
+        this.threadPool = threadPool;
         propertyChangeSupport = new PropertyChangeSupport(DesktopKernel.class.getName());
+        mWindowManager = windowManager;
+        mConfigManager = kernelCongigManager;
+        mImageRepository = imageRepository;
+        mLaunchableTargetFactory = launchableTargetFactory;
+        mBaseDirectory = baseDirectory;
+
+        picoContainer = new DefaultPicoContainer();
+        picoContainer.registerComponentInstance(windowManager);
+        picoContainer.registerComponentInstance(kernelCongigManager);
+        picoContainer.registerComponentInstance(imageRepository);
+        picoContainer.registerComponentInstance(launchableTargetFactory);
+
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+
+        defaultDecorator =
+            (DecoratorLaunchableTarget) mLaunchableTargetFactory.makeDecoratorLaunchableTarget(
+                DFT_DECORATOR, "net.sourceforge.jesktopimpl.builtinapps.decorators.DefaultDecorator",
+                "Default Decorator", "decorators/default");
+
+        mMimeManager = new MimeManagerImpl(repository, mLaunchableTargetFactory);
+        mAppInstaller = new AppInstallerImpl(propertyChangeSupport, this,
+                                            mLaunchableTargetFactory, mImageRepository, mBaseDirectory);
+        mConfigManager.registerConfigInterest(this, "decorator/currentDecorator");
+        mConfigManager.registerConfigInterest(mWindowManager, "desktop/settings");
+        setDecoratorLaunchableTarget(defaultDecorator);
+
+        initializeDecorator();
+        mConfigManager.notifyObjConfig("decorator/currentDecorator", getClass().getClassLoader());
+        mWindowManager.setKernelCallback(this);
+        mWindowManager
+            .setPersistableConfig(new PersistableConfigImpl(repository,
+                                                            "WM-"
+                                                            + mWindowManager.getClass()
+                                                                .getName().hashCode()));
+        notifyLaunchableTargetListeners();
+        mWindowManager.initializeView();
+        mConfigManager.notifyXMLConfig("desktop/settings", getClass().getClassLoader());
+
+        new File("Jesktop/Temp").mkdir();
+
+        installStartupApplications();
+
+        notifyLaunchableTargetListeners();
+
+
     }
 
 
@@ -129,7 +155,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
      * Method propertyChange
      *
      *
-     * @param evt
+     * @param event
      *
      */
     public void propertyChange( PropertyChangeEvent event ) {
@@ -176,48 +202,6 @@ public class DesktopKernelImpl extends AbstractLogEnabled
     }
 
     /**
-     * Method contextualize
-     *
-     *
-     * @param mContext
-     *
-     */
-    public void contextualize(final Context context) {
-        mBlockContext = (BlockContext) context;
-        mBaseDirectory = mBlockContext.getBaseDirectory();
-    }
-
-    protected final BlockContext getBlockContext() {
-        return mBlockContext;
-    }
-
-    /**
-     * Method configure
-     *
-     *
-     *
-     * @param confManager
-     *
-     */
-    public void configure(final Configuration confManager) throws ConfigurationException {
-        this.phoenixConfiguration = confManager;
-        mRepository = phoenixConfiguration.getChild("repository");
-    }
-
-    /**
-     * Method compose
-     *
-     *
-     *
-     * @param compManager
-     *
-     *
-     */
-    public void compose(final ComponentManager compManager) {
-        mCompManager = compManager;
-    }
-
-    /**
      * Method notifyLaunchableTargetListeners
      *
      *
@@ -227,80 +211,6 @@ public class DesktopKernelImpl extends AbstractLogEnabled
         propertyChangeSupport.firePropertyChange(DesktopKernel.LAUNCHABLE_TARGET_CHANGE, null,
                                                  mLaunchableTargetFactory
                                                      .getAllLaunchableTargets());
-    }
-
-    /**
-     * Method initialize
-     *
-     *
-     */
-    public void initialize() {
-
-        //setupLogger(this);
-        getLogger().info("Jesktop Kernel Initialized");
-
-        try {
-            mWindowManager = (WindowManager) mCompManager.lookup(WindowManager.class.getName());
-            mJesktopStore =  (Store) mCompManager.lookup(Store.ROLE);
-            mThreadManager = (ThreadManager) mCompManager.lookup(ThreadManager.ROLE);
-            mConfigManager = (KernelConfigManager) mCompManager.lookup(KernelConfigManager.class.getName());
-            mImageRepository = (ImageRepository) mCompManager.lookup(ImageRepository.class.getName());
-            mLaunchableTargetFactory = (LaunchableTargetFactory) mCompManager.lookup(LaunchableTargetFactory.class.getName());
-
-            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-
-
-
-            if (mJesktopStore != null) {
-                repository = (ObjectRepository) mJesktopStore.select(mRepository);
-
-                if (LOG) {
-                    getLogger().info("Got repository");
-                }
-            } else {
-                if (LOG) {
-                    getLogger().info("Whoops! store component is null");
-                }
-            }
-
-            defaultDecorator =
-                (DecoratorLaunchableTarget) mLaunchableTargetFactory.makeDecoratorLaunchableTarget(
-                    DFT_DECORATOR, "net.sourceforge.jesktopimpl.builtinapps.decorators.DefaultDecorator",
-                    "Default Decorator", "decorators/default");
-
-            mMimeManager = new MimeManagerImpl(repository);
-            mDesktopKernelProxy = (DesktopKernel) DynamicProxy.newInstance(this, new Class[] {DesktopKernel.class});
-            mMimeManagerProxy = (MimeManager) DynamicProxy.newInstance(mMimeManager, new Class[] {MimeManager.class});
-            mImageRepositoryProxy = (ImageRepository) DynamicProxy.newInstance(mImageRepository, new Class[] {ImageRepository.class});
-            mAppInstaller = new AppInstallerImpl(propertyChangeSupport, this,
-                                                mLaunchableTargetFactory, mImageRepository, mBaseDirectory);
-            mAppInstallerProxy = (AppInstaller) DynamicProxy.newInstance(mAppInstaller, new Class[] {AppInstaller.class});
-
-            mConfigManager.registerConfigInterest(this, "decorator/currentDecorator");
-            mConfigManager.registerConfigInterest(mWindowManager, "desktop/settings");
-            setDecoratorLaunchableTarget(defaultDecorator);
-
-            initializeDecorator();
-            mConfigManager.notifyObjConfig("decorator/currentDecorator", getClass().getClassLoader());
-            mWindowManager.setKernelCallback(mDesktopKernelProxy);
-            mWindowManager
-                .setPersistableConfig(new PersistableConfigImpl(repository,
-                                                                "WM-"
-                                                                + mWindowManager.getClass()
-                                                                    .getName().hashCode()));
-            notifyLaunchableTargetListeners();
-            mWindowManager.initializeView();
-            mConfigManager.notifyXMLConfig("desktop/settings", getClass().getClassLoader());
-
-            new File("Jesktop/Temp").mkdir();
-
-            installStartupApplications();
-
-            notifyLaunchableTargetListeners();
-
-        } catch (ComponentException ce) {
-            getLogger().error("init(): ComponentException", ce);
-        }
     }
 
     /**
@@ -420,39 +330,6 @@ public class DesktopKernelImpl extends AbstractLogEnabled
     }
 
     /**
-     * Method getAppLauncher
-     *
-     *
-     * @return
-     *
-     */
-    public AppLauncher getAppLauncher() {
-        return mAppLauncherProxy;
-    }
-
-    /**
-     * Method getImageRepository
-     *
-     *
-     * @return
-     *
-     */
-    public ImageRepository getImageRepository() {
-        return mImageRepositoryProxy;
-    }
-
-    /**
-     * Method getMimeManager
-     *
-     *
-     * @return
-     *
-     */
-    public MimeManager getMimeManager() {
-        return mMimeManagerProxy;
-    }
-
-    /**
      * Method viewDocument
      *
      *
@@ -469,7 +346,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
 
         System.out.println( "URL x " + url);
 
-        obj = getAppLauncher().launchApp(getAssociatedViewer(url), inHere);
+        obj = mAppLauncher.launchApp(getAssociatedViewer(url), inHere);
 
         if (obj instanceof ContentViewer) {
             ContentViewer cv = (ContentViewer) obj;
@@ -515,17 +392,6 @@ public class DesktopKernelImpl extends AbstractLogEnabled
         // unimplemented as yet
     }
 
-    /**
-     * Method getAppInstaller
-     *
-     *
-     * @return
-     *
-     */
-    public AppInstaller getAppInstaller() {
-        return mAppInstallerProxy;
-    }
-
     protected ConfigManager getConfigManager() {
         return mConfigManager;
     }
@@ -547,7 +413,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
     protected void confirmAppInstallation(final LaunchableTarget[] launchableTargets)
             throws JesktopLaunchException {
 
-        Object obj = mAppLauncherProxy.launchApp(installationConfirmerTarget);
+        Object obj = mAppLauncher.launchApp(installationConfirmerTarget);
         InstallationConfirmer ic = new InstallationConfirmer() {
 
             public boolean isRegistered(String targetName) {
@@ -564,7 +430,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
 
     protected void showErrorApp(final Exception e) throws JesktopLaunchException {
 
-        ErrorApp errorApp = (ErrorApp) mAppLauncherProxy.launchApp(errorAppTarget);
+        ErrorApp errorApp = (ErrorApp) mAppLauncher.launchApp(errorAppTarget);
 
         errorApp.setException(e);
     }
@@ -581,7 +447,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
     public void initiateShutdown(final String shutdownType) throws JesktopLaunchException {
 
         Object ojb =
-            mAppLauncherProxy
+            mAppLauncher
                 .launchApp(mLaunchableTargetFactory
                     .getLaunchableTarget(mLaunchableTargetFactory.SHUTDOWN_APP));
     }
@@ -596,8 +462,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
      *
      */
     public void runAsychronously(final Runnable runnable) throws Exception {    // bad to declare throw of Exception
-        ThreadPool tp = mThreadManager.getDefaultThreadPool();
-        tp.execute(runnable);
+        threadPool.execute(runnable);
     }
 
     /**
@@ -702,9 +567,8 @@ public class DesktopKernelImpl extends AbstractLogEnabled
             Decorator oldDecorator = mCurrentDecorator;
 
             // all fine, put in place decorator
-            mCurrentDecorator = (Decorator) cl.newInstance();
 
-            mCurrentDecorator.setDesktopKernel(mDesktopKernelProxy);
+            mCurrentDecorator = (Decorator) new DefaultPicoContainer(picoContainer).registerComponentImplementation(cl).getComponentInstance();
 
             if (mCurrentDecorator instanceof ObjConfigurable) {
                 ((ObjConfigurable) mCurrentDecorator)
@@ -722,23 +586,13 @@ public class DesktopKernelImpl extends AbstractLogEnabled
             }
 
             mAppLauncher = new AppLauncherImpl(mWindowManager, mLaunchableTargetFactory, this,
-                                              mConfigManager, launchedTargets, mImageRepository,
+                                              launchedTargets,
                                               mCurrentDecorator, mBaseDirectory);
-
-            mAppLauncherProxy = (AppLauncher) DynamicProxy.newInstance(mAppLauncher, new Class[] {AppLauncher.class});
 
             mWindowManager.updateComponentTreeUI();
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
-        } catch (InstantiationException ie) {
-            ie.printStackTrace();
-        } catch (IllegalAccessException iae) {
-            iae.printStackTrace();
         }
-    }
-
-    public DesktopKernel getProxy() {
-      return mDesktopKernelProxy;
     }
 
     private void initializeDecorator() {
@@ -795,7 +649,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -856,7 +710,7 @@ public class DesktopKernelImpl extends AbstractLogEnabled
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @version $Revision: 1.3 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

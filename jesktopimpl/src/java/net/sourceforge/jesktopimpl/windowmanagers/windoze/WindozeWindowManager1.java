@@ -7,19 +7,15 @@
  */
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
-import org.jesktop.frimble.JInternalFrameFrimbleFactory;
-import org.jesktop.frimble.JFrimble;
+import org.jesktop.api.AppLauncher;
+import org.jesktop.api.ImageRepository;
 import org.jesktop.frimble.Frimble;
+import org.jesktop.frimble.JFrimble;
+import org.jesktop.frimble.JInternalFrameFrimbleFactory;
 import org.jesktop.launchable.LaunchableTarget;
 
-import javax.swing.JDesktopPane;
-import javax.swing.SwingUtilities;
-import javax.swing.JPanel;
-import java.awt.Point;
-import java.awt.BorderLayout;
-import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.Component;
+import javax.swing.*;
+import java.awt.*;
 
 
 /**
@@ -27,7 +23,7 @@ import java.awt.Component;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class WindozeWindowManager1 extends WindozeWindowManager {
 
@@ -35,12 +31,14 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
     protected JDesktopPane mDesktopPane = new JInternalFrameFrimbleDesktopPane();
     protected Integer LAYER = new Integer(2);
 
+
     /**
      * Constructor WindozeWindowManager1
      *
      *
      */
-    public WindozeWindowManager1() {
+    public WindozeWindowManager1(ImageRepository imageRepository, AppLauncher appLauncher) {
+        super(imageRepository, appLauncher);
 
         mFrimbleFactory = new JInternalFrameFrimbleFactory(mDesktopPane);
 
@@ -100,7 +98,7 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     class JInternalFrameFrimbleDesktopPane extends JDesktopPane {
 

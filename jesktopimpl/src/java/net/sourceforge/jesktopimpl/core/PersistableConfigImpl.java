@@ -8,14 +8,14 @@
 
 package net.sourceforge.jesktopimpl.core;
 
-import org.apache.avalon.cornerstone.services.store.ObjectRepository;
+import org.jesktop.ObjectRepository;
 
 /**
  * Class PersistableConfigImpl
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class PersistableConfigImpl implements org.jesktop.config.PersistableConfig {
 

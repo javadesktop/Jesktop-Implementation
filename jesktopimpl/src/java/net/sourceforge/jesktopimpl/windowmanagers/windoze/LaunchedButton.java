@@ -9,6 +9,7 @@ package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
 import org.jesktop.api.LaunchedTarget;
 import org.jesktop.api.DesktopKernel;
+import org.jesktop.api.ImageRepository;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -22,21 +23,20 @@ import java.awt.Dimension;
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     public class LaunchedButton extends JButton {
 
         protected final LaunchedTarget launchedTarget;
         protected DesktopKernel mDesktopKernel;
 
-        protected LaunchedButton(final LaunchedTarget launchedTarget, final DesktopKernel desktopKernel) {
+        protected LaunchedButton(final LaunchedTarget launchedTarget, final DesktopKernel desktopKernel, ImageRepository imageRepository) {
 
             super();
             
             mDesktopKernel = desktopKernel;
 
-            this.setIcon(mDesktopKernel.getImageRepository()
-                .getAppSmallImageIcon(launchedTarget.getTargetName()));
+            this.setIcon(imageRepository.getAppSmallImageIcon(launchedTarget.getTargetName()));
             this.setText(launchedTarget.getTargetName());
 
             this.launchedTarget = launchedTarget;

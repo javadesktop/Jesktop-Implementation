@@ -8,7 +8,7 @@
 package net.sourceforge.jesktopimpl.apps.decorators.test;
 
 import org.jesktop.api.Decorator;
-import org.jesktop.api.DesktopKernel;
+import org.jesktop.api.ImageRepository;
 import org.jesktop.config.ObjConfigurable;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.frimble.Frimble;
@@ -26,10 +26,13 @@ import javax.swing.UIManager;
  */
 public class TestDecorator implements Decorator, ObjConfigurable {
 
-    private DesktopKernel desktopKernel;
-
     //private Config config; - this does not deserialize properly.
     private Config config;
+    private ImageRepository imageRepository;
+
+    public TestDecorator(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
+    }
 
     /**
      * Method setConfig
@@ -59,19 +62,6 @@ public class TestDecorator implements Decorator, ObjConfigurable {
         }
     }
 
-    // Javadocs will automatically import from interface.
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param mDesktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-        this.desktopKernel = desktopKernel;
-    }
-
     /**
      * Method end
      *
@@ -87,7 +77,7 @@ public class TestDecorator implements Decorator, ObjConfigurable {
     /**
      * Refer Decrorator java docs.
      */
-    public void initDecoratation(Frimble frimble, LaunchableTarget launchableTarget) {
+    public void decorate(Frimble frimble, LaunchableTarget launchableTarget) {
 
         String targetName = "default";
 
@@ -98,11 +88,9 @@ public class TestDecorator implements Decorator, ObjConfigurable {
         }
 
         if (config.bigIcons) {
-            frimble.setFrameIcon(desktopKernel.getImageRepository()
-                .getAppBigImageIcon(launchableTarget.getTargetName()));
+            frimble.setFrameIcon(imageRepository.getAppBigImageIcon(launchableTarget.getTargetName()));
         } else {
-            frimble.setFrameIcon(desktopKernel.getImageRepository()
-                .getAppSmallImageIcon(launchableTarget.getTargetName()));
+            frimble.setFrameIcon(imageRepository.getAppSmallImageIcon(launchableTarget.getTargetName()));
         }
 
         frimble.pack();

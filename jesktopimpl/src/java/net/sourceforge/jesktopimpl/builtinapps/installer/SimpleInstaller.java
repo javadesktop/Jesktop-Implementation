@@ -9,7 +9,7 @@ package net.sourceforge.jesktopimpl.builtinapps.installer;
 
 import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.frimble.Frimble;
-import org.jesktop.api.DesktopKernelAware;
+import org.jesktop.api.AppInstaller;
 import org.jesktop.api.DesktopKernel;
 import org.jesktop.api.JesktopPackagingException;
 import org.jesktop.appsupport.DropAware;
@@ -39,12 +39,13 @@ import java.io.File;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class SimpleInstaller extends JPanel
-        implements FrimbleAware, ActionListener, DesktopKernelAware, DropAware {
+        implements FrimbleAware, ActionListener, DropAware {
 
     protected DesktopKernel desktopKernel;
+    private AppInstaller appInstaller;
     protected JButton installButton;
     private String lastWorkingDirectory = null;
     private Frimble frimble;
@@ -56,7 +57,9 @@ public class SimpleInstaller extends JPanel
      *
      *
      */
-    public SimpleInstaller() {
+    public SimpleInstaller(DesktopKernel desktopKernel, AppInstaller appInstaller) {
+        this.desktopKernel = desktopKernel;
+        this.appInstaller = appInstaller;
 
         mainButton();
         this.setLayout(new BorderLayout());
@@ -134,19 +137,6 @@ public class SimpleInstaller extends JPanel
         installMi.addActionListener(this);
         exitMi.addActionListener(this);
         frimble.setJMenuBar(mb);
-    }
-
-    // Javadocs will automatically import from interface.
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param mDesktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-        this.desktopKernel = desktopKernel;
     }
 
     // Javadocs will automatically import from interface.
@@ -295,7 +285,7 @@ public class SimpleInstaller extends JPanel
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class JarFilter extends javax.swing.filechooser.FileFilter {
 
@@ -329,7 +319,7 @@ public class SimpleInstaller extends JPanel
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class InstallDoer implements Runnable {
 
@@ -356,7 +346,7 @@ public class SimpleInstaller extends JPanel
         public void run() {
 
             try {
-                desktopKernel.getAppInstaller().installApps(url);
+                appInstaller.installApps(url);
             } catch (JesktopPackagingException be) {
                 System.err.println("Exception during processing of applications.xml file = "
                                    + be.getMessage());

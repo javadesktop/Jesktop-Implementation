@@ -7,7 +7,6 @@
  */
 package net.sourceforge.jesktopimpl.builtinapps.installer;
 
-import org.jesktop.api.DesktopKernelAware;
 import org.jesktop.config.ObjConfiglet;
 import org.jesktop.api.DesktopKernel;
 import org.jesktop.launchable.DecoratorLaunchableTarget;
@@ -29,15 +28,15 @@ import java.beans.PropertyChangeListener;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class DecoratorChooser extends JPanel implements DesktopKernelAware, ObjConfiglet, PropertyChangeListener {
+public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyChangeListener {
 
-    private DesktopKernel mDesktopKernel;
+    private DesktopKernel desktopKernel;
     private final JComboBox choiceBox = new JComboBox();
     private DecComboBoxModel mDecComboBoxModel;
     private DecoratorLaunchableTarget[] decorators;
-    private ConfigManager cm;
+    private ConfigManager configManager;
     private Object mConfig;
 
     /**
@@ -45,7 +44,10 @@ public class DecoratorChooser extends JPanel implements DesktopKernelAware, ObjC
      *
      *
      */
-    public DecoratorChooser() {
+    public DecoratorChooser(DesktopKernel desktopKernel, ConfigManager configManager) {
+        this.desktopKernel = desktopKernel;
+        this.configManager = configManager;
+        desktopKernel.addPropertyChangeListener(DesktopKernel.LAUNCHABLE_TARGET_CHANGE, this);
 
         this.setLayout(new BorderLayout());
 
@@ -80,7 +82,7 @@ public class DecoratorChooser extends JPanel implements DesktopKernelAware, ObjC
     
     private void setDecorators(DecoratorLaunchableTarget currentDecorator, Object config) {
 
-        decorators = mDesktopKernel.getDecoratorLaunchableTargets();
+        decorators = desktopKernel.getDecoratorLaunchableTargets();
         mConfig = config;
 
         for (int i = 0; i < decorators.length; i++) {
@@ -98,37 +100,12 @@ public class DecoratorChooser extends JPanel implements DesktopKernelAware, ObjC
         choiceBox.setModel(mDecComboBoxModel);
         mDecComboBoxModel.setSelectedItem(currentDecorator, false);        
     }
-    
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param mDesktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-        this.mDesktopKernel = desktopKernel;
-        mDesktopKernel.addPropertyChangeListener(DesktopKernel.LAUNCHABLE_TARGET_CHANGE, this);
-        
-    }
-
-    /**
-     * Method setConfigManager
-     *
-     *
-     * @param cm
-     *
-     */
-    public void setConfigManager(ConfigManager cm) {
-        this.cm = cm;
-    }
 
     /**
      * Method propertyChange
      *
      *
-     * @param evt
+     * @param event
      *
      */    
     public void propertyChange( PropertyChangeEvent event ) {
@@ -145,7 +122,7 @@ public class DecoratorChooser extends JPanel implements DesktopKernelAware, ObjC
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class DecComboBoxModel extends DefaultListModel implements ComboBoxModel {
 
@@ -172,7 +149,7 @@ public class DecoratorChooser extends JPanel implements DesktopKernelAware, ObjC
             currSelected = (DecoratorLaunchableTarget) anItem;
 
             if (notifyCfgMgr) {
-                cm.notifyUpdated(DecoratorChooser.this);
+                configManager.notifyUpdated(DecoratorChooser.this);
             }
         }
 

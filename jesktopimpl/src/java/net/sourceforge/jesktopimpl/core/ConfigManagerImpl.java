@@ -8,49 +8,26 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-
-
+import net.sourceforge.jesktopimpl.services.DesktopKernelService;
+import net.sourceforge.jesktopimpl.services.KernelConfigManager;
+import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
+import net.sourceforge.jesktopimpl.services.WindowManager;
+import org.jesktop.api.Decorator;
 import org.jesktop.config.ConfigManager;
 import org.jesktop.config.Configlet;
 import org.jesktop.config.ObjConfiglet;
 import org.jesktop.config.XMLConfiglet;
+import org.jesktop.ObjectRepository;
 import org.jesktop.launchable.ConfigletLaunchableTarget;
-import org.jesktop.api.DesktopKernel;
-import org.jesktop.api.Decorator;
-
-import org.apache.avalon.cornerstone.services.store.ObjectRepository;
-import org.apache.avalon.cornerstone.services.store.Store;
-import org.apache.avalon.cornerstone.services.dom.DocumentBuilderFactory;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.phoenix.Block;
-import net.sourceforge.jesktopimpl.services.KernelConfigManager;
-import net.sourceforge.jesktopimpl.services.DesktopKernelService;
-import net.sourceforge.jesktopimpl.services.WindowManager;
-import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.swing.JComponent;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
-
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Iterator;
-import java.beans.PropertyChangeSupport;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 
 
 /**
@@ -58,60 +35,25 @@ import java.beans.PropertyChangeEvent;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class ConfigManagerImpl extends AbstractLogEnabled
-        implements Block, KernelConfigManager, ConfigManager, Contextualizable, Composable, Configurable, Initializable  {
+public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
 
     private final static String CFG = "cfg-";
-    private ObjectRepository mObjectRepository;
-    private Store mStore;
     private LaunchableTargetFactory mLaunchableTargetFactory;
+    private ObjectRepository objectRepository;
     private PropertyChangeSupport propChgSupport = new PropertyChangeSupport("DummyBean");
     //private HashMap configListeners = new HashMap();
     private DocumentBuilderFactory mDocumentBuilderFactory;
     private DocumentBuilder mDocumentBuilder;
-    private Configuration mRepository;
-
-    public ConfigManagerImpl() {
-    }
-
-    public void contextualize(Context context)
-            throws ContextException {
-    }
-
-    public void configure(Configuration configuration)
-            throws ConfigurationException {
-        mRepository = configuration.getChild("repository");
-    }
-
-    /**
-     * Method compose
-     *
-     *
-     * @param componentManager
-     *
-     * @throws ComponentException
-     *
-     */
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        mStore = (Store) componentManager.lookup(Store.class.getName());
-        mDocumentBuilderFactory =
-            (DocumentBuilderFactory) componentManager.lookup(DocumentBuilderFactory.class.getName());
-        mLaunchableTargetFactory = (LaunchableTargetFactory) componentManager.lookup(LaunchableTargetFactory.class.getName());
-        try
-        {
-            mDocumentBuilder = mDocumentBuilderFactory.newDocumentBuilder();
-        }
-        catch (ParserConfigurationException pce)
-        {
-            throw new ComponentException("ParserConfiguration Exception in compose()",pce);
-        }
-    }
-
-    public void initialize()
-            throws Exception {
-        mObjectRepository = (ObjectRepository) mStore.select(mRepository);
+ 
+    public ConfigManagerImpl(DocumentBuilderFactory documentBuilderFactory, LaunchableTargetFactory launchableTargetFactory,
+                             ObjectRepository objectRepository) throws ParserConfigurationException {
+ 
+        mDocumentBuilderFactory = documentBuilderFactory;
+        mLaunchableTargetFactory = launchableTargetFactory;
+        this.objectRepository = objectRepository;
+        mDocumentBuilder = mDocumentBuilderFactory.newDocumentBuilder(); 
     }
 
     /**
@@ -126,8 +68,8 @@ public class ConfigManagerImpl extends AbstractLogEnabled
      */
     public Object getObjConfig(final String configPath, final ClassLoader classLoader) {
 
-        if (mObjectRepository.containsKey(CFG + configPath)) {
-            return mObjectRepository.get(CFG + configPath, classLoader);
+        if (objectRepository.containsKey(CFG + configPath)) {
+            return objectRepository.get(CFG + configPath, classLoader);
         } else {
             return null;
         }
@@ -145,10 +87,10 @@ public class ConfigManagerImpl extends AbstractLogEnabled
      */
     public Document getXMLConfig(final String configPath, final ClassLoader classLoader) {
 
-        if (mObjectRepository.containsKey(CFG + configPath)) {
+        if (objectRepository.containsKey(CFG + configPath)) {
             System.out.println("in mObjectRepository");
 
-            return (Document) mObjectRepository.get(CFG + configPath, classLoader);
+            return (Document) objectRepository.get(CFG + configPath, classLoader);
         } else {
             Document doc = mDocumentBuilder.newDocument();
             Element root = doc.createElement("config");
@@ -161,10 +103,10 @@ public class ConfigManagerImpl extends AbstractLogEnabled
 
     public String getStringConfig(final String configPath, final String defaultVal) {
 
-        if (mObjectRepository.containsKey(CFG + configPath)) {
-            return (String) mObjectRepository.get(CFG + configPath);
+        if (objectRepository.containsKey(CFG + configPath)) {
+            return (String) objectRepository.get(CFG + configPath);
         } else {
-            mObjectRepository.put(CFG + configPath, defaultVal);
+            objectRepository.put(CFG + configPath, defaultVal);
 
             return defaultVal;
         }
@@ -241,7 +183,7 @@ public class ConfigManagerImpl extends AbstractLogEnabled
         Object newCfg = clet.getConfig();
 
         if ((oldCfg == null) ||!oldCfg.equals(newCfg)) {
-            mObjectRepository.put(CFG + clt.getConfigPath(), clet.getConfig());
+            objectRepository.put(CFG + clt.getConfigPath(), clet.getConfig());
             notifyInterested(clt.getConfigPath(), clet, clet.getConfig());
         }
     }
@@ -262,7 +204,7 @@ public class ConfigManagerImpl extends AbstractLogEnabled
         Object newCfg = clet.getConfig();
 
         //if (oldCfg == null || !oldCfg.equals(newCfg)) {
-        mObjectRepository.put(CFG + clt.getConfigPath(), clet.getConfig());
+        objectRepository.put(CFG + clt.getConfigPath(), clet.getConfig());
         notifyInterested(clt.getConfigPath(), clet, clet.getConfig());
 
         //}

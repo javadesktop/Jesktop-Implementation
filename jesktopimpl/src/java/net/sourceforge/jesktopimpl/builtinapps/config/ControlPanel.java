@@ -7,35 +7,29 @@
  */
 package net.sourceforge.jesktopimpl.builtinapps.config;
 
-import org.jesktop.frimble.JFrimble;
-import org.jesktop.api.DesktopKernelAware;
+import net.sourceforge.jesktopimpl.services.KernelConfigManager;
+import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import org.jesktop.api.DesktopKernel;
-import org.jesktop.launchable.ConfigletLaunchableTarget;
+import org.jesktop.config.ConfigManager;
 import org.jesktop.config.Configlet;
 import org.jesktop.config.ObjConfiglet;
 import org.jesktop.config.XMLConfiglet;
-import org.jesktop.config.ConfigManager;
+import org.jesktop.frimble.JFrimble;
+import org.jesktop.launchable.ConfigletLaunchableTarget;
 import org.w3c.dom.Document;
-import net.sourceforge.jesktopimpl.core.LaunchableTargetHolder;
-import net.sourceforge.jesktopimpl.core.ConfigManagerImpl;
-import net.sourceforge.jesktopimpl.services.KernelConfigManager;
-import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
+import org.picocontainer.defaults.DefaultPicoContainer;
+import org.picocontainer.MutablePicoContainer;
 
-import javax.swing.JTabbedPane;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.SingleSelectionModel;
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.util.Vector;
-import java.util.Iterator;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Iterator;
+import java.util.Vector;
 
 
 /**
@@ -43,9 +37,9 @@ import java.beans.PropertyChangeEvent;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class ControlPanel extends JFrimble implements DesktopKernelAware, PropertyChangeListener {
+public class ControlPanel extends JFrimble implements PropertyChangeListener {
 
     private JTabbedPane jtp = new JTabbedPane(JTabbedPane.TOP);
     private DesktopKernel desktopKernel;
@@ -61,16 +55,26 @@ public class ControlPanel extends JFrimble implements DesktopKernelAware, Proper
     private KernelConfigManager mConfigManager;
     private ControlPanelConfigManager cpConfigManger;
     private Configlet selectedConfiglet;
-    private Vector configletWrappers = new Vector(); 
+    private Vector configletWrappers = new Vector();
+    private MutablePicoContainer picoContainer;
 
     /**
      * Constructor ConfirmInstallation
      *
      *
      */
-    public ControlPanel() {
+    public ControlPanel(DesktopKernel desktopKernel, LaunchableTargetFactory launchableTargetFactory, KernelConfigManager kernelConfigManager) {
 
         super("Control Panel");
+        this.desktopKernel = desktopKernel;
+        mLaunchableTargetFactory = launchableTargetFactory;
+        mConfigManager = kernelConfigManager;
+        cpConfigManger = new ControlPanelConfigManager();
+
+        picoContainer = new DefaultPicoContainer();
+        picoContainer.registerComponentInstance(desktopKernel);
+        picoContainer.registerComponentInstance(launchableTargetFactory);
+        picoContainer.registerComponentInstance(kernelConfigManager);
 
         super.getContentPane().setLayout(new BorderLayout());
 
@@ -80,43 +84,6 @@ public class ControlPanel extends JFrimble implements DesktopKernelAware, Proper
         footer.add(revertBtn);
         footer.add(okBtn);
         this.getContentPane().add(footer, BorderLayout.SOUTH);
-    }
-
-    /**
-     * Method setLaunchableTargetHolder
-     *
-     *
-     * @param mLaunchableTargetHolder
-     *
-     */
-    public void setLaunchableTargetFactory(LaunchableTargetFactory ltf) {
-        this.mLaunchableTargetFactory = ltf;
-    }
-
-    /**
-     * Method setConfigManager
-     *
-     *
-     * @param mConfigManager
-     *
-     */
-    public void setConfigManager(KernelConfigManager cm) {
-        this.mConfigManager = cm;
-        this.cpConfigManger = new ControlPanelConfigManager();
-    }
-
-    // Javadocs will automatically import from interface.
-
-    /**
-     * Method setDesktopKernel
-     *
-     *
-     * @param mDesktopKernel
-     *
-     */
-    public void setDesktopKernel(DesktopKernel desktopKernel) {
-
-        this.desktopKernel = desktopKernel;
 
         jtp.getModel().addChangeListener(new ChangeListener() {
 
@@ -131,12 +98,13 @@ public class ControlPanel extends JFrimble implements DesktopKernelAware, Proper
         });
 
         setConfiglets(desktopKernel.getConfigletLaunchableTargets());
-        
+
         desktopKernel.addPropertyChangeListener(DesktopKernel.LAUNCHABLE_TARGET_CHANGE, this);
-        
+
         this.getContentPane().add(jtp, BorderLayout.CENTER);
+
     }
-    
+
     public void setConfiglets(ConfigletLaunchableTarget[] configlets) {
         mConfiglets = configlets;
         
@@ -181,15 +149,7 @@ public class ControlPanel extends JFrimble implements DesktopKernelAware, Proper
 
                     Class cLetClass = cLetClassLoader.loadClass(mConfiglets[f].getClassName());
 
-                    clet = (Configlet) cLetClass.newInstance();
-
-                    clet.setConfigManager(cpConfigManger);
-
-                    if (clet instanceof DesktopKernelAware) {
-                        DesktopKernelAware dka = (DesktopKernelAware) clet;
-
-                        dka.setDesktopKernel(desktopKernel);
-                    }
+                    clet = (Configlet) new DefaultPicoContainer(picoContainer).registerComponentImplementation(cLetClass).getComponentInstance();
 
                     if (clet instanceof ObjConfiglet) {
                         ((ObjConfiglet) clet).setConfig(mConfigManager.getObjConfig(mConfiglets[f].getConfigPath(),
@@ -202,10 +162,6 @@ public class ControlPanel extends JFrimble implements DesktopKernelAware, Proper
                     ConfigletWrapper cw = new ConfigletWrapper (mConfiglets[f], clet);
                     jtp.add(mConfiglets[f].getDisplayName(), cw);
                     configletWrappers.add(cw);
-                } catch (InstantiationException ie) {
-                    ie.printStackTrace();
-                } catch (IllegalAccessException iae) {
-                    iae.printStackTrace();
                 } catch (ClassNotFoundException cnfe) {
                    cnfe.printStackTrace();
                 }
@@ -228,7 +184,7 @@ public class ControlPanel extends JFrimble implements DesktopKernelAware, Proper
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class OKBtn extends JButton {
 
@@ -263,7 +219,7 @@ public class ControlPanel extends JFrimble implements DesktopKernelAware, Proper
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class TryBtn extends JButton {
 
@@ -298,7 +254,7 @@ public class ControlPanel extends JFrimble implements DesktopKernelAware, Proper
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class RevertBtn extends JButton {
 
@@ -342,7 +298,7 @@ public class ControlPanel extends JFrimble implements DesktopKernelAware, Proper
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.1 $
+     * @version $Revision: 1.2 $
      */
     private class ControlPanelConfigManager implements ConfigManager {
 
