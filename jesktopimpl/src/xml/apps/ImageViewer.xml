@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<application type="normal" target="Tools/ImageViewer">
+	<display-name>Image Viewer</display-name>
+	<class>org.apache.avalon.jesktop.apps.imageviewer.ImageViewer</class>
+	<icons icon32="org/apache/avalon/jesktop/apps/imageviewer/ImageViewer32.gif" 
+	       icon16="org/apache/avalon/jesktop/apps/imageviewer/ImageViewer16.gif" />
+</application>

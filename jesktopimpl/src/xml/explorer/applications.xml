@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<applications>
+  <default-application target-name="Tools/Explorer"/>
+  <appxml locn="JESKTOP-INF/Explorer.xml"/>
+</applications>

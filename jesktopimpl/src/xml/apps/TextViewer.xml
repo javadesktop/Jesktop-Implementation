@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<application type="normal" target="Tools/TextViewer">
+	<display-name>Text Viewer</display-name>
+	<class>org.apache.avalon.jesktop.apps.notepad.TextViewer</class>
+</application>

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<application type="normal" target="Tools/Misc/DragMonitor">
+	<display-name>Drag Monitor</display-name>
+	<class>org.apache.avalon.jesktop.apps.misc.DragMonitor</class>
+</application>

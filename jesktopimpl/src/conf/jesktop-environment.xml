@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                                README!
+
+    Basic config file that sets up context for server application.
+
+-->
+<environment>
+
+    <logs>
+      <category name="" target="default" priority="DEBUG" />
+      <category name="objectstorage" target="objectstorage-target" priority="DEBUG" />
+      <category name="jesktop-kernel" target="jesktop-kernel-target" priority="DEBUG" />      
+      <category name="jesktop-windowmanager" target="jesktop-windowmanager-target" priority="DEBUG" />     
+
+      <log-target name="default" location="/logs/jesktop-default.log" />
+      <log-target name="jesktop-kernel-target" location="/logs/jesktop-kernel.log" />
+      <log-target name="jesktop-windowmanager-target" location="/logs/jesktop-windowmanager.log" />
+      <log-target name="objectstorage-target" location="/logs/objectstorage.log" />
+    </logs>
+
+    <policy>
+      <grant code-base="file:${app.home}${/}SAR-INF${/}lib${/}*">
+        <permission class="java.security.AllPermission" />
+      </grant>
+    </policy>
+
+</environment>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<applications>
+	<appxml locn="JESKTOP-INF/TextViewer.xml"/>
+	<appxml locn="JESKTOP-INF/ImageViewer.xml"/>
+	<appxml locn="JESKTOP-INF/DragMonitor.xml"/>
+	<appxml locn="JESKTOP-INF/BackdropConfiglet.xml"/>	
+</applications>

@@ -1,0 +1,467 @@
+<?xml version="1.0"?>
+
+<!--
+==============================================================================
+
+ Jesktop build file
+
+==============================================================================
+-->
+
+<project default="main" basedir=".">
+
+  <!--
+    Give user a chance to override without editing this file
+    (and without typing -D each time he compiles it)
+  -->
+  <property file=".ant.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+
+  <property name="name" value="jesktop"/>
+  <property name="Name" value="Jesktop"/>
+  <property name="version" value="1.0"/>
+  <property name="year" value="2001"/>
+  <property name="jar.name" value="jesktop"/>
+
+  <!--
+    these are here only for those who use jikes compiler. For other
+    developers this part makes no difference.
+  -->
+  <property name="build.compiler.emacs" value="on"/>
+  <property name="build.compiler.pedantic" value="true"/>
+  <property name="build.compiler.depend" value="true"/>
+  <property name="build.compiler.fulldepend" value="true"/>
+
+  <property name="build.debug" value="on"/>
+  <property name="build.optimize" value="off"/>
+  <property name="build.deprecation" value="on"/>
+
+  <!--
+       ===================================================================
+       Set the installation variables for Cornerstone/Phoenix
+       ===================================================================
+  -->
+  <property name="phoenix.home" value="../../../jakarta-avalon-phoenix/dist"/>
+  <property name="install.dir" value="${phoenix.home}/apps"/>
+  <property name="installvar.dir" value="${phoenix.home}/var"/>
+
+  <!--
+       ===================================================================
+       Set the properties for intermediate directory
+       ===================================================================
+  -->
+  <property name="build.dir" value="build"/>
+  <property name="build.lib" value="${build.dir}/lib"/>
+  <property name="build.src" value="${build.dir}/src"/>
+  <property name="build.classes" value="${build.dir}/classes"/>
+  <property name="build.javadocs" value="${build.dir}/javadocs"/>
+  <property name="build.docs" value="${build.dir}/docs"/>
+  <property name="build.xdocs" value="${build.dir}/xdocs"/>
+
+  <!--
+       ===================================================================
+       Set the properties for source directories
+       ===================================================================
+  -->
+  <property name="src.dir" value="src"/>
+  <property name="java.dir" value="${src.dir}/java"/>
+  <property name="manifest.dir" value="${src.dir}/manifest"/>
+  <property name="conf.dir" value="${src.dir}/conf"/>
+  <property name="tools.dir" value="tools"/>
+  <property name="docs.dir" value="docs"/>
+  <property name="javadocs.dir" value="${docs.dir}/api"/>
+  <property name="xdocs.dir" value="${src.dir}/xdocs"/>
+  <property name="avalon.skin" value="${tools.dir}/lib/jakarta-style.jar"/>
+  <property name="xerces.jar2" value="../../${tools.dir}/lib/xerces.jar"/>  
+
+  <property name="dist.name" value="${Name}-${version}"/>
+  <property name="dist.base" value="distributions"/>
+
+  <path id="project.class.path">
+    <pathelement path="${java.class.path}" /> 
+ 
+  </path>
+
+  <!--
+       ===================================================================
+                                  Help on usage
+       ===================================================================
+  -->
+  <target name="usage">
+    <echo message=""/>
+    <echo message="${Name} Build file"/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message=""/>
+    <echo message=" available targets are:"/>
+    <echo message=""/>
+    <echo message="   all         -> generates all the ${Name} jar/bar/sar files"/>
+    <echo message="   install     -> installs ${Name} into Phoenix"/>
+    <echo message="   uninstall   -> uninstalls ${Name} from Phoenix"/>
+    <echo message="   check       -> perform any built in tests"/>
+    <echo message="   docs        -> generates the ${Name} Documentation"/>
+    <echo message="   printerdocs -> generates printer-friendly ${Name} Docs"/>
+    <echo message="   javadocs    -> generates the API documentation (java 1.2+ only)"/>
+    <echo message="   dist        -> generates the ${Name} distribution"/>
+    <echo message="   clean       -> cleans up the created directories"/>
+    <echo message="   distclean   -> cleans up all genereated files and directories"/>
+    <echo message=""/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message=""/>
+  </target>
+
+  <target name="help" depends="usage"/>
+
+  <!--
+       ===================================================================
+       Set up dist properties
+       ===================================================================
+  -->
+  <target name="setup-properties" >
+
+    <property name="dist.dir" value="dist"/>
+    <property name="dist.lib" value="${dist.dir}/lib"/>
+    <property name="dist.docs" value="${dist.dir}/docs"/>
+    <property name="dist.javadocs" value="${dist.dir}/docs/api"/>
+
+    <property name="src.dist.dir" value="dist-src"/>
+    <property name="src.dist.src" value="${src.dist.dir}/src"/>
+    <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
+    <property name="src.dist.javadocs" value="${src.dist.dir}/docs/api"/>
+    <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
+    <property name="src.dist.tools" value="${src.dist.dir}/tools"/>
+  </target>
+
+  <!--
+       ===================================================================
+                         Prepares the build directory
+       ===================================================================
+  -->
+  <target name="compile">
+  
+    <mkdir dir="${build.dir}"/>
+    <available property="jsse.present" classname="javax.net.ssl.SSLServerSocket" />
+
+    <mkdir dir="${build.classes}"/>
+
+    <javac srcdir="${java.dir}"
+           destdir="${build.classes}"
+           debug="${build.debug}"
+           optimize="${build.optimize}"
+           deprecation="${build.deprecation}"> 
+      <classpath>
+        <pathelement path="${project.class.path}"/>
+        <pathelement path="${xerces.jar2}" />           
+        <pathelement path="../../build/classes" />
+        <fileset dir="lib">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="../../lib">
+          <include name="*.jar" />
+        </fileset>
+      </classpath>
+
+
+      <exclude name="**/gui/*.java"/> 
+    </javac>
+
+    <copy todir="${build.classes}">
+      <fileset dir="${java.dir}">
+        <include name="**/*.xinfo"/>
+        <include name="**/*.properties" />
+      </fileset>
+    </copy>
+
+  </target>
+
+  <!--
+       ===================================================================
+                           Creates all the .jar file
+       ===================================================================
+  -->
+  <target name="main" depends="jars, sars" description="Default target to generate build products minus docs"/>  
+  <target name="all" depends="jars, sars" description="Generates all the Jesktop jar/bar/sar files"/>
+  
+  <target name="jars" depends="compile">
+
+    <mkdir dir="${build.lib}"/>
+    
+    <jar file="${build.lib}/${jar.name}-explorer.jar">
+      <zipfileset dir="build/classes">
+        <include name="org/apache/avalon/jesktop/apps/explorer/**"/>
+      </zipfileset>                  
+      <zipfileset dir="src/java">
+        <include name="org/apache/avalon/jesktop/apps/explorer/**/*.xinfo"/>
+        <include name="org/apache/avalon/jesktop/apps/explorer/**/*.gif"/>
+      </zipfileset>         
+      <zipfileset dir="src/xml/explorer" prefix="JESKTOP-INF">
+        <include name="*.xml"/>
+      </zipfileset>      
+    </jar>
+
+    <jar file="${build.lib}/${jar.name}-apps.jar">
+      <zipfileset dir="build/classes">
+        <include name="org/apache/avalon/jesktop/apps/**"/>
+        <exclude name="org/apache/avalon/jesktop/apps/explorer/**"/>
+      </zipfileset>                  
+      <zipfileset dir="src/java">
+        <include name="org/apache/avalon/jesktop/apps/**/*.xinfo"/>
+        <include name="org/apache/avalon/jesktop/apps/**/*.gif"/>
+        <exclude name="org/apache/avalon/jesktop/apps/explorer/**"/>
+      </zipfileset>         
+      <zipfileset dir="src/xml/apps" prefix="JESKTOP-INF">
+        <include name="*.xml"/>
+      </zipfileset>      
+    </jar>
+    
+  
+  </target>
+  
+  <target name="bars" depends="compile">
+  
+    <mkdir dir="${build.lib}"/>
+    
+    <jar file="${build.lib}/${jar.name}.jar"
+         manifest="${manifest.dir}/jesktop.mf">
+      <zipfileset dir="build/classes">
+        <exclude name="org/apache/avalon/jesktop/apps/**"/>
+      </zipfileset>                  
+      <zipfileset dir="src/java">
+        <include name="**/*.xinfo"/>
+        <include name="**/*.gif"/>
+        <exclude name="org/apache/avalon/jesktop/apps/**"/>
+      </zipfileset>         
+    </jar>  
+    
+  </target>
+  
+  <target name="sars" depends="bars">
+
+    <mkdir dir="${build.lib}"/>
+
+    <jar file="${build.lib}/${jar.name}.sar">
+
+      <zipfileset dir="${build.lib}" prefix="SAR-INF/lib">
+        <include name="jesktop.jar"/>
+      </zipfileset>
+
+      <zipfileset dir="../../build/lib" prefix="SAR-INF/lib">
+        <include name="cornerstone.jar"/>
+      </zipfileset>
+
+      <zipfileset dir="lib" prefix="SAR-INF/lib">
+        <include name="*.jar"/>
+      </zipfileset>
+
+      <zipfileset dir="${conf.dir}" fullpath="SAR-INF/assembly.xml">
+        <include name="jesktop-assembly.xml"/>
+      </zipfileset>
+
+      <zipfileset dir="${conf.dir}" fullpath="SAR-INF/environment.xml">
+        <include name="jesktop-environment.xml"/>
+      </zipfileset>
+
+      <zipfileset dir="${conf.dir}" fullpath="SAR-INF/config.xml">
+        <include name="jesktop-config.xml"/>
+      </zipfileset>
+
+    </jar>
+
+    <mkdir dir="dist"/>
+
+    <copy todir="dist">
+      <fileset dir="${build.lib}">
+        <include name="**"/>
+      </fileset>
+    </copy>
+
+  </target>
+
+  <!--
+       ===================================================================
+       Create the API documentation
+       ===================================================================
+  -->
+  <target name="javadocs">
+
+    <delete dir="${build.javadocs}"/>
+    <mkdir dir="${build.javadocs}"/>
+
+    <javadoc packagenames="jesktop.*"
+             sourcepath="${java.dir}"
+             destdir="${build.javadocs}">
+      <classpath refid="project.class.path" />
+      <doclet name="com.sun.tools.doclets.standard.Standard">
+       <param name="-author"/>
+       <param name="-version"/>
+       <param name="-use"/>
+       <param name="-doctitle" value="${Name}"/>
+       <param name="-windowtitle" value="${Name} API"/>
+       <param name="-bottom"
+              value="&quot;Copyright &#169; 2001 Apache Jakarta Project. All Rights Reserved.&quot;"/>
+      </doclet>
+    </javadoc>
+
+  </target>
+
+  <!--
+       ===================================================================
+                     Prepares the documentation directory
+       ===================================================================
+  -->
+  <target name="docs" depends="javadocs">
+
+    <mkdir dir="${build.xdocs}"/>
+    <mkdir dir="${build.docs}"/>
+
+    <filter token="year" value="${year}"/>
+    <filter token="AVALON_BASE" value="http://jakarta.apache.org/avalon"/>
+    <filter token="FRAMEWORK_BASE" value="http://jakarta.apache.org/avalon/framework"/>
+
+    <copy todir="${build.xdocs}" filtering="on">
+      <fileset dir="${xdocs.dir}">
+        <exclude name="**/images/**"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.docs}" filtering="off">
+      <fileset dir="${xdocs.dir}">
+        <include name="**/images/**"/>
+      </fileset>
+    </copy>
+
+    <java classname="org.apache.cocoon.Main" fork="true">
+      <arg value="-c${build.context}/"/>
+      <arg value="-d${build.docs}"/>
+      <arg value="-w${build.dir}/work"/>
+      <arg value="-l${build.dir}/work/cocoon.log"/>
+      <arg value="-uINFO"/>
+      <arg value="-f${src.dir}/xdocs/jesktop.uris"/>
+      <classpath>
+        <!--<path refid="tools.class.path"/>-->
+        <fileset dir="../../${tools.dir}/lib"/>
+        <fileset dir="../../${tools.dir}/ext"/>
+      </classpath>
+    </java>
+
+    <!--
+    <stylebook targetdirectory="${build.docs}"
+               book="${build.xdocs}/book.xml"
+               skindirectory="src/skins/jesktop">
+      <classpath refid="project.class.path" />
+    </stylebook>
+    -->
+
+  </target>
+
+  <target name="printerdocs" depends="javadocs">
+    <echo message="Not implemented yet."/>
+  </target>
+
+  <!--
+       ===================================================================
+                 Completely build all dists
+       ===================================================================
+  -->
+  <target name="dist">
+    <mkdir dir="${dist.base}"/>
+
+    <antcall target="dist">
+      <param name="dist.dir" value="${dist.name}" />
+    </antcall>
+
+    <zip file="${dist.base}/${dist.name}-bin.zip"
+         basedir="${dist.name}/.."
+         includes="${dist.name}/**"/>
+
+    <tar longfile="gnu" tarfile="${dist.base}/${dist.name}-bin.tar">
+      <tarfileset dir="${dist.name}/.." username="avalon" group="avalon">
+        <include name="${dist.name}/**"/>
+      </tarfileset>
+    </tar>
+
+    <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz"
+          src="${dist.base}/${dist.name}-bin.tar"/>
+
+    <delete file="${dist.base}/${dist.name}-bin.tar"/>
+    <delete dir="${dist.name}" />
+
+    <antcall target="src-dist">
+      <param name="src.dist.dir" value="${dist.name}" />
+    </antcall>
+
+    <zip file="${dist.base}/${dist.name}-src.zip"
+         basedir="${dist.name}/.."
+         includes="${dist.name}/**"/>
+
+    <tar longfile="gnu" tarfile="${dist.base}/${dist.name}-src.tar" >
+      <tarfileset dir="${dist.name}/.." mode="755" username="avalon" group="avalon">
+        <include name="${dist.name}/build.sh"/>
+      </tarfileset>
+      <tarfileset dir="${dist.name}/.." username="avalon" group="avalon">
+        <include name="${dist.name}/**"/>
+        <exclude name="${dist.name}/build.sh"/>
+      </tarfileset>
+    </tar>
+
+    <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz"
+          src="${dist.base}/${dist.name}-src.tar"/>
+
+    <delete file="${dist.base}/${dist.name}-src.tar"/>
+    <delete dir="${dist.name}" />
+
+  </target>
+
+  <!--
+       ===================================================================
+                 Cleans up build and distribution directories
+       ===================================================================
+  -->
+  <target name="clean">
+    <delete dir="${build.dir}" />
+    <delete>
+      <fileset dir="." includes="**/*~" defaultexcludes="no"/>
+    </delete>
+  </target>
+
+  <!--
+       ===================================================================
+                      Cleans absolutely everything up
+       ===================================================================
+  -->
+  <target name="distclean" depends="clean">
+    <delete dir="${docs.dir}" />
+    <delete dir="${dist.base}" />
+  </target>
+
+  <!--
+       ===================================================================
+                  Deploys Jesktop to relatively local Phoenix
+                    Phoenix should have been shut down first
+       ===================================================================
+  -->
+  <target name="install" depends="main" description="Installs into Phoenix">
+    <!-- <fail message="install.dir not specified." unless="install.dir"/> -->
+    <echo message="Installing to ${install.dir}" />    
+    <copy file="${build.lib}/jesktop.sar" todir="${install.dir}" />
+    <delete file="${installvar.dir}/jesktop-install.log" />     
+    <delete dir="${install.dir}/jesktop" />
+  </target>
+
+  <target name="uninstall" description="Uninstalls from Phoenix">
+
+    <!-- <fail message="install.dir not specified." unless="install.dir"/> -->
+    <delete dir="${install.dir}/jesktop/" />
+    <delete file="jesktop.sar" dir="${install.dir}"/>
+  </target>
+
+  <!--
+       ===================================================================
+       Performs unit tests
+       ===================================================================
+  -->
+  <target name="test" depends="check"/>
+
+  <target name="check" depends="compile" description="Perform any built in tests">
+  </target>
+
+</project>
