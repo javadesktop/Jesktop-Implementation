@@ -4,11 +4,21 @@ rem Phoenix start script.
 rem
 rem Author: Peter Donald [donaldp@apache.org]
 rem
-rem The user may choose to supply parameters to the JVM (such as memory settings)
-rem via setting the environment variable PHOENIX_JVM_OPTS
+rem Environment Variable Prequisites
 rem
-rem The user may also disable the security manager by setting PHOENIX_SECURE=false
+rem   PHOENIX_OPTS       (Optional) Java runtime options used when the command is
+rem                      executed.
 rem
+rem   PHOENIX_TMPDIR     (Optional) Directory path location of temporary directory
+rem                      the JVM should use (java.io.tmpdir).  Defaults to
+rem                      $CATALINA_BASE/temp.
+rem
+rem   JAVA_HOME          Must point at your Java Development Kit installation.
+rem
+rem   PHOENIX_JVM_OPTS   (Optional) Java runtime options used when the command is
+rem                       executed.
+rem
+rem -----------------------------------------------------------------------------
 
 rem
 rem Determine if JAVA_HOME is set and if so then use it
@@ -40,15 +50,22 @@ if not "%PHOENIX_HOME%" == "" goto phoenix_home
 
 echo.
 echo Warning: PHOENIX_HOME environment variable is not set.
-echo   This needs to be set for Win9x as it's command prompt 
+echo   This needs to be set for Win9x as it's command prompt
 echo   scripting bites
 echo.
 goto end
 
 :phoenix_home
 
-rem echo "Home directory: %PHOENIX_HOME%"
-rem echo "Home ext directory: %PHOENIX_HOME%\lib"
+if not "%PHOENIX_TMPDIR%"=="" goto afterTmpDir
+set PHOENIX_TMPDIR=%PHOENIX_HOME%\temp
+if not exist "%PHOENIX_TMPDIR%" mkdir %PHOENIX_TMPDIR%
+
+:afterTmpDir
+
+echo Using PHOENIX_HOME:   %PHOENIX_HOME%
+echo Using PHOENIX_TMPDIR: %PHOENIX_TMPDIR%
+echo Using JAVA_HOME:      %JAVA_HOME%
 
 set PHOENIX_SM=
 
@@ -66,6 +83,6 @@ rem thus breaking Phoenix
 rem
 
 rem Kicking the tires and lighting the fires!!!
-%PHOENIX_JAVACMD% -Djava.ext.dirs=%PHOENIX_HOME%\lib -Dphoenix.home=%PHOENIX_HOME% -Djava.security.policy=jar:file:%PHOENIX_HOME%/bin/phoenix-loader.jar!/META-INF/java.policy %PHOENIX_JVM_OPTS% %PHOENIX_SECURE% -jar %PHOENIX_HOME%\bin\phoenix-loader.jar %1 %2 %3 %4 %5 %6 %7 %8 %9
+"%PHOENIX_JAVACMD%" "-Djava.ext.dirs=%PHOENIX_HOME%\lib" "-Dphoenix.home=%PHOENIX_HOME%" "-Djava.security.policy=jar:file:%PHOENIX_HOME%/bin/phoenix-loader.jar!/META-INF/java.policy" %PHOENIX_JVM_OPTS% %PHOENIX_SECURE% -jar "%PHOENIX_HOME%\bin\phoenix-loader.jar" %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 :end
