@@ -316,6 +316,7 @@
         <exclude name="build.xml"/>
         <exclude name="dist/**"/>
         <exclude name="src/**"/>
+        <exclude name="object-repository/**"/>
       </fileset>
     </zip>
 

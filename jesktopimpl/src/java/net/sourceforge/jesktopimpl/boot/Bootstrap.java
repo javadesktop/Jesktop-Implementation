@@ -39,7 +39,7 @@ public class Bootstrap {
 
     public Bootstrap() throws ParserConfigurationException {
 
-        File baseDir = new File(".");
+        File baseDir = new File(".").getAbsoluteFile();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         ObjectRepository or = new DefaultObjectRepository(baseDir);
         LaunchableTargetFactory ltf = new LaunchableTargetFactoryImpl(or);

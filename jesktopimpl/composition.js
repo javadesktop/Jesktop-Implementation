@@ -1,6 +1,6 @@
 var pico = new DefaultPicoContainer()
 
-pico.registerComponentInstance(new File("."))
+pico.registerComponentInstance(new File(".").getAbsoluteFile())
 pico.registerComponentInstance(Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance())
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.DefaultObjectRepository)
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.LaunchableTargetFactoryImpl)
