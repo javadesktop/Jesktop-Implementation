@@ -387,4 +387,36 @@
   <target name="check" depends="compile" description="Perform any built in tests">
   </target>
 
+  <!--
+       ===================================================================
+       Deploy the site.
+       ===================================================================
+  -->
+
+  <target name="site:sshdeploy" depends="distclean" description="Deploy the generated site docs using ssh">
+    <!-- assume user has a ~/build.properties file with maven.ssh.executable etc -->
+    <property file="${user.home}/build.properties"/>
+
+    <tar tarfile="site.tar" basedir="dist"/>
+    <gzip zipfile="site.tar.gz" src="site.tar"/>
+    <delete file="site.tar"/>
+
+    <!-- Make sure the destination directory exists before trying to copy -->
+    <exec dir="." executable="${maven.ssh.executable}">
+      <arg line="codehaus.org -l ${sourceforge.username} 'mkdir -p /groups/j/je/jesktopimpl/html-docs'"/>
+    </exec>
+
+    <exec dir="." executable="${maven.scp.executable}">
+      <arg value="site.tar.gz"/>
+      <arg value="${sourceforge.username}@shell.sourceforge.net:/groups/j/je/jesktopimpl/html-docs"/>
+    </exec>
+
+    <exec dir="." executable="${maven.ssh.executable}">
+      <arg line="codehaus.org -l ${sourceforge.username} 'cd /groups/j/je/jesktopimpl/html-docs;gunzip site.tar.gz;tar xUvf site.tar;chmod -R g+u *;rm site.tar'"/>
+    </exec>
+
+    <delete file="site.tar.gz"/>
+
+  </target>
+
 </project>
