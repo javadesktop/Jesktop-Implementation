@@ -20,12 +20,14 @@ public class DefaultObjectRepository implements ObjectRepository {
         repoDir.mkdirs();
     }
 
-    public void put(String key, Object data) {
+    public synchronized void put(String key, Object data) {
         ObjectOutputStream oos = null;
         try {
             File file = new File(repoDir, key);
             file.getParentFile().mkdirs();
             oos = new ObjectOutputStream(new FileOutputStream(file));
+            oos.writeObject(data);
+            oos.flush();
         } catch (IOException e) {
             throw new RuntimeException("TODO - IO error during write : " + e.getMessage());
         } finally{
@@ -36,13 +38,14 @@ public class DefaultObjectRepository implements ObjectRepository {
         }
     }
 
-    public boolean containsKey(String key) {
+    public synchronized boolean containsKey(String key) {
         File file = new File(repoDir, key);
         file.getParentFile().mkdirs();
+        System.out.println(file.getAbsolutePath());
         return file.exists();
     }
 
-    public Object get(String key) {
+    public synchronized Object get(String key) {
         ObjectInputStream ois = null;
         try {
             File file = new File(repoDir, key);
@@ -66,7 +69,7 @@ public class DefaultObjectRepository implements ObjectRepository {
         }
     }
 
-    public Object get(String key, ClassLoader classLoader) {
+    public synchronized Object get(String key, ClassLoader classLoader) {
         return get(key);
         // TODO should do classloader stuff.
     }

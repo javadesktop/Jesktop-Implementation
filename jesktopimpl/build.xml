@@ -38,15 +38,6 @@
 
   <!--
        ===================================================================
-       Set the installation variables for Cornerstone/Phoenix
-       ===================================================================
-  -->
-  <property name="phoenix.home" value="phoenix-bin"/>
-  <property name="install.dir" value="${phoenix.home}/apps"/>
-  <property name="installvar.dir" value="${phoenix.home}/var"/>
-
-  <!--
-       ===================================================================
        Set the properties for intermediate directory
        ===================================================================
   -->
@@ -94,8 +85,6 @@
     <echo message=" available targets are:"/>
     <echo message=""/>
     <echo message="   all         -> generates all the ${Name} jar/bar/sar files"/>
-    <echo message="   install     -> installs ${Name} into Phoenix"/>
-    <echo message="   uninstall   -> uninstalls ${Name} from Phoenix"/>
     <echo message="   check       -> perform any built in tests"/>
     <echo message="   docs        -> generates the ${Name} Documentation"/>
     <echo message="   printerdocs -> generates printer-friendly ${Name} Docs"/>
@@ -152,11 +141,7 @@
         <pathelement path="${xerces.jar2}" />           
         <fileset dir="lib">
           <include name="*.jar"/>
-        </fileset>
-        <fileset dir="phoenix-bin/lib">
-          <include name="*.jar"/>
-        </fileset>
-        
+        </fileset>        
       </classpath>
 
 
@@ -177,8 +162,8 @@
                            Creates all the .jar file
        ===================================================================
   -->
-  <target name="main" depends="jars, sars" description="Default target to generate build products minus docs"/>  
-  <target name="all" depends="jars, sars" description="Generates all the Jesktop jar/bar/sar files"/>
+  <target name="main" depends="jars" description="Default target to generate build products minus docs"/>  
+  <target name="all" depends="jars" description="Generates all the Jesktop jar/bar/sar files"/>
   
   <target name="jars" depends="compile">
 
@@ -211,21 +196,12 @@
         <include name="*.xml"/>
       </zipfileset>      
     </jar>
-    
-  
-  </target>
-  
-  <target name="bars" depends="compile">
-  
-    <mkdir dir="${build.lib}"/>
-    
-    <jar jarfile="${build.lib}/${jar.name}.jar"
-         manifest="${manifest.dir}/jesktop.mf">
+        
+    <jar jarfile="lib/${jar.name}.jar">
       <zipfileset dir="build/classes">
         <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
       </zipfileset>                  
       <zipfileset dir="src/java">
-        <include name="**/*.xinfo"/>
         <include name="**/*.gif"/>
         <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
       </zipfileset>         
@@ -233,41 +209,9 @@
     
   </target>
   
-  <target name="sars" depends="bars">
-
-    <mkdir dir="${build.lib}"/>
-
-    <jar jarfile="${build.lib}/${jar.name}.sar">
-
-      <zipfileset dir="${build.lib}" prefix="SAR-INF/lib">
-        <include name="jesktop.jar"/>
-      </zipfileset>
-
-      <zipfileset dir="lib" prefix="SAR-INF/lib">
-        <include name="cornerstone.jar"/>
-        <include name="jesktop-*.jar"/>
-      </zipfileset>
-
-      <zipfileset dir="${conf.dir}" fullpath="SAR-INF/assembly.xml">
-        <include name="jesktop-assembly.xml"/>
-      </zipfileset>
-
-      <zipfileset dir="${conf.dir}" fullpath="SAR-INF/environment.xml">
-        <include name="jesktop-environment.xml"/>
-      </zipfileset>
-
-      <zipfileset dir="${conf.dir}" fullpath="SAR-INF/config.xml">
-        <include name="jesktop-config.xml"/>
-      </zipfileset>
-
-    </jar>
-
-
-  </target>
-
   <!--
        ===================================================================
-       Create the API documentation
+       Create the documentation
        ===================================================================
   -->
   <target name="javadocs">
@@ -286,7 +230,7 @@
        <param name="-doctitle" value="${Name}"/>
        <param name="-windowtitle" value="${Name} API"/>
        <param name="-bottom"
-              value="&quot;Copyright &#169; 2001 Apache Jakarta Project. All Rights Reserved.&quot;"/>
+              value="&quot;Copyright &#169; 2004 Jesktop Team. All Rights Reserved.&quot;"/>
       </doclet>
     </javadoc>
 
@@ -303,8 +247,6 @@
     <mkdir dir="${build.docs}"/>
 
     <filter token="year" value="${year}"/>
-    <filter token="AVALON_BASE" value="http://jakarta.apache.org/avalon"/>
-    <filter token="FRAMEWORK_BASE" value="http://jakarta.apache.org/avalon/framework"/>
 
     <copy todir="${build.xdocs}" filtering="on">
       <fileset dir="${xdocs.dir}">
@@ -368,32 +310,34 @@
     </copy>
     
 
-    <zip zipfile="dist/Phoenix-and-${dist.name}.zip">
-      <zipfileset dir="phoenix-bin" prefix="pheonix-and-jesktop">
+    <zip zipfile="dist/${dist.name}.zip">
+      <fileset dir=".">
         <exclude name="apps/jesktop/**"/>
-        <exclude name="logs/**"/>
-      </zipfileset>
+        <exclude name="build/**"/>
+      </fileset>
     </zip>
 
     <zip zipfile="dist/${dist.name}-src.zip">
       <fileset dir=".">
         <include name="src/**"/>
-	<include name="phoenix-bin/**"/>
-        <exclude name="phoenix-bin/apps/jesktop/**"/>
         <include name="lib/*"/>
+        <include name="composition.js"/>
+        <include name="run.bat"/>
         <include name="build.xml"/>
         <include name="LICENSE.txt"/>
+        <exclude name="build/**"/>
       </fileset>         
     </zip>         
 
     <tar longfile="gnu" tarfile="dist/${dist.name}-src.tar" >
       <tarfileset dir="." username="jesktop" group="jesktop">
         <include name="src/**"/>
-        <include name="phoenix-bin/**"/>
-        <exclude name="phoenix-bin/apps/jesktop/**"/>
         <include name="lib/*"/>
+        <include name="composition.js"/>
+        <include name="run.bat"/>
         <include name="build.xml"/>
         <include name="LICENSE.txt"/>
+        <exclude name="build/**"/>
       </tarfileset>
     </tar>
 
@@ -424,27 +368,6 @@
   <target name="distclean" depends="clean">
     <delete dir="${docs.dir}" />
     <delete dir="${dist.base}" />
-  </target>
-
-  <!--
-       ===================================================================
-                  Deploys Jesktop to relatively local Phoenix
-                    Phoenix should have been shut down first
-       ===================================================================
-  -->
-  <target name="install" depends="main" description="Installs into Phoenix">
-    <!-- <fail message="install.dir not specified." unless="install.dir"/> -->
-    <echo message="Installing to ${install.dir}" />    
-    <copy file="${build.lib}/jesktop.sar" todir="${install.dir}" />
-    <delete file="${installvar.dir}/jesktop-install.log" />     
-    <delete dir="${install.dir}/jesktop" />
-  </target>
-
-  <target name="uninstall" description="Uninstalls from Phoenix">
-
-    <!-- <fail message="install.dir not specified." unless="install.dir"/> -->
-    <delete dir="${install.dir}/jesktop/" />
-    <delete file="jesktop.sar" dir="${install.dir}"/>
   </target>
 
   <!--
