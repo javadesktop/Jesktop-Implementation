@@ -17,66 +17,63 @@ import javax.swing.JPopupMenu;
 import java.util.HashSet;
 
 /**
-     * Class LaunchBar
-     *
-     *
-     * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.3 $
-     */
-    public class LaunchBar extends JPopupMenu {
+ * Class LaunchBar
+ *
+ * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
+ * @version $Revision: 1.4 $
+ */
+public class LaunchBar extends JPopupMenu {
 
-    protected LaunchableTarget[] mLaunchableTargets;
-    protected ImageRepository mImageRepository;
-    protected DesktopKernel mDesktopKernel;
-    protected WindozeWindowManager mWindozeWindowManager;
+    protected LaunchableTarget[] launchableTargets;
+    protected ImageRepository imageRepository;
+    protected DesktopKernel desktopKernel;
+    protected WindozeWindowManager windozeWindowManager;
     private AppLauncher appLauncher;
 
     /**
-         * Constructor LaunchBar
-         *
-         *
-         */
-        protected LaunchBar(final DesktopKernel desktopKernel, final LaunchableTarget[] launchableTargets,
-                            final ImageRepository imageRepository, final WindozeWindowManager windozeWindowManager,
-                            final AppLauncher appLauncher) {
-            mLaunchableTargets = launchableTargets;
-            mImageRepository = imageRepository;
-            mDesktopKernel = desktopKernel;
-            mWindozeWindowManager = windozeWindowManager;
+     * Constructor LaunchBar
+     */
+    protected LaunchBar(final DesktopKernel desktopKernel, final LaunchableTarget[] launchableTargets,
+                        final ImageRepository imageRepository, final WindozeWindowManager windozeWindowManager,
+                        final AppLauncher appLauncher) {
+        this.launchableTargets = launchableTargets;
+        this.imageRepository = imageRepository;
+        this.desktopKernel = desktopKernel;
+        this.windozeWindowManager = windozeWindowManager;
         this.appLauncher = appLauncher;
         setupStartButton();
-        }
+    }
 
-        private void setupStartButton() {
+    private void setupStartButton() {
 
-            int deep = 0;
+        int deep = 0;
 
-            // makes an assumption that there are only menus at the root level
-            HashSet hs = new HashSet();
+        // makes an assumption that there are only menus at the root level
+        HashSet hs = new HashSet();
 
-            for (int x = 0; x < mLaunchableTargets.length; x++) {
-                String[] parts = mLaunchableTargets[x].getTargetNameParts();
+        for (int x = 0; x < launchableTargets.length; x++) {
+            String[] parts = launchableTargets[x].getTargetNameParts();
 
-                if (deep < parts.length - 1) {
+            if (deep < parts.length - 1) {
 
-                    // still a menu
-                    if (!hs.contains(parts[deep])) {
-                        this.add(new LaunchBarGroupMenuItem(mDesktopKernel, mLaunchableTargets, mWindozeWindowManager,
-                                mImageRepository, appLauncher, parts[deep], parts[deep], deep + 1));
-                        hs.add(parts[deep].intern());
-                    }
+                // still a menu
+                if (!hs.contains(parts[deep])) {
+                    this.add(new LaunchBarGroupMenuItem(desktopKernel, launchableTargets, windozeWindowManager,
+                            imageRepository, appLauncher, parts[deep], parts[deep], deep + 1));
+                    hs.add(parts[deep].intern());
                 }
+            }
 
-                if (deep == parts.length - 1) {
+            if (deep == parts.length - 1) {
 
-                    // leaf
-                    if (!hs.contains(parts[deep])) {
-                        this.add(new LaunchBarMenuItem(mDesktopKernel, mLaunchableTargets[x],
-                                mWindozeWindowManager, appLauncher, 
-                                mImageRepository
-                            .getAppSmallImageIcon(mLaunchableTargets[x].getTargetName())));
-                    }
+                // leaf
+                if (!hs.contains(parts[deep])) {
+                    this.add(new LaunchBarMenuItem(desktopKernel, launchableTargets[x],
+                            windozeWindowManager, appLauncher,
+                            imageRepository
+                            .getAppSmallImageIcon(launchableTargets[x].getTargetName())));
                 }
             }
         }
     }
+}

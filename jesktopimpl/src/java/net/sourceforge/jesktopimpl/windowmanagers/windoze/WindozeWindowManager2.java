@@ -27,7 +27,7 @@ import java.awt.Graphics;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class WindozeWindowManager2 extends WindozeWindowManager {
 
@@ -39,8 +39,8 @@ public class WindozeWindowManager2 extends WindozeWindowManager {
      *
      *
      */
-    public WindozeWindowManager2(ImageRepository imageRepository, AppLauncher appLauncher) {
-        super(imageRepository, appLauncher);
+    public WindozeWindowManager2(ImageRepository imageRepository) {
+        super(imageRepository);
 
 
         mFrimbleFactory = new JFrameFrimbleFactory();
@@ -96,7 +96,7 @@ public class WindozeWindowManager2 extends WindozeWindowManager {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.3 $
+     * @version $Revision: 1.4 $
      */
     class JFrameFrimblePanel extends JPanel {
 

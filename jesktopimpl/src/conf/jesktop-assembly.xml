@@ -61,7 +61,7 @@
   <block class="net.sourceforge.jesktopimpl.core.DesktopKernelImpl" name="jesktop-kernel" >
     <provide name="cfg-mgr" role="net.sourceforge.jesktopimpl.services.KernelConfigManager"/>
     <provide name="image-repository" role="org.jesktop.ImageRepository"/>
-    <provide name="jesktop-windowmanager" role="net.sourceforge.jesktopimpl.services.WindowManager"/>
+    <provide name="jesktop-windowmanager" role="org.jesktop.WindowManager"/>
     <provide name="objectstorage" role="org.apache.avalon.cornerstone.services.store.Store"/>
     <provide name="launchable-target-factory" role="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory"/>
     <provide name="thread-manager" role="org.apache.avalon.cornerstone.services.threads.ThreadManager"/>

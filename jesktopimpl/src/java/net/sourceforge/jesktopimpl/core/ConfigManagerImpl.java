@@ -8,10 +8,10 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-import net.sourceforge.jesktopimpl.services.DesktopKernelService;
+import org.jesktop.services.DesktopKernelService;
 import net.sourceforge.jesktopimpl.services.KernelConfigManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
-import net.sourceforge.jesktopimpl.services.WindowManager;
+import org.jesktop.WindowManager;
 import org.jesktop.Decorator;
 import org.jesktop.config.ConfigManager;
 import org.jesktop.config.Configlet;
@@ -19,6 +19,7 @@ import org.jesktop.config.ObjConfiglet;
 import org.jesktop.config.XMLConfiglet;
 import org.jesktop.ObjectRepository;
 import org.jesktop.Decorator;
+import org.jesktop.WindowManager;
 import org.jesktop.launchable.ConfigletLaunchableTarget;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,7 +37,7 @@ import java.beans.PropertyChangeSupport;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
 

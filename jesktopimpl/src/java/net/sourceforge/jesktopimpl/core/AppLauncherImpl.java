@@ -7,15 +7,16 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-import net.sourceforge.jesktopimpl.services.DesktopKernelService;
+import org.jesktop.services.DesktopKernelService;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
-import net.sourceforge.jesktopimpl.services.WindowManager;
+import org.jesktop.WindowManager;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.frimble.FrimbleCallback;
 import org.jesktop.frimble.JFrimble;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.*;
+import org.jesktop.services.DesktopKernelService;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.picocontainer.MutablePicoContainer;
@@ -36,12 +37,12 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
     private static int TEMPAPPSUFFIX = 1;
-    private net.sourceforge.jesktopimpl.services.WindowManager mWindowManager;
+    private org.jesktop.WindowManager mWindowManager;
     private LaunchableTargetFactory mLaunchableTargetFactory;
     private DesktopKernelService mDesktopKernelService;
     private Vector mLaunchedTargets;
@@ -282,7 +283,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                     }
 
                     public void shutdownAvalon(boolean force) throws PropertyVetoException {
-                        mDesktopKernelService.shutdownAvalon(force);
+                        mDesktopKernelService.shutdownSystem(force);
                     }
                 };
 

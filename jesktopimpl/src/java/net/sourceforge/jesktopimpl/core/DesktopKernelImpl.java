@@ -9,9 +9,10 @@ package net.sourceforge.jesktopimpl.core;
 
 import net.sourceforge.jesktopimpl.builtinapps.installer.ConfirmInstallation;
 import net.sourceforge.jesktopimpl.builtinapps.sys.ErrorApp;
-import net.sourceforge.jesktopimpl.services.DesktopKernelService;
+import org.jesktop.services.DesktopKernelService;
+import org.jesktop.services.WindowManagerService;
 import net.sourceforge.jesktopimpl.services.KernelConfigManager;
-import net.sourceforge.jesktopimpl.services.WindowManager;
+import org.jesktop.WindowManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import org.jesktop.appsupport.DropAware;
 import org.jesktop.appsupport.DraggedItem;
@@ -83,7 +84,7 @@ public class DesktopKernelImpl
     private DecoratorLaunchableTarget defaultDecorator;
     private LaunchableTarget errorAppTarget = new NormalLaunchableTargetImpl("*ErrorApp*",
                                                   "net.sourceforge.jesktopimpl.builtinapps.sys.ErrorApp", "Error", false);
-    private WindowManager mWindowManager;
+    private WindowManagerService mWindowManager;
     private DropAware currentDropApp;
     private DraggedItem currentDraggedItem;
     protected MimeManager mMimeManager;
@@ -96,7 +97,7 @@ public class DesktopKernelImpl
      *
      *
      */
-    public DesktopKernelImpl(WindowManager windowManager, ObjectRepository repository, ThreadPool threadPool,
+    public DesktopKernelImpl(WindowManagerService windowManager, ObjectRepository repository, ThreadPool threadPool,
                              KernelConfigManager kernelCongigManager, ImageRepository imageRepository,
                              LaunchableTargetFactory launchableTargetFactory, File baseDirectory) {
         this.threadPool = threadPool;
@@ -526,7 +527,7 @@ public class DesktopKernelImpl
     }
 
     /**
-     * Method shutdownAvalon
+     * Method shutdownSystem
      *
      *
      * @param force
@@ -534,7 +535,7 @@ public class DesktopKernelImpl
      * @throws PropertyVetoException
      *
      */
-    public void shutdownAvalon(final boolean force) throws PropertyVetoException {
+    public void shutdownSystem(final boolean force) throws PropertyVetoException {
 
         closeApps();
         mWindowManager.close();
@@ -587,6 +588,7 @@ public class DesktopKernelImpl
                                               launchedTargets,
                                               mCurrentDecorator, mBaseDirectory);
 
+            mWindowManager.setAppLauncher(mAppLauncher);
             mWindowManager.updateComponentTreeUI();
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
@@ -647,7 +649,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.4 $
+     * @version $Revision: 1.5 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -708,7 +710,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.4 $
+     * @version $Revision: 1.5 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

@@ -24,7 +24,7 @@ import java.awt.*;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class WindozeWindowManager1 extends WindozeWindowManager {
 
@@ -38,8 +38,8 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
      *
      *
      */
-    public WindozeWindowManager1(ImageRepository imageRepository, AppLauncher appLauncher) {
-        super(imageRepository, appLauncher);
+    public WindozeWindowManager1(ImageRepository imageRepository) {
+        super(imageRepository);
 
         mFrimbleFactory = new JInternalFrameFrimbleFactory(mDesktopPane);
 
@@ -99,7 +99,7 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
      *
      *
      * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.3 $
+     * @version $Revision: 1.4 $
      */
     class JInternalFrameFrimbleDesktopPane extends JDesktopPane {
 

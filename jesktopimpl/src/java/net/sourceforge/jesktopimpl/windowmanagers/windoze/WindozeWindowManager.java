@@ -11,6 +11,7 @@ import net.sourceforge.jesktopimpl.JesktopConstants;
 import org.jesktop.DesktopKernel;
 import org.jesktop.LaunchedTarget;
 import org.jesktop.*;
+import org.jesktop.services.WindowManagerService;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.config.PersistableConfig;
 import org.jesktop.config.ConfigHelper;
@@ -56,7 +57,7 @@ import java.net.MalformedURLException;
  *
  */
 public abstract class WindozeWindowManager
-        implements net.sourceforge.jesktopimpl.services.WindowManager, PropertyChangeListener {
+        implements PropertyChangeListener, WindowManagerService {
 
     protected JPanel bottomBar;
     protected JButton startBtn;
@@ -69,7 +70,7 @@ public abstract class WindozeWindowManager
     protected JLayeredPane mLayeredPane;
     protected LaunchableTarget[] mLaunchableTargets;
     protected DesktopKernel mDesktopKernel;
-    protected ImageRepository mImageRepository;
+    protected ImageRepository imageRepository;
     private AppLauncher appLauncher;
     protected PersistableConfig mPersistableConfig;
     protected Rectangle bounds;
@@ -81,18 +82,9 @@ public abstract class WindozeWindowManager
      *
      *
      */
-    public WindozeWindowManager(ImageRepository imageRepository, AppLauncher appLauncher) {
+    public WindozeWindowManager(ImageRepository imageRepository) {
 
-        mImageRepository = imageRepository;
-        this.appLauncher = appLauncher;
-    }
-
-    /**
-     * Method initialize
-     *
-     *
-     */
-    public void initialize() {
+        this.imageRepository = imageRepository;
 
         frame = new JFrame("Windows Style Window Manager - " + JesktopConstants.SOFTWARE_VERSION);
 
@@ -108,6 +100,10 @@ public abstract class WindozeWindowManager
 
     }
 
+    public void setAppLauncher(AppLauncher appLauncher) {
+        this.appLauncher = appLauncher;
+    }
+
     /**
      * Method addLaunchedTarget
      *
@@ -117,7 +113,7 @@ public abstract class WindozeWindowManager
      */
     public void addLaunchedTarget(final LaunchedTarget launchedTarget) {
 
-        LaunchedButton btn = new LaunchedButton(launchedTarget, mDesktopKernel, mImageRepository);
+        LaunchedButton btn = new LaunchedButton(launchedTarget, mDesktopKernel, imageRepository);
 
         bottomBar.add(btn);
     }
@@ -403,7 +399,7 @@ public abstract class WindozeWindowManager
 
             public void actionPerformed(ActionEvent ae) {
 
-                LaunchBar lb = new LaunchBar(mDesktopKernel, mLaunchableTargets, mImageRepository,
+                LaunchBar lb = new LaunchBar(mDesktopKernel, mLaunchableTargets, imageRepository,
                         WindozeWindowManager.this, appLauncher);
 
                 lb.show((java.awt.Component) ae.getSource(), startBtn.getX() + 3,
@@ -416,7 +412,7 @@ public abstract class WindozeWindowManager
     private JLabel getMenuDragRep(final LaunchableTarget lTarget) {
 
         JLabel lbl = new JLabel(lTarget.getDisplayName(),
-                                mImageRepository.getAppSmallImageIcon(lTarget.getTargetName()),
+                                imageRepository.getAppSmallImageIcon(lTarget.getTargetName()),
                                 JLabel.RIGHT);
 
         lbl.setForeground(Color.black);
