@@ -98,7 +98,7 @@ public abstract class WindozeWindowManager
 
         this.imageRepository = imageRepository;
 
-        frame = new JFrame("Windows Style Window Manager - " + JesktopConstants.SOFTWARE_VERSION);
+        frame = new JFrame("Jesktop: Windows Style Window Manager - " + JesktopConstants.SOFTWARE_VERSION);
 
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
