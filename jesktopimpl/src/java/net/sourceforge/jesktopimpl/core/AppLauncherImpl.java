@@ -10,7 +10,6 @@ package net.sourceforge.jesktopimpl.core;
 import net.sourceforge.jesktopimpl.services.DesktopKernelService;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import net.sourceforge.jesktopimpl.services.WindowManager;
-import org.jesktop.api.*;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.frimble.FrimbleCallback;
@@ -37,7 +36,7 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
