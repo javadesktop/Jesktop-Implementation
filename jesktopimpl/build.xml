@@ -10,413 +10,413 @@
 
 <project default="main" basedir=".">
 
-  <!--
-    Give user a chance to override without editing this file
-    (and without typing -D each time he compiles it)
-  -->
-  <property file=".ant.properties"/>
-  <property file="${user.home}/.ant.properties"/>
+    <!--
+      Give user a chance to override without editing this file
+      (and without typing -D each time he compiles it)
+    -->
+    <property file=".ant.properties"/>
+    <property file="${user.home}/.ant.properties"/>
 
-  <property name="name" value="jesktop"/>
-  <property name="Name" value="Jesktop"/>
-  <property name="version" value="2.0"/>
-  <property name="year" value="2004"/>
-  <property name="jar.name" value="jesktop"/>
-
-  <!--
-    these are here only for those who use jikes compiler. For other
-    developers this part makes no difference.
-  -->
-  <property name="build.compiler.emacs" value="on"/>
-  <property name="build.compiler.pedantic" value="true"/>
-  <property name="build.compiler.depend" value="true"/>
-  <property name="build.compiler.fulldepend" value="true"/>
-
-  <property name="build.debug" value="on"/>
-  <property name="build.optimize" value="off"/>
-  <property name="build.deprecation" value="on"/>
-
-  <!--
-       ===================================================================
-       Set the properties for intermediate directory
-       ===================================================================
-  -->
-  <property name="build.dir" value="build"/>
-  <property name="build.lib" value="${build.dir}/lib"/>
-  <property name="build.src" value="${build.dir}/src"/>
-  <property name="build.classes" value="${build.dir}/classes"/>
-  <property name="build.javadocs" value="${build.dir}/javadocs"/>
-  <property name="build.docs" value="${build.dir}/docs"/>
-  <property name="build.xdocs" value="${build.dir}/xdocs"/>
-
-  <!--
-       ===================================================================
-       Set the properties for source directories
-       ===================================================================
-  -->
-  <property name="src.dir" value="src"/>
-  <property name="java.dir" value="${src.dir}/java"/>
-  <property name="manifest.dir" value="${src.dir}/manifest"/>
-  <property name="conf.dir" value="${src.dir}/conf"/>
-  <property name="tools.dir" value="tools"/>
-  <property name="docs.dir" value="docs"/>
-  <property name="javadocs.dir" value="${docs.dir}/api"/>
-  <property name="xdocs.dir" value="${src.dir}/xdocs"/>
-  <property name="avalon.skin" value="${tools.dir}/lib/jakarta-style.jar"/>
-  <property name="xerces.jar2" value="../../${tools.dir}/lib/xerces.jar"/>  
-
-  <property name="dist.name" value="${Name}-${version}"/>
-
-  <path id="project.class.path">
-    <pathelement path="${java.class.path}" /> 
- 
-  </path>
-
-  <!--
-       ===================================================================
-                                  Help on usage
-       ===================================================================
-  -->
-  <target name="usage">
-    <echo message=""/>
-    <echo message="${Name} Build file"/>
-    <echo message="-------------------------------------------------------------"/>
-    <echo message=""/>
-    <echo message=" available targets are:"/>
-    <echo message=""/>
-    <echo message="   all         -> generates all the ${Name} jar/bar/sar files"/>
-    <echo message="   check       -> perform any built in tests"/>
-    <echo message="   docs        -> generates the ${Name} Documentation"/>
-    <echo message="   printerdocs -> generates printer-friendly ${Name} Docs"/>
-    <echo message="   javadocs    -> generates the API documentation (java 1.2+ only)"/>
-    <echo message="   dist        -> generates the ${Name} distribution"/>
-    <echo message="   clean       -> cleans up the created directories"/>
-    <echo message="   distclean   -> cleans up all genereated files and directories"/>
-    <echo message=""/>
-    <echo message="-------------------------------------------------------------"/>
-    <echo message=""/>
-  </target>
-
-  <target name="help" depends="usage"/>
-
-  <!--
-       ===================================================================
-       Set up dist properties
-       ===================================================================
-  -->
-  <target name="setup-properties" >
-
-    <property name="dist.dir" value="dist"/>
-    <property name="dist.lib" value="${dist.dir}/lib"/>
-    <property name="dist.docs" value="${dist.dir}/docs"/>
-    <property name="dist.javadocs" value="${dist.dir}/docs/api"/>
-
-    <property name="src.dist.dir" value="dist-src"/>
-    <property name="src.dist.src" value="${src.dist.dir}/src"/>
-    <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
-    <property name="src.dist.javadocs" value="${src.dist.dir}/docs/api"/>
-    <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
-    <property name="src.dist.tools" value="${src.dist.dir}/tools"/>
-  </target>
-
-  <!--
-       ===================================================================
-                         Prepares the build directory
-       ===================================================================
-  -->
-  <target name="compile">
-  
-    <mkdir dir="${build.dir}"/>
-    <available property="jsse.present" classname="javax.net.ssl.SSLServerSocket" />
-
-    <mkdir dir="${build.classes}"/>
-
-    <javac srcdir="${java.dir}"
-           destdir="${build.classes}"
-           debug="${build.debug}"
-           optimize="${build.optimize}"
-           deprecation="${build.deprecation}"> 
-      <classpath>
-        <pathelement path="${project.class.path}"/>
-        <pathelement path="${xerces.jar2}" />           
-        <fileset dir="lib">
-          <include name="*.jar"/>
-        </fileset>        
-      </classpath>
-
-
-      <exclude name="**/gui/*.java"/> 
-    </javac>
-
-    <copy todir="${build.classes}">
-      <fileset dir="${java.dir}">
-        <include name="**/*.xinfo"/>
-        <include name="**/*.properties" />
-      </fileset>
-    </copy>
-
-  </target>
-
-  <!--
-       ===================================================================
-                           Creates all the .jar file
-       ===================================================================
-  -->
-  <target name="main" depends="jars" description="Default target to generate build products minus docs"/>  
-  <target name="all" depends="jars" description="Generates all the Jesktop jar/bar/sar files"/>
-  
-  <target name="jars" depends="compile">
-
-    <mkdir dir="${build.lib}/installables"/>
-    
-    <jar jarfile="${build.lib}/installables/${jar.name}-explorer.jar">
-      <zipfileset dir="build/classes">
-        <include name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
-      </zipfileset>                  
-      <zipfileset dir="src/java">
-        <include name="net/sourceforge/jesktopimpl/apps/explorer/**/*.xinfo"/>
-        <include name="net/sourceforge/jesktopimpl/apps/explorer/**/*.gif"/>
-      </zipfileset>         
-      <zipfileset dir="src/xml/explorer" prefix="JESKTOP-INF">
-        <include name="*.xml"/>
-      </zipfileset>      
-    </jar>
-
-    <jar jarfile="${build.lib}/installables/${jar.name}-apps.jar">
-      <zipfileset dir="build/classes">
-        <include name="net/sourceforge/jesktopimpl/apps/**"/>
-        <exclude name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
-      </zipfileset>                  
-      <zipfileset dir="src/java">
-        <include name="net/sourceforge/jesktopimpl/apps/**/*.xinfo"/>
-        <include name="net/sourceforge/jesktopimpl/apps/**/*.gif"/>
-        <exclude name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
-      </zipfileset>         
-      <zipfileset dir="src/xml/apps" prefix="JESKTOP-INF">
-        <include name="*.xml"/>
-      </zipfileset>      
-    </jar>
-        
-    <jar jarfile="lib/${jar.name}.jar">
-      <zipfileset dir="build/classes">
-        <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
-      </zipfileset>                  
-      <zipfileset dir="src/java">
-        <include name="**/*.gif"/>
-        <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
-      </zipfileset>         
-    </jar>  
-    
-  </target>
-  
-  <!--
-       ===================================================================
-       Create the documentation
-       ===================================================================
-  -->
-  <target name="javadocs">
-
-    <delete dir="${build.javadocs}"/>
-    <mkdir dir="${build.javadocs}"/>
-
-    <javadoc packagenames="jesktop.*"
-             sourcepath="${java.dir}"
-             destdir="${build.javadocs}">
-      <classpath refid="project.class.path" />
-      <doclet name="com.sun.tools.doclets.standard.Standard">
-       <param name="-author"/>
-       <param name="-version"/>
-       <param name="-use"/>
-       <param name="-doctitle" value="${Name}"/>
-       <param name="-windowtitle" value="${Name} API"/>
-       <param name="-bottom"
-              value="&quot;Copyright &#169; 2004 Jesktop Team. All Rights Reserved.&quot;"/>
-      </doclet>
-    </javadoc>
-
-  </target>
-
-  <!--
-       ===================================================================
-                     Prepares the documentation directory
-       ===================================================================
-  -->
-  <target name="docs" depends="javadocs">
-
-    <mkdir dir="${build.xdocs}"/>
-    <mkdir dir="${build.docs}"/>
-
-    <filter token="year" value="${year}"/>
-
-    <copy todir="${build.xdocs}" filtering="on">
-      <fileset dir="${xdocs.dir}">
-        <exclude name="**/images/**"/>
-      </fileset>
-    </copy>
-
-    <copy todir="${build.docs}" filtering="off">
-      <fileset dir="${xdocs.dir}">
-        <include name="**/images/**"/>
-      </fileset>
-    </copy>
-
-    <java classname="org.apache.cocoon.Main" fork="true">
-      <arg value="-c${build.context}/"/>
-      <arg value="-d${build.docs}"/>
-      <arg value="-w${build.dir}/work"/>
-      <arg value="-l${build.dir}/work/cocoon.log"/>
-      <arg value="-uINFO"/>
-      <arg value="-f${src.dir}/xdocs/jesktop.uris"/>
-      <classpath>
-        <!--<path refid="tools.class.path"/>-->
-        <fileset dir="../../${tools.dir}/lib"/>
-        <fileset dir="../../${tools.dir}/ext"/>
-      </classpath>
-    </java>
+    <property name="name" value="jesktop"/>
+    <property name="Name" value="Jesktop"/>
+    <property name="version" value="2.0"/>
+    <property name="year" value="2004"/>
+    <property name="jar.name" value="jesktop"/>
 
     <!--
-    <stylebook targetdirectory="${build.docs}"
-               book="${build.xdocs}/book.xml"
-               skindirectory="src/skins/jesktop">
-      <classpath refid="project.class.path" />
-    </stylebook>
+      these are here only for those who use jikes compiler. For other
+      developers this part makes no difference.
+    -->
+    <property name="build.compiler.emacs" value="on"/>
+    <property name="build.compiler.pedantic" value="true"/>
+    <property name="build.compiler.depend" value="true"/>
+    <property name="build.compiler.fulldepend" value="true"/>
+
+    <property name="build.debug" value="on"/>
+    <property name="build.optimize" value="off"/>
+    <property name="build.deprecation" value="on"/>
+
+    <!--
+         ===================================================================
+         Set the properties for intermediate directory
+         ===================================================================
+    -->
+    <property name="build.dir" value="build"/>
+    <property name="build.lib" value="${build.dir}/lib"/>
+    <property name="build.src" value="${build.dir}/src"/>
+    <property name="build.classes" value="${build.dir}/classes"/>
+    <property name="build.javadocs" value="${build.dir}/javadocs"/>
+    <property name="build.docs" value="${build.dir}/docs"/>
+    <property name="build.xdocs" value="${build.dir}/xdocs"/>
+
+    <!--
+         ===================================================================
+         Set the properties for source directories
+         ===================================================================
+    -->
+    <property name="src.dir" value="src"/>
+    <property name="java.dir" value="${src.dir}/java"/>
+    <property name="manifest.dir" value="${src.dir}/manifest"/>
+    <property name="conf.dir" value="${src.dir}/conf"/>
+    <property name="tools.dir" value="tools"/>
+    <property name="docs.dir" value="docs"/>
+    <property name="javadocs.dir" value="${docs.dir}/api"/>
+    <property name="xdocs.dir" value="${src.dir}/xdocs"/>
+    <property name="avalon.skin" value="${tools.dir}/lib/jakarta-style.jar"/>
+    <property name="xerces.jar2" value="../../${tools.dir}/lib/xerces.jar"/>
+
+    <property name="dist.name" value="${Name}-${version}"/>
+
+    <path id="project.class.path">
+        <pathelement path="${java.class.path}"/>
+
+    </path>
+
+    <!--
+         ===================================================================
+                                    Help on usage
+         ===================================================================
+    -->
+    <target name="usage">
+        <echo message=""/>
+        <echo message="${Name} Build file"/>
+        <echo message="-------------------------------------------------------------"/>
+        <echo message=""/>
+        <echo message=" available targets are:"/>
+        <echo message=""/>
+        <echo message="   all         -> generates all the ${Name} jar/bar/sar files"/>
+        <echo message="   check       -> perform any built in tests"/>
+        <echo message="   docs        -> generates the ${Name} Documentation"/>
+        <echo message="   printerdocs -> generates printer-friendly ${Name} Docs"/>
+        <echo message="   javadocs    -> generates the API documentation (java 1.2+ only)"/>
+        <echo message="   dist        -> generates the ${Name} distribution"/>
+        <echo message="   clean       -> cleans up the created directories"/>
+        <echo message="   distclean   -> cleans up all genereated files and directories"/>
+        <echo message=""/>
+        <echo message="-------------------------------------------------------------"/>
+        <echo message=""/>
+    </target>
+
+    <target name="help" depends="usage"/>
+
+    <!--
+         ===================================================================
+         Set up dist properties
+         ===================================================================
+    -->
+    <target name="setup-properties">
+
+        <property name="dist.dir" value="dist"/>
+        <property name="dist.lib" value="${dist.dir}/lib"/>
+        <property name="dist.docs" value="${dist.dir}/docs"/>
+        <property name="dist.javadocs" value="${dist.dir}/docs/api"/>
+
+        <property name="src.dist.dir" value="dist-src"/>
+        <property name="src.dist.src" value="${src.dist.dir}/src"/>
+        <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
+        <property name="src.dist.javadocs" value="${src.dist.dir}/docs/api"/>
+        <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
+        <property name="src.dist.tools" value="${src.dist.dir}/tools"/>
+    </target>
+
+    <!--
+         ===================================================================
+                           Prepares the build directory
+         ===================================================================
+    -->
+    <target name="compile">
+
+        <mkdir dir="${build.dir}"/>
+        <available property="jsse.present" classname="javax.net.ssl.SSLServerSocket"/>
+
+        <mkdir dir="${build.classes}"/>
+
+        <javac srcdir="${java.dir}"
+            destdir="${build.classes}"
+            debug="${build.debug}"
+            optimize="${build.optimize}"
+            deprecation="${build.deprecation}">
+            <classpath>
+                <pathelement path="${project.class.path}"/>
+                <pathelement path="${xerces.jar2}"/>
+                <fileset dir="lib">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+
+
+            <exclude name="**/gui/*.java"/>
+        </javac>
+
+        <copy todir="${build.classes}">
+            <fileset dir="${java.dir}">
+                <include name="**/*.xinfo"/>
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+
+    </target>
+
+    <!--
+         ===================================================================
+                             Creates all the .jar file
+         ===================================================================
+    -->
+    <target name="main" depends="jars" description="Default target to generate build products minus docs"/>
+    <target name="all" depends="jars" description="Generates all the Jesktop jar/bar/sar files"/>
+
+    <target name="jars" depends="compile">
+
+        <mkdir dir="${build.lib}/installables"/>
+
+        <jar jarfile="${build.lib}/installables/${jar.name}-explorer.jar">
+            <zipfileset dir="build/classes">
+                <include name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
+            </zipfileset>
+            <zipfileset dir="src/java">
+                <include name="net/sourceforge/jesktopimpl/apps/explorer/**/*.xinfo"/>
+                <include name="net/sourceforge/jesktopimpl/apps/explorer/**/*.gif"/>
+            </zipfileset>
+            <zipfileset dir="src/xml/explorer" prefix="JESKTOP-INF">
+                <include name="*.xml"/>
+            </zipfileset>
+        </jar>
+
+        <jar jarfile="${build.lib}/installables/${jar.name}-apps.jar">
+            <zipfileset dir="build/classes">
+                <include name="net/sourceforge/jesktopimpl/apps/**"/>
+                <exclude name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
+            </zipfileset>
+            <zipfileset dir="src/java">
+                <include name="net/sourceforge/jesktopimpl/apps/**/*.xinfo"/>
+                <include name="net/sourceforge/jesktopimpl/apps/**/*.gif"/>
+                <exclude name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
+            </zipfileset>
+            <zipfileset dir="src/xml/apps" prefix="JESKTOP-INF">
+                <include name="*.xml"/>
+            </zipfileset>
+        </jar>
+
+        <jar jarfile="lib/${jar.name}.jar">
+            <zipfileset dir="build/classes">
+                <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
+            </zipfileset>
+            <zipfileset dir="src/java">
+                <include name="**/*.gif"/>
+                <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
+            </zipfileset>
+        </jar>
+
+    </target>
+
+    <!--
+         ===================================================================
+         Create the documentation
+         ===================================================================
+    -->
+    <target name="javadocs">
+
+        <delete dir="${build.javadocs}"/>
+        <mkdir dir="${build.javadocs}"/>
+
+        <javadoc packagenames="jesktop.*"
+            sourcepath="${java.dir}"
+            destdir="${build.javadocs}">
+            <classpath refid="project.class.path"/>
+            <doclet name="com.sun.tools.doclets.standard.Standard">
+                <param name="-author"/>
+                <param name="-version"/>
+                <param name="-use"/>
+                <param name="-doctitle" value="${Name}"/>
+                <param name="-windowtitle" value="${Name} API"/>
+                <param name="-bottom"
+                    value="&quot;Copyright &#169; 2004 Jesktop Team. All Rights Reserved.&quot;"/>
+            </doclet>
+        </javadoc>
+
+    </target>
+
+    <!--
+         ===================================================================
+                       Prepares the documentation directory
+         ===================================================================
+    -->
+    <target name="docs" depends="javadocs">
+
+        <mkdir dir="${build.xdocs}"/>
+        <mkdir dir="${build.docs}"/>
+
+        <filter token="year" value="${year}"/>
+
+        <copy todir="${build.xdocs}" filtering="on">
+            <fileset dir="${xdocs.dir}">
+                <exclude name="**/images/**"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${build.docs}" filtering="off">
+            <fileset dir="${xdocs.dir}">
+                <include name="**/images/**"/>
+            </fileset>
+        </copy>
+
+        <java classname="org.apache.cocoon.Main" fork="true">
+            <arg value="-c${build.context}/"/>
+            <arg value="-d${build.docs}"/>
+            <arg value="-w${build.dir}/work"/>
+            <arg value="-l${build.dir}/work/cocoon.log"/>
+            <arg value="-uINFO"/>
+            <arg value="-f${src.dir}/xdocs/jesktop.uris"/>
+            <classpath>
+                <!--<path refid="tools.class.path"/>-->
+                <fileset dir="../../${tools.dir}/lib"/>
+                <fileset dir="../../${tools.dir}/ext"/>
+            </classpath>
+        </java>
+
+        <!--
+        <stylebook targetdirectory="${build.docs}"
+                   book="${build.xdocs}/book.xml"
+                   skindirectory="src/skins/jesktop">
+          <classpath refid="project.class.path" />
+        </stylebook>
+        -->
+
+    </target>
+
+    <target name="printerdocs" depends="javadocs">
+        <echo message="Not implemented yet."/>
+    </target>
+
+    <!--
+         ===================================================================
+                   Completely build all dists
+         ===================================================================
+    -->
+    <target name="dist" depends="jars">
+
+        <mkdir dir="dist"/>
+
+        <copy todir="dist" filtering="off">
+            <fileset dir="build/lib">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <copy todir="dist" filtering="off">
+            <fileset dir="src/docs">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+
+        <zip zipfile="dist/${dist.name}.zip">
+            <fileset dir=".">
+                <exclude name="build/**"/>
+                <exclude name="build.xml"/>
+                <exclude name="dist/**"/>
+                <exclude name="src/**"/>
+                <exclude name="object-repository/**"/>
+            </fileset>
+        </zip>
+
+        <zip zipfile="dist/${dist.name}-src.zip">
+            <fileset dir=".">
+                <include name="src/**"/>
+                <include name="lib/*"/>
+                <exclude name="lib/jesktop.jar"/>
+                <include name="composition.js"/>
+                <include name="run.bat"/>
+                <include name="build.xml"/>
+                <include name="LICENSE.txt"/>
+                <exclude name="build/**"/>
+            </fileset>
+        </zip>
+
+        <tar longfile="gnu" tarfile="dist/${dist.name}-src.tar">
+            <tarfileset dir="." username="jesktop" group="jesktop">
+                <include name="src/**"/>
+                <include name="lib/*"/>
+                <exclude name="lib/jesktop.jar"/>
+                <include name="composition.js"/>
+                <include name="run.bat"/>
+                <include name="build.xml"/>
+                <include name="LICENSE.txt"/>
+                <exclude name="build/**"/>
+            </tarfileset>
+        </tar>
+
+        <gzip zipfile="dist/${dist.name}-src.tar.gz"
+            src="dist/${dist.name}-src.tar"/>
+        <delete file="dist/${dist.name}-src.tar"/>
+
+
+    </target>
+
+    <!--
+         ===================================================================
+                   Cleans up build and distribution directories
+         ===================================================================
+    -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="dist/**"/>
+
+        <delete>
+            <fileset dir="." includes="**/*~" defaultexcludes="no"/>
+        </delete>
+    </target>
+
+    <!--
+         ===================================================================
+                        Cleans absolutely everything up
+         ===================================================================
+    -->
+    <target name="distclean" depends="clean">
+        <delete dir="${docs.dir}"/>
+        <delete dir="${dist.base}"/>
+    </target>
+
+    <!--
+         ===================================================================
+         Performs unit tests
+         ===================================================================
+    -->
+    <target name="test" depends="check"/>
+
+    <target name="check" depends="compile" description="Perform any built in tests">
+    </target>
+
+    <!--
+         ===================================================================
+         Deploy the site.
+         ===================================================================
     -->
 
-  </target>
+    <target name="site:sshdeploy" depends="distclean" description="Deploy the generated site docs using ssh">
+        <!-- assume user has a ~/build.properties file with maven.ssh.executable etc -->
+        <property file="${user.home}/build.properties"/>
 
-  <target name="printerdocs" depends="javadocs">
-    <echo message="Not implemented yet."/>
-  </target>
+        <tar tarfile="site.tar" basedir="dist"/>
+        <gzip zipfile="site.tar.gz" src="site.tar"/>
+        <delete file="site.tar"/>
 
-  <!--
-       ===================================================================
-                 Completely build all dists
-       ===================================================================
-  -->
-  <target name="dist" depends="jars">
-  
-    <mkdir dir="dist"/>
+        <!-- Make sure the destination directory exists before trying to copy -->
+        <exec dir="." executable="${maven.ssh.executable}">
+            <arg line="shell.sourceforge.net -l ${sourceforge.username} 'mkdir -p /home/groups/j/je/jesktopimpl/htdocs'"/>
+        </exec>
 
-    <copy todir="dist" filtering="off">
-      <fileset dir="build/lib">
-        <include name="**"/>
-      </fileset>
-    </copy>
-    
-    <copy todir="dist" filtering="off">
-      <fileset dir="src/docs">
-        <include name="**"/>
-      </fileset>
-    </copy>
-    
+        <exec dir="." executable="${maven.scp.executable}">
+            <arg value="site.tar.gz"/>
+            <arg value="${sourceforge.username}@shell.sourceforge.net:/home/groups/j/je/jesktopimpl/htdocs"/>
+        </exec>
 
-    <zip zipfile="dist/${dist.name}.zip">
-      <fileset dir=".">
-        <exclude name="build/**"/>
-        <exclude name="build.xml"/>
-        <exclude name="dist/**"/>
-        <exclude name="src/**"/>
-        <exclude name="object-repository/**"/>
-      </fileset>
-    </zip>
+        <exec dir="." executable="${maven.ssh.executable}">
+            <arg line="shell.sourceforge.net -l ${sourceforge.username} 'cd /home/groups/j/je/jesktopimpl/htdocs;gunzip site.tar.gz;tar xUvf site.tar;chmod -R g+u *;rm site.tar'"/>
+        </exec>
 
-    <zip zipfile="dist/${dist.name}-src.zip">
-      <fileset dir=".">
-        <include name="src/**"/>
-        <include name="lib/*"/>
-        <exclude name="lib/jesktop.jar"/>
-        <include name="composition.js"/>
-        <include name="run.bat"/>
-        <include name="build.xml"/>
-        <include name="LICENSE.txt"/>
-        <exclude name="build/**"/>
-      </fileset>         
-    </zip>         
+        <delete file="site.tar.gz"/>
 
-    <tar longfile="gnu" tarfile="dist/${dist.name}-src.tar" >
-      <tarfileset dir="." username="jesktop" group="jesktop">
-        <include name="src/**"/>
-        <include name="lib/*"/>
-        <exclude name="lib/jesktop.jar"/>
-        <include name="composition.js"/>
-        <include name="run.bat"/>
-        <include name="build.xml"/>
-        <include name="LICENSE.txt"/>
-        <exclude name="build/**"/>
-      </tarfileset>
-    </tar>
-
-    <gzip zipfile="dist/${dist.name}-src.tar.gz"
-          src="dist/${dist.name}-src.tar"/>
-    <delete file="dist/${dist.name}-src.tar"/>
-
-
-  </target>
-
-  <!--
-       ===================================================================
-                 Cleans up build and distribution directories
-       ===================================================================
-  -->
-  <target name="clean">
-    <delete dir="${build.dir}" />
-    <delete dir="dist/**" />
-    
-    <delete>
-      <fileset dir="." includes="**/*~" defaultexcludes="no"/>
-    </delete>
-  </target>
-
-  <!--
-       ===================================================================
-                      Cleans absolutely everything up
-       ===================================================================
-  -->
-  <target name="distclean" depends="clean">
-    <delete dir="${docs.dir}" />
-    <delete dir="${dist.base}" />
-  </target>
-
-  <!--
-       ===================================================================
-       Performs unit tests
-       ===================================================================
-  -->
-  <target name="test" depends="check"/>
-
-  <target name="check" depends="compile" description="Perform any built in tests">
-  </target>
-
-  <!--
-       ===================================================================
-       Deploy the site.
-       ===================================================================
-  -->
-
-  <target name="site:sshdeploy" depends="distclean" description="Deploy the generated site docs using ssh">
-    <!-- assume user has a ~/build.properties file with maven.ssh.executable etc -->
-    <property file="${user.home}/build.properties"/>
-
-    <tar tarfile="site.tar" basedir="dist"/>
-    <gzip zipfile="site.tar.gz" src="site.tar"/>
-    <delete file="site.tar"/>
-
-    <!-- Make sure the destination directory exists before trying to copy -->
-    <exec dir="." executable="${maven.ssh.executable}">
-      <arg line="codehaus.org -l ${sourceforge.username} 'mkdir -p /groups/j/je/jesktopimpl/html-docs'"/>
-    </exec>
-
-    <exec dir="." executable="${maven.scp.executable}">
-      <arg value="site.tar.gz"/>
-      <arg value="${sourceforge.username}@shell.sourceforge.net:/groups/j/je/jesktopimpl/html-docs"/>
-    </exec>
-
-    <exec dir="." executable="${maven.ssh.executable}">
-      <arg line="codehaus.org -l ${sourceforge.username} 'cd /groups/j/je/jesktopimpl/html-docs;gunzip site.tar.gz;tar xUvf site.tar;chmod -R g+u *;rm site.tar'"/>
-    </exec>
-
-    <delete file="site.tar.gz"/>
-
-  </target>
+    </target>
 
 </project>
