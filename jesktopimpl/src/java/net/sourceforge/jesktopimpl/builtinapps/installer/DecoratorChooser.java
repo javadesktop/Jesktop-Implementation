@@ -1,9 +1,21 @@
-/*
- * Copyright (C) The Apache Software Foundation. All rights reserved.
+/* ====================================================================
+ * Copyright 2000 - 2004, The Jesktop project committers
  *
- * This software is published under the terms of the Apache Software License
- * version 1.1, a copy of which has been included with this distribution in
- * the LICENSE file.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *
+ * Portions of this code are copyright Apache Software Foundation, and licensed
+ * under the Apache Software License 1.1
  */
 package net.sourceforge.jesktopimpl.builtinapps.installer;
 
@@ -29,7 +41,7 @@ import java.beans.PropertyChangeListener;
  *
  *
  * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyChangeListener {
 
@@ -80,7 +92,7 @@ public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyCh
     public void setConfig(Object config) {
         setDecorators(null, config);
     }
-    
+
     private void setDecorators(DecoratorLaunchableTarget currentDecorator, Object config) {
 
         decorators = desktopKernel.getDecoratorLaunchableTargets();
@@ -88,7 +100,7 @@ public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyCh
 
         for (int i = 0; i < decorators.length; i++) {
             DecoratorLaunchableTarget dec = decorators[i];
-            
+
             if (dec.getTargetName().equals(config)) {
                 currentDecorator = dec;
 
@@ -99,7 +111,7 @@ public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyCh
         mDecComboBoxModel = new DecComboBoxModel();
 
         choiceBox.setModel(mDecComboBoxModel);
-        mDecComboBoxModel.setSelectedItem(currentDecorator, false);        
+        mDecComboBoxModel.setSelectedItem(currentDecorator, false);
     }
 
     /**
@@ -108,7 +120,7 @@ public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyCh
      *
      * @param event
      *
-     */    
+     */
     public void propertyChange( PropertyChangeEvent event ) {
         if (ConfigHelper.isConfigPropChange(event)) {
             setConfig(event.getNewValue());
@@ -116,14 +128,14 @@ public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyCh
         if (event.getPropertyName().equals(DesktopKernel.LAUNCHABLE_TARGET_CHANGE)) {
             setDecorators(mDecComboBoxModel.getSelectedDecoratorLaunchableTarget(), mConfig);
         }
-    }    
-    
+    }
+
     /**
      * Class DecComboBoxModel
      *
      *
      * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.3 $
+     * @version $Revision: 1.4 $
      */
     private class DecComboBoxModel extends DefaultListModel implements ComboBoxModel {
 
