@@ -1,4 +1,4 @@
-var pico = new DefaultPicoContainer(new ImplementationHidingComponentAdapterFactory())
+var pico = new DefaultPicoContainer()
 
 pico.registerComponentInstance(new File("."))
 pico.registerComponentInstance(Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance())
@@ -10,3 +10,4 @@ pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.window
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.ThreadPoolImpl)
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.DesktopKernelImpl)
 
+pico.getComponentInstances();
