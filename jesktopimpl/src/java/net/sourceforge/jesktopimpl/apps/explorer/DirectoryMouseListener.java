@@ -41,23 +41,23 @@ import java.io.IOException;
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.5 $
+     * @version $Revision: 1.6 $
      */
 public class DirectoryMouseListener extends MouseAdapter {
 
-    private DirectoryTableModel mDirectoryTableModel;
-    private final DesktopKernel mDesktopKernel;
-    private DirectoryPanel mDirectoryPanel;
+    private DirectoryTableModel directoryTableModel;
+    private final DesktopKernel desktopKernel;
+    private DirectoryPanel directoryPanel;
     private AppLauncher appLauncher;
 
     protected DirectoryMouseListener(final DesktopKernel desktopKernel, final DirectoryPanel directoryPanel, AppLauncher appLauncher) {
-        mDesktopKernel = desktopKernel;
-        mDirectoryPanel = directoryPanel;
+        this.desktopKernel = desktopKernel;
+        this.directoryPanel = directoryPanel;
         this.appLauncher = appLauncher;
     }
 
     protected void setDirectoryTableModel(final DirectoryTableModel directoryTableModel) {
-        mDirectoryTableModel = directoryTableModel;
+        this.directoryTableModel = directoryTableModel;
     }
 
     /**
@@ -70,20 +70,20 @@ public class DirectoryMouseListener extends MouseAdapter {
     public void mouseClicked(final MouseEvent e) {
 
         try {
-            int r = mDirectoryPanel.getContentsTable().rowAtPoint(e.getPoint());
-            File file = mDirectoryTableModel.getFileAtRow(r);
+            int r = directoryPanel.getContentsTable().rowAtPoint(e.getPoint());
+            File file = directoryTableModel.getFileAtRow(r);
 
             if (e.getClickCount() == 1) {
                 if (!file.isDirectory()) {
-                    JComponent prvComp = mDirectoryPanel.getItemPreview().getPreviewPanel();
+                    JComponent prvComp = directoryPanel.getItemPreview().getPreviewPanel();
 
-                    mDesktopKernel.viewDocument(file.toURL(), prvComp, true);
+                    desktopKernel.viewDocument(file.toURL(), prvComp, true);
                 }
             }
 
             if (e.getClickCount() == 2) {
                 if (file.isDirectory()) {
-                    mDirectoryPanel.setDirectory(file);
+                    directoryPanel.setDirectory(file);
                 } else {
                     if (file.getCanonicalPath().toLowerCase().endsWith(".jar")) {
                         try {
@@ -93,7 +93,7 @@ public class DirectoryMouseListener extends MouseAdapter {
                                                + baxmle.getMessage());
                         }
                     } else {
-                        mDesktopKernel.viewDocument(file.toURL());
+                        desktopKernel.viewDocument(file.toURL());
                     }
                 }
             }
@@ -116,10 +116,10 @@ public class DirectoryMouseListener extends MouseAdapter {
      */
     public void mousePressed(final MouseEvent e) {
 
-        int r = mDirectoryPanel.getContentsTable().rowAtPoint(e.getPoint());
-        File file = mDirectoryTableModel.getFileAtRow(r);
+        int r = directoryPanel.getContentsTable().rowAtPoint(e.getPoint());
+        File file = directoryTableModel.getFileAtRow(r);
 
-        mDirectoryPanel.setCurrentlyDraggedItem(new DraggedItem(new DragLabel(file.getName()),
+        directoryPanel.setCurrentlyDraggedItem(new DraggedItem(new DragLabel(file.getName()),
                                                                 file));
     }
 
@@ -131,6 +131,6 @@ public class DirectoryMouseListener extends MouseAdapter {
      *
      */
     public void mouseReleased(final MouseEvent e) {
-        mDesktopKernel.itemBeingDragged(null, null);
+        desktopKernel.itemBeingDragged(null, null);
     }
 }

@@ -46,11 +46,11 @@ import java.awt.event.ActionListener;
 public class DirectoryExplorer extends JPanel
         implements FrimbleAware, DropAware {
 
-    private JSplitPane mSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-    private DirectoryPanel mDirectoryPanel;
-    private DirectoryTree mDirectoryTree = new DirectoryTree();
-    private JToolBar mToolBar = new JToolBar(JToolBar.HORIZONTAL);
-    private JButton mParentBtn = new JButton("Up Dir");
+    private JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+    private DirectoryPanel directoryPanel;
+    private DirectoryTree directoryTree = new DirectoryTree();
+    private JToolBar toolBar = new JToolBar(JToolBar.HORIZONTAL);
+    private JButton parentBtn = new JButton("Up Dir");
 
     /**
      * Constructor DirectoryExplorer
@@ -59,21 +59,21 @@ public class DirectoryExplorer extends JPanel
      */
     public DirectoryExplorer(DesktopKernel desktopKernel, ImageRepository imageRepository, AppLauncher appLauncher) {
 
-         mDirectoryPanel = new DirectoryPanel(desktopKernel, imageRepository, appLauncher);
+         directoryPanel = new DirectoryPanel(desktopKernel, imageRepository, appLauncher);
         this.setLayout(new BorderLayout());
-        this.add(mToolBar, BorderLayout.NORTH);
-        this.add(mSplitPane, BorderLayout.CENTER);
-        mSplitPane.add(mDirectoryPanel, JSplitPane.RIGHT);
-        mSplitPane.add(mDirectoryTree, JSplitPane.LEFT);
-        mDirectoryTree.setDirectoryPanel(mDirectoryPanel);
-        mToolBar.add(mParentBtn);
-        mToolBar.add(new JLabel(""));
-        mParentBtn.addActionListener(new ActionListener() {
+        this.add(toolBar, BorderLayout.NORTH);
+        this.add(splitPane, BorderLayout.CENTER);
+        splitPane.add(directoryPanel, JSplitPane.RIGHT);
+        splitPane.add(directoryTree, JSplitPane.LEFT);
+        directoryTree.setDirectoryPanel(directoryPanel);
+        toolBar.add(parentBtn);
+        toolBar.add(new JLabel(""));
+        parentBtn.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
 
-                if (ae.getSource() == mParentBtn) {
-                    mDirectoryPanel.setParentDirectory();
+                if (ae.getSource() == parentBtn) {
+                    directoryPanel.setParentDirectory();
                 }
             }
         });
@@ -90,7 +90,7 @@ public class DirectoryExplorer extends JPanel
      *
      */
     public void setFrimble(Frimble frimble) {
-        mDirectoryPanel.setFrimble(frimble);
+        directoryPanel.setFrimble(frimble);
     }
 
     // Javadocs will automatically import from interface.
@@ -106,7 +106,7 @@ public class DirectoryExplorer extends JPanel
      *
      */
     public boolean doYouRecognizeDraggedItem(final Point pt, Class cl) {
-        return mDirectoryPanel.doYouRecognizeDraggedItem(pt, cl);
+        return directoryPanel.doYouRecognizeDraggedItem(pt, cl);
     }
 
     /**
@@ -129,7 +129,7 @@ public class DirectoryExplorer extends JPanel
      *
      */
     public void anotherHasRecognizedDraggedItem(Class cl) {
-        mDirectoryPanel.anotherHasRecognizedDraggedItem(cl);
+        directoryPanel.anotherHasRecognizedDraggedItem(cl);
     }
 
     /**
@@ -138,6 +138,6 @@ public class DirectoryExplorer extends JPanel
      *
      */
     public void draggingStopped() {
-        mDirectoryPanel.draggingStopped();
+        directoryPanel.draggingStopped();
     }
 }

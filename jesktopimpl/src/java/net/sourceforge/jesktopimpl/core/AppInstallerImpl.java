@@ -48,7 +48,7 @@ import java.util.Vector;
  * Class AppInstallerImpl
  *
  * @author Paul Hammant
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class AppInstallerImpl extends AppBase implements AppInstaller {
 
@@ -267,7 +267,7 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                 }
                 Document app = null;
                 try {
-                    app = dbf.newDocumentBuilder().parse(url.openStream());
+                    app = documentBuilderFactory.newDocumentBuilder().parse(url.openStream());
                 } catch (SAXException e) {
                     throw new JesktopPackagingException(e.getMessage());
                 } catch (ParserConfigurationException e) {

@@ -33,7 +33,7 @@ import java.net.URL;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ImageRepositoryImpl implements ImageRepository {
 
@@ -46,7 +46,7 @@ public class ImageRepositoryImpl implements ImageRepository {
                                                                     + "default_file_32x32.gif");
     private static final ImageIcon DEFAULT_FILE_ICON_16 = makeImage(PATH
                                                                     + "default_file_16x16.gif");
-    private HashMap mImages = new HashMap();
+    private HashMap images = new HashMap();
     private ObjectRepository objectRepository;
 
     public ImageRepositoryImpl(ObjectRepository objectRepository) {
@@ -158,7 +158,7 @@ public class ImageRepositoryImpl implements ImageRepository {
 
     private ImageIcon getImageIcon(final String name, final ImageIcon defaultIcon) {
 
-        ImageIcon ii = (ImageIcon) mImages.get(name);
+        ImageIcon ii = (ImageIcon) images.get(name);
 
         if (ii == null) {
             if (objectRepository.containsKey(name)) {
@@ -167,7 +167,7 @@ public class ImageRepositoryImpl implements ImageRepository {
                 ii = defaultIcon;
             }
 
-            mImages.put(name, ii);
+            images.put(name, ii);
         }
 
         return ii;
@@ -183,6 +183,6 @@ public class ImageRepositoryImpl implements ImageRepository {
      */
     public void setImageIcon(final String name, final ImageIcon imageIcon) {
         objectRepository.put(name, imageIcon);
-        mImages.put(name, imageIcon);
+        images.put(name, imageIcon);
     }
 }

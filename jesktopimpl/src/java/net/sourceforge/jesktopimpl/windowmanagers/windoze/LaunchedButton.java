@@ -19,35 +19,34 @@
  */
 package net.sourceforge.jesktopimpl.windowmanagers.windoze;
 
-import org.jesktop.LaunchedTarget;
 import org.jesktop.DesktopKernel;
 import org.jesktop.ImageRepository;
-import org.jesktop.DesktopKernel;
+import org.jesktop.LaunchedTarget;
 
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.awt.Dimension;
+import java.awt.event.MouseEvent;
 
 /**
      * Class LaunchedButton
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.5 $
+     * @version $Revision: 1.6 $
      */
     public class LaunchedButton extends JButton {
 
         protected final LaunchedTarget launchedTarget;
-        protected DesktopKernel mDesktopKernel;
+        protected DesktopKernel desktopKernel;
 
         protected LaunchedButton(final LaunchedTarget launchedTarget, final DesktopKernel desktopKernel, ImageRepository imageRepository) {
 
             super();
 
-            mDesktopKernel = desktopKernel;
+            this.desktopKernel = desktopKernel;
 
             this.setIcon(imageRepository.getAppSmallImageIcon(launchedTarget.getTargetName()));
             this.setText(launchedTarget.getTargetName());
@@ -57,7 +56,7 @@ import java.awt.Dimension;
             this.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent ae) {
-                    mDesktopKernel.launchedTargetSelected(getLaunchedTarget());
+                    LaunchedButton.this.desktopKernel.launchedTargetSelected(getLaunchedTarget());
                 }
             });
             this.addMouseListener(new MouseAdapter() {
@@ -73,7 +72,7 @@ import java.awt.Dimension;
                 protected void maybeShowPopup(MouseEvent e) {
 
                     if (e.isPopupTrigger()) {
-                        LaunchTargetMenu ltm = new LaunchTargetMenu(mDesktopKernel, getLaunchedTarget());
+                        LaunchTargetMenu ltm = new LaunchTargetMenu(LaunchedButton.this.desktopKernel, getLaunchedTarget());
 
                         ltm.show(e.getComponent(), e.getX(), e.getY());
                     }

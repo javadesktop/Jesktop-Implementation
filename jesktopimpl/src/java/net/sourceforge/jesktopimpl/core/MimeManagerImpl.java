@@ -45,11 +45,11 @@ public class MimeManagerImpl implements MimeManager, Serializable {
     private static final String KEY = "jesktop-registered-mimes";
     protected static final String ALLOWED_TARGET_NAME = "System/MimeConfiguration";
     private static transient ObjectRepository repository;
-    private static transient LaunchableTargetFactory mLaunchableTargetFactory;
+    private static transient LaunchableTargetFactory launchableTargetFactory;
     private HashMap registeredMimes;
 
     public MimeManagerImpl(ObjectRepository repository, LaunchableTargetFactory launchableTargetFactory) {
-        mLaunchableTargetFactory = launchableTargetFactory;
+        MimeManagerImpl.launchableTargetFactory = launchableTargetFactory;
 
         registeredMimes = new HashMap();
         this.repository = repository;
@@ -72,7 +72,7 @@ public class MimeManagerImpl implements MimeManager, Serializable {
             throw new MimeAlreadyRegisteredException(mime);
         }
 
-        return new MimeInfoImpl(this, mime, description, mLaunchableTargetFactory);
+        return new MimeInfoImpl(this, mime, description, launchableTargetFactory);
     }
 
     /**

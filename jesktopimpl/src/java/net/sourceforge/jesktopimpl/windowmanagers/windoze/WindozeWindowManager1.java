@@ -36,12 +36,12 @@ import java.awt.*;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class WindozeWindowManager1 extends WindozeWindowManager {
 
-    private JInternalFrameFrimbleFactory mFrimbleFactory;
-    protected JDesktopPane mDesktopPane = new JInternalFrameFrimbleDesktopPane();
+    private JInternalFrameFrimbleFactory frimbleFactory;
+    protected JDesktopPane desktopPane = new JInternalFrameFrimbleDesktopPane();
     protected Integer LAYER = new Integer(2);
 
 
@@ -53,9 +53,9 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
     public WindozeWindowManager1(ImageRepository imageRepository) {
         super(imageRepository);
 
-        mFrimbleFactory = new JInternalFrameFrimbleFactory(mDesktopPane);
+        frimbleFactory = new JInternalFrameFrimbleFactory(desktopPane);
 
-        JFrimble.setFrimbleFactory(mFrimbleFactory);
+        JFrimble.setFrimbleFactory(frimbleFactory);
     }
 
     /**
@@ -68,12 +68,12 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
      *
      */
     public Frimble createFrimble(final String title) {
-        return mFrimbleFactory.getFrimble(title);
+        return frimbleFactory.getFrimble(title);
     }
 
     protected final void setBackdrop2(final String bPath, final String type) {
-        mDesktopPane.invalidate();
-        mDesktopPane.repaint();
+        desktopPane.invalidate();
+        desktopPane.repaint();
     }
 
 
@@ -87,15 +87,15 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
     public void initializeView2() {
 
         super.initializeView2();
-        frame.getContentPane().add(mDesktopPane, BorderLayout.CENTER);
-        mDesktopPane.invalidate();
-        mDesktopPane.repaint();
+        frame.getContentPane().add(desktopPane, BorderLayout.CENTER);
+        desktopPane.invalidate();
+        desktopPane.repaint();
         frame.setVisible(true);
     }
 
     protected void acceptLaunchableTarget(final LaunchableTarget lTarget, final Point pt) {
 
-        SwingUtilities.convertPointFromScreen(pt, mDesktopPane);
+        SwingUtilities.convertPointFromScreen(pt, desktopPane);
 
         LaunchableTargetLabel ltl = new LaunchableTargetLabel(lTarget);
 
@@ -111,7 +111,7 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.6 $
+     * @version $Revision: 1.7 $
      */
     class JInternalFrameFrimbleDesktopPane extends JDesktopPane {
 

@@ -36,37 +36,34 @@ import java.awt.event.MouseMotionListener;
 import java.awt.Point;
 
 /**
-     * Class LaunchBarMenuItem
-     *
-     *
-     * @author  Dec 2000.
-     * @version $Revision: 1.6 $
-     */
-    public class LaunchBarMenuItem extends JMenuItem implements ActionListener {
+ * Class LaunchBarMenuItem
+ *
+ * @author Dec 2000.
+ * @version $Revision: 1.7 $
+ */
+public class LaunchBarMenuItem extends JMenuItem implements ActionListener {
 
-        protected LaunchableTarget mLaunchableTarget;
-        protected DesktopKernel mDesktopKernel;
-        protected WindozeWindowManager mWindozeWindowManager;
+    protected LaunchableTarget launchableTarget;
+    protected DesktopKernel desktopKernel;
+    protected WindozeWindowManager windozeWindowManager;
     private AppLauncher appLauncher;
 
     /**
-         * Constructor LaunchBarMenuItem
-         *
-         *
-         * @param launchableTarget
-         * @param im
-         *
-         */
-        protected LaunchBarMenuItem(final DesktopKernel desktopKernel, final LaunchableTarget launchableTarget,
-                                    final WindozeWindowManager windozeWindowManager,
-                                    final AppLauncher appLauncher,
-                                    final ImageIcon im) {
+     * Constructor LaunchBarMenuItem
+     *
+     * @param launchableTarget
+     * @param im
+     */
+    protected LaunchBarMenuItem(final DesktopKernel desktopKernel, final LaunchableTarget launchableTarget,
+                                final WindozeWindowManager windozeWindowManager,
+                                final AppLauncher appLauncher,
+                                final ImageIcon im) {
 
-            super(launchableTarget.getDisplayName(), im);
+        super(launchableTarget.getDisplayName(), im);
 
-            mDesktopKernel = desktopKernel;
-            mLaunchableTarget = launchableTarget;
-            mWindozeWindowManager = windozeWindowManager;
+        this.desktopKernel = desktopKernel;
+        this.launchableTarget = launchableTarget;
+        this.windozeWindowManager = windozeWindowManager;
         this.appLauncher = appLauncher;
 
         addActionListener(this);
@@ -91,56 +88,53 @@ import java.awt.Point;
                      System.out.println( "mdm released" );
                  }
              });*/
-            this.addMouseListener(new MouseAdapter() {
+        this.addMouseListener(new MouseAdapter() {
 
-                public void mouseReleased(MouseEvent event) {
+            public void mouseReleased(MouseEvent event) {
 
-                    Point pt = event.getPoint();
+                Point pt = event.getPoint();
 
-                    SwingUtilities.convertPointToScreen(pt, LaunchBarMenuItem.this);
-                    mWindozeWindowManager.renderLaunchableTargetDragRepresentation(null, pt, true);
-                }
-            });
-            this.addMouseMotionListener(new MouseMotionListener() {
-
-                public void mouseDragged(MouseEvent event) {
-
-                    Point pt = event.getPoint();
-
-                    SwingUtilities.convertPointToScreen(pt, LaunchBarMenuItem.this);
-                    mWindozeWindowManager.renderLaunchableTargetDragRepresentation(launchableTarget, pt, false);
-                }
-
-                public void mouseMoved(MouseEvent event) {}
-            });
-        }
-
-
-        /**
-         * Method getLaunchableTarget
-         *
-         *
-         * @return
-         *
-         */
-        protected LaunchableTarget getLaunchableTarget() {
-            return mLaunchableTarget;
-        }
-
-        /**
-         * Method actionPerformed
-         *
-         *
-         * @param e
-         *
-         */
-        public void actionPerformed(final ActionEvent e) {
-
-            try {
-                appLauncher.launchApp(mLaunchableTarget);
-            } catch (JesktopLaunchException jle) {
-                //TODO pop a dialog
-                jle.printStackTrace();
+                SwingUtilities.convertPointToScreen(pt, LaunchBarMenuItem.this);
+                LaunchBarMenuItem.this.windozeWindowManager.renderLaunchableTargetDragRepresentation(null, pt, true);
             }
+        });
+        this.addMouseMotionListener(new MouseMotionListener() {
+
+            public void mouseDragged(MouseEvent event) {
+
+                Point pt = event.getPoint();
+
+                SwingUtilities.convertPointToScreen(pt, LaunchBarMenuItem.this);
+                LaunchBarMenuItem.this.windozeWindowManager.renderLaunchableTargetDragRepresentation(launchableTarget, pt, false);
+            }
+
+            public void mouseMoved(MouseEvent event) {
+            }
+        });
+    }
+
+
+    /**
+     * Method getLaunchableTarget
+     *
+     * @return
+     */
+    protected LaunchableTarget getLaunchableTarget() {
+        return launchableTarget;
+    }
+
+    /**
+     * Method actionPerformed
+     *
+     * @param e
+     */
+    public void actionPerformed(final ActionEvent e) {
+
+        try {
+            appLauncher.launchApp(launchableTarget);
+        } catch (JesktopLaunchException jle) {
+            //TODO pop a dialog
+            jle.printStackTrace();
         }
     }
+}

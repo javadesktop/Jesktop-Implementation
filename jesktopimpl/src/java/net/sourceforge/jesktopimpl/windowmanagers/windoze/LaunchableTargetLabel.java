@@ -28,11 +28,11 @@ import javax.swing.JLabel;
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.3 $
+     * @version $Revision: 1.4 $
      */
     public class LaunchableTargetLabel extends JLabel {
 
-        private LaunchableTarget ltgt;
+        private LaunchableTarget launchableTarget;
 
         /**
          * Constructor LaunchableTargetLabel
@@ -42,6 +42,6 @@ import javax.swing.JLabel;
          *
          */
         protected LaunchableTargetLabel(final LaunchableTarget ltgt) {
-            this.ltgt = ltgt;
+            this.launchableTarget = ltgt;
         }
     }

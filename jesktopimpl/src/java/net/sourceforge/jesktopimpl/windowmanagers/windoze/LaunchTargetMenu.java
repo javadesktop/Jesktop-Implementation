@@ -34,12 +34,12 @@ import java.awt.event.ActionEvent;
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.4 $
+     * @version $Revision: 1.5 $
      */
     public class LaunchTargetMenu extends JPopupMenu implements ActionListener {
 
-        protected DesktopKernel mDesktopKernel;
-        protected LaunchedTarget mLaunchedTarget;
+        protected DesktopKernel desktopKernel;
+        protected LaunchedTarget launchedTarget;
 
         /**
          * Constructor LaunchTargetMenu
@@ -50,8 +50,8 @@ import java.awt.event.ActionEvent;
          */
         protected LaunchTargetMenu(final DesktopKernel desktopKernel, final LaunchedTarget launchedTarget) {
 
-            mDesktopKernel = desktopKernel;
-            mLaunchedTarget = launchedTarget;
+            this.desktopKernel = desktopKernel;
+            this.launchedTarget = launchedTarget;
 
             JMenuItem menuItem = new JMenuItem("Close");
 
@@ -71,7 +71,7 @@ import java.awt.event.ActionEvent;
             String str = e.getActionCommand();
 
             if (str.equals("Close")) {
-                mDesktopKernel.launchedTargetCloseRequested(mLaunchedTarget);
+                desktopKernel.launchedTargetCloseRequested(launchedTarget);
             }
         }
     }

@@ -419,16 +419,16 @@
 
         <!-- Make sure the destination directory exists before trying to copy -->
         <exec dir="." executable="${maven.ssh.executable}">
-            <arg line="shell.sourceforge.net -l ${sourceforge.username} 'mkdir -p /home/groups/j/je/jesktopimpl/htdocs'"/>
+            <arg line="shell.sourceforge.net -l ${sourceforge.username} 'newgrp jesktopimpl;mkdir -p /home/groups/j/je/jesktopimpl/htdocs'"/>
         </exec>
 
         <exec dir="." executable="${maven.scp.executable}">
             <arg value="site.tar.gz"/>
-            <arg value="${sourceforge.username}@shell.sourceforge.net:/home/groups/j/je/jesktopimpl/htdocs"/>
+            <arg value="${sourceforge.username}@shell.sourceforge.net:/home/users/p/pa/paul-h"/>
         </exec>
 
         <exec dir="." executable="${maven.ssh.executable}">
-            <arg line="shell.sourceforge.net -l ${sourceforge.username} 'cd /home/groups/j/je/jesktopimpl/htdocs;gunzip site.tar.gz;tar xUvf site.tar;chmod -R g+u *;rm site.tar'"/>
+            <arg line="shell.sourceforge.net -l ${sourceforge.username} 'newgrp jesktopimpl;mv /home/users/p/pa/paul-h/site.tar.gz /home/groups/j/je/jesktopimpl/htdocs/site.tar.gz;cd /home/groups/j/je/jesktopimpl/htdocs;gunzip site.tar.gz;tar xUvf site.tar;chmod -R g+u *;rm site.tar'"/>
         </exec>
 
         <delete file="site.tar.gz"/>

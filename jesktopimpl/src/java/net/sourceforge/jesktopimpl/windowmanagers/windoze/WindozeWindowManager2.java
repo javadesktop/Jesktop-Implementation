@@ -39,12 +39,12 @@ import java.awt.Graphics;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class WindozeWindowManager2 extends WindozeWindowManager {
 
-    private JFrameFrimbleFactory mFrimbleFactory;
-    protected JPanel mBackdropPanel = new JFrameFrimblePanel();
+    private JFrameFrimbleFactory frimbleFactory;
+    protected JPanel backdropPanel = new JFrameFrimblePanel();
 
     /**
      * Constructor WindozeWindowManager2
@@ -55,9 +55,9 @@ public class WindozeWindowManager2 extends WindozeWindowManager {
         super(imageRepository);
 
 
-        mFrimbleFactory = new JFrameFrimbleFactory();
+        frimbleFactory = new JFrameFrimbleFactory();
 
-        JFrimble.setFrimbleFactory(mFrimbleFactory);
+        JFrimble.setFrimbleFactory(frimbleFactory);
     }
 
     /**
@@ -68,10 +68,10 @@ public class WindozeWindowManager2 extends WindozeWindowManager {
     public void initializeView2() {
 
         super.initializeView2();
-        frame.getContentPane().add(mBackdropPanel, BorderLayout.CENTER);
-        mBackdropPanel.setBackground(new Color(57, 109, 165));    // windows(tm) blue.
-        mBackdropPanel.invalidate();
-        mBackdropPanel.repaint();
+        frame.getContentPane().add(backdropPanel, BorderLayout.CENTER);
+        backdropPanel.setBackground(new Color(57, 109, 165));    // windows(tm) blue.
+        backdropPanel.invalidate();
+        backdropPanel.repaint();
         frame.setVisible(true);
     }
 
@@ -85,7 +85,7 @@ public class WindozeWindowManager2 extends WindozeWindowManager {
      *
      */
     public Frimble createFrimble(final String title) {
-        return mFrimbleFactory.getFrimble(title);
+        return frimbleFactory.getFrimble(title);
     }
 
     protected void setBackdrop2(final String bPath, final String type) {}
@@ -108,7 +108,7 @@ public class WindozeWindowManager2 extends WindozeWindowManager {
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.6 $
+     * @version $Revision: 1.7 $
      */
     class JFrameFrimblePanel extends JPanel {
 

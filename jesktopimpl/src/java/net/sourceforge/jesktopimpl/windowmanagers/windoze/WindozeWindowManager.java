@@ -77,18 +77,18 @@ public abstract class WindozeWindowManager
     protected Vector launched = new Vector();
     protected JFrame frame;
     protected JComponent lastDragRep;
-    protected LaunchableTarget mLastLaunchableTargetDragged;
-    protected JLabel mLastLaunchableTargetDraggedLabel;
+    protected LaunchableTarget lastLaunchableTargetDragged;
+    protected JLabel lastLaunchableTargetDraggedLabel;
     protected boolean mRenderLaunchableTargetDrag = true;
-    protected JLayeredPane mLayeredPane;
+    protected JLayeredPane layeredPane;
     protected LaunchableTarget[] launchableTargets;
     protected DesktopKernel desktopKernel;
     protected ImageRepository imageRepository;
     private AppLauncher appLauncher;
-    protected PersistableConfig mPersistableConfig;
+    protected PersistableConfig persistableConfig;
     protected Rectangle bounds;
-    protected Image mBackgroundImage;
-    protected String mBackgroundType = "tile";
+    protected Image backgroundImage;
+    protected String backgroundType = "tile";
 
     /**
      * Constructor WindozeWindowManager
@@ -109,7 +109,7 @@ public abstract class WindozeWindowManager
             }
         });
 
-        mLayeredPane = frame.getLayeredPane();
+        layeredPane = frame.getLayeredPane();
 
     }
 
@@ -218,7 +218,7 @@ public abstract class WindozeWindowManager
         if (lastDragRep != dragRep) {
             if (lastDragRep != null) {
                 lastDragRep.setVisible(false);
-                mLayeredPane.remove(lastDragRep);
+                layeredPane.remove(lastDragRep);
 
                 lastDragRep = null;
             }
@@ -226,12 +226,12 @@ public abstract class WindozeWindowManager
             if (dragRep != null) {
                 lastDragRep = dragRep;
 
-                mLayeredPane.add(dragRep, JLayeredPane.DRAG_LAYER, 1);
+                layeredPane.add(dragRep, JLayeredPane.DRAG_LAYER, 1);
             }
         }
 
         if (dragRep != null) {
-            SwingUtilities.convertPointFromScreen(pt, mLayeredPane);
+            SwingUtilities.convertPointFromScreen(pt, layeredPane);
             dragRep.setBounds(pt.x, pt.y, (int) dragRep.getPreferredSize().getWidth(),
                               (int) dragRep.getPreferredSize().getHeight());
             dragRep.setVisible(true);
@@ -245,7 +245,7 @@ public abstract class WindozeWindowManager
      */
     protected void closeRequested() {
 
-        mPersistableConfig.put("bounds", frame.getBounds());
+        persistableConfig.put("bounds", frame.getBounds());
 
         try {
             desktopKernel.initiateShutdown(DesktopKernel.SHUTDOWN_SHUTDOWN);
@@ -296,14 +296,14 @@ public abstract class WindozeWindowManager
      *
      */
     public void setPersistableConfig(final PersistableConfig persistableConfig) {
-        this.mPersistableConfig = persistableConfig;
+        this.persistableConfig = persistableConfig;
         bounds = (Rectangle) persistableConfig.get("bounds");
     }
 
     protected void setBackdrop(final String bPath, final String type) {
         try {
-            mBackgroundImage = new ImageIcon(new URL(bPath)).getImage();
-            this.mBackgroundType = type;
+            backgroundImage = new ImageIcon(new URL(bPath)).getImage();
+            this.backgroundType = type;
 
             frame.invalidate();
 
@@ -321,26 +321,26 @@ public abstract class WindozeWindowManager
 
     protected void paintComponentHelper(final Graphics g, final JComponent repaintable) {
 
-        if (mBackgroundImage != null) {
-            if (mBackgroundType.equals("tiled")) {
+        if (backgroundImage != null) {
+            if (backgroundType.equals("tiled")) {
 
                 // this code copied (public domain) from www.afu.com (JavaFaq)
                 int w = 0, h = 0;
 
                 while (w < repaintable.getSize().width) {
-                    g.drawImage(mBackgroundImage, w, h, repaintable);
+                    g.drawImage(backgroundImage, w, h, repaintable);
 
-                    while ((h + mBackgroundImage.getHeight(repaintable)) < repaintable.getSize().height) {
-                        h += mBackgroundImage.getHeight(repaintable);
+                    while ((h + backgroundImage.getHeight(repaintable)) < repaintable.getSize().height) {
+                        h += backgroundImage.getHeight(repaintable);
 
-                        g.drawImage(mBackgroundImage, w, h, repaintable);
+                        g.drawImage(backgroundImage, w, h, repaintable);
                     }
 
                     h = 0;
-                    w += mBackgroundImage.getWidth(repaintable);
+                    w += backgroundImage.getWidth(repaintable);
                 }
             } else {
-                g.drawImage(mBackgroundImage, 0, 0, repaintable.getSize().width, repaintable.getSize().height,
+                g.drawImage(backgroundImage, 0, 0, repaintable.getSize().width, repaintable.getSize().height,
                             repaintable);
             }
         }
@@ -460,34 +460,34 @@ public abstract class WindozeWindowManager
     public void renderLaunchableTargetDragRepresentation(final LaunchableTarget lTarget, final Point pt,
                                                          final boolean released) {
 
-        if (mLastLaunchableTargetDragged != lTarget) {
-            if (mLastLaunchableTargetDragged != null) {
+        if (lastLaunchableTargetDragged != lTarget) {
+            if (lastLaunchableTargetDragged != null) {
                 if (released) {
                     this.acceptLaunchableTarget(lTarget, pt);
                 }
 
-                mLastLaunchableTargetDraggedLabel.setVisible(false);
-                mLayeredPane.remove(mLastLaunchableTargetDraggedLabel);
+                lastLaunchableTargetDraggedLabel.setVisible(false);
+                layeredPane.remove(lastLaunchableTargetDraggedLabel);
 
-                mLastLaunchableTargetDraggedLabel = null;
-                mLastLaunchableTargetDragged = null;
+                lastLaunchableTargetDraggedLabel = null;
+                lastLaunchableTargetDragged = null;
             } else {
-                mLastLaunchableTargetDragged = lTarget;
-                mLastLaunchableTargetDraggedLabel = getMenuDragRep(lTarget);
+                lastLaunchableTargetDragged = lTarget;
+                lastLaunchableTargetDraggedLabel = getMenuDragRep(lTarget);
             }
 
-            if (mLastLaunchableTargetDraggedLabel != null) {
-                mLayeredPane.add(mLastLaunchableTargetDraggedLabel, JLayeredPane.DRAG_LAYER, 1);
+            if (lastLaunchableTargetDraggedLabel != null) {
+                layeredPane.add(lastLaunchableTargetDraggedLabel, JLayeredPane.DRAG_LAYER, 1);
             }
         }
 
-        if ((mLastLaunchableTargetDraggedLabel != null) && mRenderLaunchableTargetDrag) {
-            SwingUtilities.convertPointFromScreen(pt, mLayeredPane);
-            mLastLaunchableTargetDraggedLabel
-                .setBounds(pt.x, pt.y, (int) mLastLaunchableTargetDraggedLabel.getPreferredSize()
-                    .getWidth(), (int) mLastLaunchableTargetDraggedLabel.getPreferredSize()
+        if ((lastLaunchableTargetDraggedLabel != null) && mRenderLaunchableTargetDrag) {
+            SwingUtilities.convertPointFromScreen(pt, layeredPane);
+            lastLaunchableTargetDraggedLabel
+                .setBounds(pt.x, pt.y, (int) lastLaunchableTargetDraggedLabel.getPreferredSize()
+                    .getWidth(), (int) lastLaunchableTargetDraggedLabel.getPreferredSize()
                     .getHeight());
-            mLastLaunchableTargetDraggedLabel.setVisible(true);
+            lastLaunchableTargetDraggedLabel.setVisible(true);
         }
     }
 

@@ -39,7 +39,7 @@ import java.util.Iterator;
  */
 public class MimeInfoImpl implements MimeInfo, java.io.Serializable {
 
-    private LaunchableTargetFactory mLaunchableTargetFactory;
+    private LaunchableTargetFactory launchableTargetFactory;
     private MimeManagerImpl manager;
     private String mime;
     private String description;
@@ -53,7 +53,7 @@ public class MimeInfoImpl implements MimeInfo, java.io.Serializable {
     public MimeInfoImpl(final MimeManagerImpl manager, final String mime, final String description,
                         final LaunchableTargetFactory launchableTargetFactory) {
 
-        this.mLaunchableTargetFactory = launchableTargetFactory;
+        this.launchableTargetFactory = launchableTargetFactory;
         this.manager = manager;
         registeredExtensions = new HashSet(2);
         actions = new ArrayList();
@@ -150,7 +150,7 @@ public class MimeInfoImpl implements MimeInfo, java.io.Serializable {
         Iterator it = actions.iterator();
 
         for (int i = 0; it.hasNext(); i++) {
-            targets[i] = mLaunchableTargetFactory.getLaunchableTarget((String) it.next());
+            targets[i] = launchableTargetFactory.getLaunchableTarget((String) it.next());
         }
 
         return targets;

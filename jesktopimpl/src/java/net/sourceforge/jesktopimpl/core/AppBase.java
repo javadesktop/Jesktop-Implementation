@@ -43,16 +43,16 @@ import java.net.URLClassLoader;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public abstract class AppBase {
 
     protected final File baseDir;
-    protected final DocumentBuilderFactory dbf;
+    protected final DocumentBuilderFactory documentBuilderFactory;
 
     protected AppBase(DocumentBuilderFactory dbf, File baseDir) {
         this.baseDir = baseDir;
-        this.dbf = dbf;
+        this.documentBuilderFactory = dbf;
     }
 
     protected Document getApplicationsDotXML(final String jarName, final URLClassLoader urlClassLoader)
@@ -65,7 +65,7 @@ public abstract class AppBase {
                 throw new JesktopPackagingException("missing JESKTOP-INF/applications.xml in jar " + jarName);
             }
 
-            DocumentBuilder db = dbf.newDocumentBuilder();
+            DocumentBuilder db = documentBuilderFactory.newDocumentBuilder();
 
             Document appJarApplicationsConf = db.parse(url.openStream());
 
@@ -163,7 +163,7 @@ public abstract class AppBase {
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.7 $
+     * @version $Revision: 1.8 $
      */
     protected class JarSuffixHolder {
 

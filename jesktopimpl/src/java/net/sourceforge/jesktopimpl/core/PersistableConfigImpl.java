@@ -26,16 +26,16 @@ import org.jesktop.ObjectRepository;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class PersistableConfigImpl implements org.jesktop.config.PersistableConfig {
 
-    private ObjectRepository mObjectRepository;
-    private String mPrefix;
+    private ObjectRepository objectRepository;
+    private String prefix;
 
     protected PersistableConfigImpl(final ObjectRepository rep, final String prefix) {
-        this.mObjectRepository = rep;
-        this.mPrefix = prefix + "-";
+        this.objectRepository = rep;
+        this.prefix = prefix + "-";
     }
 
     /**
@@ -47,7 +47,7 @@ public class PersistableConfigImpl implements org.jesktop.config.PersistableConf
      *
      */
     public void put(final String key, final Object obj) {
-        mObjectRepository.put(mPrefix + key, obj);
+        objectRepository.put(prefix + key, obj);
     }
 
     /**
@@ -61,8 +61,8 @@ public class PersistableConfigImpl implements org.jesktop.config.PersistableConf
      */
     public Object get(final String key) {
 
-        if (mObjectRepository.containsKey(mPrefix + key)) {
-            return mObjectRepository.get(mPrefix + key);
+        if (objectRepository.containsKey(prefix + key)) {
+            return objectRepository.get(prefix + key);
         } else {
             return null;
         }

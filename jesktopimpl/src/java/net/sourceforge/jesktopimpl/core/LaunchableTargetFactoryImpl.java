@@ -43,7 +43,7 @@ public class LaunchableTargetFactoryImpl
 
     private ObjectRepository objectRepository;
     private HashMap classloaders;
-    private LaunchableTargetHolder mLaunchableTargetHolder;
+    private LaunchableTargetHolder launchableTargetHolder;
 
     public LaunchableTargetFactoryImpl(ObjectRepository objectRepository) {
         this.objectRepository = objectRepository;
@@ -53,7 +53,7 @@ public class LaunchableTargetFactoryImpl
 
         if (alreadySetup) {
             try {
-                mLaunchableTargetHolder = (LaunchableTargetHolder) objectRepository.get(KEY, LaunchableTargetHolder.class.getClassLoader());
+                launchableTargetHolder = (LaunchableTargetHolder) objectRepository.get(KEY, LaunchableTargetHolder.class.getClassLoader());
 
                 appsDone = true;
             } catch (Exception e) {
@@ -82,7 +82,7 @@ public class LaunchableTargetFactoryImpl
         }
 
         if (!appsDone) {
-            mLaunchableTargetHolder = new LaunchableTargetHolder();
+            launchableTargetHolder = new LaunchableTargetHolder();
             setBuiltInApps();
             save();
         }
@@ -102,7 +102,7 @@ public class LaunchableTargetFactoryImpl
         LaunchableTarget lt = new DecoratorLaunchableTargetImpl(targetName, className,
                                                                 displayName, configPath);
 
-        mLaunchableTargetHolder.targets.put(targetName, lt);
+        launchableTargetHolder.targets.put(targetName, lt);
         save();
         return (DecoratorLaunchableTarget) lt;
     }
@@ -117,17 +117,17 @@ public class LaunchableTargetFactoryImpl
                                                                 appFilePrefix, jarFileNames,
                                                                 displayName, configPath);
 
-        mLaunchableTargetHolder.targets.put(targetName, lt);
+        launchableTargetHolder.targets.put(targetName, lt);
         save();
         return (DecoratorLaunchableTarget) lt;
     }
 
     public LaunchableTarget getLaunchableTarget(String targetName) {
-        return (LaunchableTarget) mLaunchableTargetHolder.targets.get(targetName);
+        return (LaunchableTarget) launchableTargetHolder.targets.get(targetName);
     }
 
     public boolean isRegistered(String targetName) {
-        return (mLaunchableTargetHolder.targets.get(targetName) != null);
+        return (launchableTargetHolder.targets.get(targetName) != null);
     }
 
     public ConfigletLaunchableTarget[] getConfigletLaunchableTargets() {
@@ -164,7 +164,7 @@ public class LaunchableTargetFactoryImpl
     }
 
     public void confirmLaunchableTarget(LaunchableTarget launchableTarget) {
-        mLaunchableTargetHolder.targets.put(launchableTarget.getTargetName(), launchableTarget);
+        launchableTargetHolder.targets.put(launchableTarget.getTargetName(), launchableTarget);
         save();
     }
 
@@ -213,7 +213,7 @@ public class LaunchableTargetFactoryImpl
 
 
     public String getNewAppSuffix() {
-        String tmp = "0000" + mLaunchableTargetHolder.appSuffix++;
+        String tmp = "0000" + launchableTargetHolder.appSuffix++;
 
         return tmp.substring(tmp.length() - 5, tmp.length());
     }
@@ -250,7 +250,7 @@ public class LaunchableTargetFactoryImpl
                                            boolean singleInstance) {
         LaunchableTarget lt = new NormalLaunchableTargetImpl(targetName, className, displayName,
                                                              singleInstance);
-        mLaunchableTargetHolder.targets.put(lt.getTargetName(), lt);
+        launchableTargetHolder.targets.put(lt.getTargetName(), lt);
         save();
     }
 
@@ -260,7 +260,7 @@ public class LaunchableTargetFactoryImpl
                                            boolean singleInstance) {
         LaunchableTarget lt = new KernelLaunchableTargetImpl(targetName, className, displayName,
                                                              singleInstance);
-        mLaunchableTargetHolder.targets.put(lt.getTargetName(), lt);
+        launchableTargetHolder.targets.put(lt.getTargetName(), lt);
         save();
     }
 
@@ -273,7 +273,7 @@ public class LaunchableTargetFactoryImpl
         LaunchableTarget lt = new NormalLaunchableTargetImpl(targetName, className,
                                                              appFilePrefix, jarFileNames,
                                                              displayName, singleInstance);
-        mLaunchableTargetHolder.targets.put(targetName, lt);
+        launchableTargetHolder.targets.put(targetName, lt);
         save();
         return lt;
     }
@@ -285,7 +285,7 @@ public class LaunchableTargetFactoryImpl
         LaunchableTarget lt = new ConfigletLaunchableTargetImpl(targetName, className,
                                                                 displayName, configPath);
 
-        mLaunchableTargetHolder.targets.put(targetName, lt);
+        launchableTargetHolder.targets.put(targetName, lt);
         save();
         return lt;
     }
@@ -300,23 +300,23 @@ public class LaunchableTargetFactoryImpl
                                                                 appFilePrefix, jarFileNames,
                                                                     displayName, configPath);
 
-        mLaunchableTargetHolder.targets.put(targetName, lt);
+        launchableTargetHolder.targets.put(targetName, lt);
         save();
         return lt;
     }
 
     private void save() {
-        objectRepository.put(KEY, mLaunchableTargetHolder);
+        objectRepository.put(KEY, launchableTargetHolder);
     }
 
     private LaunchableTarget[] subset(Class cls) {
 
         Vector vec = new Vector();
-        Iterator it = mLaunchableTargetHolder.targets.keySet().iterator();
+        Iterator it = launchableTargetHolder.targets.keySet().iterator();
 
         while (it.hasNext()) {
             String key = (String) it.next();
-            LaunchableTarget lt = (LaunchableTarget) mLaunchableTargetHolder.targets.get(key);
+            LaunchableTarget lt = (LaunchableTarget) launchableTargetHolder.targets.get(key);
 
             if (cls.isInstance(lt)) {
                 vec.add(lt);

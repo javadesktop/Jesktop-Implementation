@@ -36,14 +36,14 @@ import java.awt.Container;
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.5 $
+     * @version $Revision: 1.6 $
      */
     public class LaunchBarGroupMenuItem extends JMenu {
 
-    protected LaunchableTarget[] mLaunchableTargets;
-    protected ImageRepository mImageRepository;
-    protected DesktopKernel mDesktopKernel;
-    protected WindozeWindowManager mWindozeWindowManager;
+    protected LaunchableTarget[] launchableTargets;
+    protected ImageRepository imageRepository;
+    protected DesktopKernel desktopKernel;
+    protected WindozeWindowManager windozeWindowManager;
 
         /**
          * Constructor LaunchBarGroupMenuItem
@@ -61,24 +61,24 @@ import java.awt.Container;
 
             super(phrase);
 
-            mLaunchableTargets = launchableTargets;
-            mImageRepository = imageRepository;
-            mDesktopKernel = desktopKernel;
-            mWindozeWindowManager = windozeWindowManager;
+            this.launchableTargets = launchableTargets;
+            this.imageRepository = imageRepository;
+            this.desktopKernel = desktopKernel;
+            this.windozeWindowManager = windozeWindowManager;
 
             HashSet hs = new HashSet();
 
-            for (int x = 0; x < mLaunchableTargets.length; x++) {
-                if (mLaunchableTargets[x].getTargetName().startsWith(path)) {
-                    String[] parts = mLaunchableTargets[x].getTargetNameParts();
+            for (int x = 0; x < this.launchableTargets.length; x++) {
+                if (this.launchableTargets[x].getTargetName().startsWith(path)) {
+                    String[] parts = this.launchableTargets[x].getTargetNameParts();
 
                     if (deep < parts.length - 1) {
 
                         // still a menu
                         if (!hs.contains(parts[deep])) {
                             LaunchBarGroupMenuItem lbgi =
-                                new LaunchBarGroupMenuItem(mDesktopKernel, mLaunchableTargets,
-                                        mWindozeWindowManager, mImageRepository, appLauncher, path + "/" + parts[deep], parts[deep],
+                                new LaunchBarGroupMenuItem(this.desktopKernel, this.launchableTargets,
+                                        this.windozeWindowManager, this.imageRepository, appLauncher, path + "/" + parts[deep], parts[deep],
                                                            deep + 1);
 
                             this.add(lbgi);
@@ -91,9 +91,9 @@ import java.awt.Container;
 
                         // leaf
                         if (!hs.contains(parts[deep])) {
-                            this.add(new LaunchBarMenuItem(mDesktopKernel, mLaunchableTargets[x],
-                                    mWindozeWindowManager, appLauncher,
-                                mImageRepository.getAppSmallImageIcon(mLaunchableTargets[x].getTargetName())));
+                            this.add(new LaunchBarMenuItem(this.desktopKernel, this.launchableTargets[x],
+                                    this.windozeWindowManager, appLauncher,
+                                this.imageRepository.getAppSmallImageIcon(this.launchableTargets[x].getTargetName())));
                         }
                     }
                 }
