@@ -7,7 +7,7 @@ pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.L
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.ConfigManagerImpl)
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.ImageRepositoryImpl)
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.windowmanagers.windoze.WindozeWindowManager1)
-pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.ThreadPoolImpl)
+pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.NotReallyAThreadPool)
 pico.registerComponentImplementation(Packages.net.sourceforge.jesktopimpl.core.DesktopKernelImpl)
 
 pico.getComponentInstances();
