@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Created-By: Apache Avalon Project
 
-Name: org/apache/avalon/jesktop/core/DesktopKernelImpl.class
+Name: net/sourceforge/jesktopimpl/core/DesktopKernelImpl.class
 Avalon-Block: true
 
-Name: org/apache/avalon/jesktop/windowmanagers/windoze/WindozeWindowManager1.class
+Name: net/sourceforge/jesktopimpl/windowmanagers/windoze/WindozeWindowManager1.class
 Avalon-Block: true
 
-Name: org/apache/avalon/jesktop/windowmanagers/windoze/WindozeWindowManager2.class
+Name: net/sourceforge/jesktopimpl/windowmanagers/windoze/WindozeWindowManager2.class
 Avalon-Block: true
 

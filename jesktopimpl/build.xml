@@ -183,11 +183,11 @@
     
     <jar jarfile="${build.lib}/${jar.name}-explorer.jar">
       <zipfileset dir="build/classes">
-        <include name="org/apache/avalon/jesktop/apps/explorer/**"/>
+        <include name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
       </zipfileset>                  
       <zipfileset dir="src/java">
-        <include name="org/apache/avalon/jesktop/apps/explorer/**/*.xinfo"/>
-        <include name="org/apache/avalon/jesktop/apps/explorer/**/*.gif"/>
+        <include name="net/sourceforge/jesktopimpl/apps/explorer/**/*.xinfo"/>
+        <include name="net/sourceforge/jesktopimpl/apps/explorer/**/*.gif"/>
       </zipfileset>         
       <zipfileset dir="src/xml/explorer" prefix="JESKTOP-INF">
         <include name="*.xml"/>
@@ -196,13 +196,13 @@
 
     <jar jarfile="${build.lib}/${jar.name}-apps.jar">
       <zipfileset dir="build/classes">
-        <include name="org/apache/avalon/jesktop/apps/**"/>
-        <exclude name="org/apache/avalon/jesktop/apps/explorer/**"/>
+        <include name="net/sourceforge/jesktopimpl/apps/**"/>
+        <exclude name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
       </zipfileset>                  
       <zipfileset dir="src/java">
-        <include name="org/apache/avalon/jesktop/apps/**/*.xinfo"/>
-        <include name="org/apache/avalon/jesktop/apps/**/*.gif"/>
-        <exclude name="org/apache/avalon/jesktop/apps/explorer/**"/>
+        <include name="net/sourceforge/jesktopimpl/apps/**/*.xinfo"/>
+        <include name="net/sourceforge/jesktopimpl/apps/**/*.gif"/>
+        <exclude name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
       </zipfileset>         
       <zipfileset dir="src/xml/apps" prefix="JESKTOP-INF">
         <include name="*.xml"/>
@@ -219,12 +219,12 @@
     <jar jarfile="${build.lib}/${jar.name}.jar"
          manifest="${manifest.dir}/jesktop.mf">
       <zipfileset dir="build/classes">
-        <exclude name="org/apache/avalon/jesktop/apps/**"/>
+        <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
       </zipfileset>                  
       <zipfileset dir="src/java">
         <include name="**/*.xinfo"/>
         <include name="**/*.gif"/>
-        <exclude name="org/apache/avalon/jesktop/apps/**"/>
+        <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
       </zipfileset>         
     </jar>  
     

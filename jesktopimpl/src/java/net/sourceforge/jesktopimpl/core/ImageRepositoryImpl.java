@@ -34,12 +34,12 @@ import java.net.URL;
  *
  *
  * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ImageRepositoryImpl extends AbstractLogEnabled implements Block, ImageRepository, Contextualizable,
         Composable, Configurable, Initializable  {
 
-    private static final String PATH = "org/apache/avalon/jesktop/icons/";
+    private static final String PATH = "net/sourceforge/jesktopimpl/icons/";
     private static final ImageIcon DEFAULT_APP_ICON_32 = makeImage(PATH
                                                                    + "default_app_32x32.gif");
     private static final ImageIcon DEFAULT_APP_ICON_16 = makeImage(PATH

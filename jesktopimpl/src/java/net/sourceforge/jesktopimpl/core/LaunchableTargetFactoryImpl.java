@@ -92,7 +92,7 @@ public class LaunchableTargetFactoryImpl extends AbstractLogEnabled
                     e.printStackTrace();
                     System.err.println("********************************");
                     System.err.println("**  Problem, the last time    **");
-                    System.err.println("**  you ran Avalon/Jesktop    **");
+                    System.err.println("**  you ran Jesktop           **");
                     System.err.println("**  the installed apps used   **");
                     System.err.println("**  a now incompatible class  **");
                     System.err.println("**  Default apps installed    **");
