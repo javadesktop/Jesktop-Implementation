@@ -51,6 +51,7 @@ import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Startable;
 
 import javax.swing.JComponent;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.Vector;
 import java.util.Iterator;
 import java.beans.PropertyChangeSupport;
@@ -104,6 +105,7 @@ public class DesktopKernelImpl
     private KernelConfigManager kernelConfigManager;
     private MimeManager mimeManager;
     private MutablePicoContainer picoContainer;
+    private final DocumentBuilderFactory dbf;
 
     /**
      * Constructor DesktopKernelImpl
@@ -114,6 +116,7 @@ public class DesktopKernelImpl
                              KernelConfigManager kernelCongigManager, ImageRepository imageRepository,
                              LaunchableTargetFactory launchableTargetFactory, KernelConfigManager kernelConfigManager,
                              MimeManager mimeManager,
+                             DocumentBuilderFactory dbf,
                              File baseDirectory) {
         this.threadPool = threadPool;
         this.kernelConfigManager = kernelConfigManager;
@@ -123,7 +126,9 @@ public class DesktopKernelImpl
         configManager = kernelCongigManager;
         this.imageRepository = imageRepository;
         this.launchableTargetFactory = launchableTargetFactory;
+        this.dbf = dbf;
         this.baseDirectory = baseDirectory;
+
 
         picoContainer = new DefaultPicoContainer();
         picoContainer.registerComponentInstance(windowManager);
@@ -139,7 +144,7 @@ public class DesktopKernelImpl
                 "Default Decorator", "decorators/default");
 
         appInstaller = new AppInstallerImpl(propertyChangeSupport, this,
-                this.launchableTargetFactory, this.imageRepository, this.baseDirectory);
+                this.launchableTargetFactory, this.imageRepository, dbf, this.baseDirectory);
         configManager.registerConfigInterest(this, "decorator/currentDecorator");
         configManager.registerConfigInterest(mWindowManager, "desktop/settings");
         setDecoratorLaunchableTarget(defaultDecorator);
@@ -602,7 +607,7 @@ public class DesktopKernelImpl
             appLauncher = new AppLauncherImpl(mWindowManager, launchableTargetFactory, this,
                                               launchedTargets,
                                               currentDecorator, kernelConfigManager ,
-                                              appInstaller, mimeManager, baseDirectory);
+                                              appInstaller, mimeManager, dbf, baseDirectory);
 
             mWindowManager.setAppLauncher(appLauncher);
             mWindowManager.updateComponentTreeUI();
@@ -674,7 +679,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.10 $
+     * @version $Revision: 1.11 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -735,7 +740,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.10 $
+     * @version $Revision: 1.11 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

@@ -19,33 +19,36 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
+import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import org.jesktop.AppInstaller;
-import org.jesktop.*;
+import org.jesktop.DesktopKernel;
+import org.jesktop.ImageRepository;
+import org.jesktop.JesktopLaunchException;
 import org.jesktop.JesktopPackagingException;
 import org.jesktop.launchable.LaunchableTarget;
-import org.jesktop.JesktopLaunchException;
-import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.beans.PropertyChangeSupport;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.MalformedURLException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Vector;
 
 
 /**
  * Class AppInstallerImpl
  *
- *
  * @author Paul Hammant
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class AppInstallerImpl extends AppBase implements AppInstaller {
 
@@ -59,8 +62,9 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                                final DesktopKernelImpl desktopKernelImpl,
                                final LaunchableTargetFactory launchableTargetHolder,
                                final ImageRepository imageRepository,
+                               final DocumentBuilderFactory dbf,
                                final File baseDir) {
-        super(baseDir);
+        super(dbf, baseDir);
         launchableTargetFactory = launchableTargetHolder;
         this.propertyChangeSupport = propertyChangeSupport;
         this.imageRepository = imageRepository;
@@ -70,18 +74,15 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
     private void notifyLaunchableTargetListeners() {
 
         propertyChangeSupport.firePropertyChange(DesktopKernel.LAUNCHABLE_TARGET_CHANGE, null,
-                                                 launchableTargetFactory
-                                                     .getAllLaunchableTargets());
+                launchableTargetFactory
+                .getAllLaunchableTargets());
     }
 
     /**
      * Method installApps
      *
-     *
      * @param url
-     *
      * @throws JesktopPackagingException
-     *
      */
     public void installApps(final URL url) throws JesktopPackagingException {
 
@@ -95,15 +96,12 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
     /**
      * Method installAppWithoutConfirmation
      *
-     *
      * @param url
-     *
      * @throws JesktopPackagingException
-     *
      */
     public void installAppWithoutConfirmation(final URL url) throws JesktopPackagingException {
         try {
-            applicationInstall(new InputStream[] {url.openStream()}, false);
+            applicationInstall(new InputStream[]{url.openStream()}, false);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -112,11 +110,8 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
     /**
      * Method installApps
      *
-     *
      * @param urls
-     *
      * @throws JesktopPackagingException
-     *
      */
     public void installApps(final URL[] urls) throws JesktopPackagingException {
 
@@ -136,46 +131,37 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
     /**
      * Method installApps
      *
-     *
      * @param inputStream
-     *
      * @throws JesktopPackagingException
-     *
      */
     public void installApps(final InputStream inputStream) throws JesktopPackagingException {
-        applicationInstall(new InputStream[]{ inputStream }, true);
+        applicationInstall(new InputStream[]{inputStream}, true);
     }
+
     /**
      * Method installApps
      *
-     *
      * @param inputStreams
-     *
      * @throws JesktopPackagingException
-     *
      */
     public void installApps(final InputStream[] inputStreams) throws JesktopPackagingException {
         applicationInstall(inputStreams, true);
     }
+
     /**
      * Method installApps
      *
-     *
      * @param inputStreams
-     *
      * @throws JesktopPackagingException
-     *
      */
     protected void installAppsWithoutConfirmation(final InputStream[] inputStreams) throws JesktopPackagingException {
         applicationInstall(inputStreams, false);
     }
+
     /**
      * Method installApps
      *
-     *
      * @param inputStreams
-     *
-     *
      */
     private void applicationInstall(final InputStream[] inputStreams, boolean confirm) {
 
@@ -192,7 +178,7 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                 LaunchableTarget[] pendInsts = new org.jesktop.launchable.LaunchableTarget[0];
                 pendInsts = this.installApps(appFilePrefix, jarNames, jarSuffix);
                 if (confirm) {
-                  desktopKernelImpl.confirmAppInstallation(pendInsts);
+                    desktopKernelImpl.confirmAppInstallation(pendInsts);
                 } else {
                     for (int i = 0; i < pendInsts.length; i++) {
                         launchableTargetFactory.confirmLaunchableTarget(pendInsts[i]);
@@ -209,9 +195,8 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
         notifyLaunchableTargetListeners();
     }
 
-    private LaunchableTarget[] installApps(
-            final String appFilePrefix, final Vector jarFileNames, final JarSuffixHolder suffix)
-                throws JesktopPackagingException {
+    private LaunchableTarget[] installApps(final String appFilePrefix, final Vector jarFileNames, final JarSuffixHolder suffix)
+            throws JesktopPackagingException {
 
         //ClassLoader classLoader = launchableTargetHolder.getClassLoader(appFilePrefix, jarFileNames);
         InputStream appsIs = null;
@@ -219,49 +204,50 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
         try {
             firstJar = (String) jarFileNames.elementAt(0);
             URLClassLoader tempClassLoader = new URLClassLoader(new URL[]{
-                new File(firstJar).toURL() });
-            Configuration appJarApplicationsConf = getApplicationsDotXML(firstJar, tempClassLoader);
+                new File(firstJar).toURL()});
+            Document appJarApplicationsConf = getApplicationsDotXML(firstJar, tempClassLoader);
 
             return installApps(appFilePrefix, jarFileNames, suffix, appJarApplicationsConf,
-                               tempClassLoader);
+                    tempClassLoader);
         } catch (IOException ioe) {
-            throw new JesktopPackagingException(
-                "JESKTOP-INF/applications.xml is missing from application jar : " + firstJar);
+            throw new JesktopPackagingException("JESKTOP-INF/applications.xml is missing from application jar : " + firstJar);
         }
     }
 
-    private LaunchableTarget[] installApps(
-            final String appFilePrefix, final Vector jarFileNames, final JarSuffixHolder suffix,
-            final Configuration appsConfig, final URLClassLoader tempClassLoader) throws JesktopPackagingException {
+    private LaunchableTarget[] installApps(final String appFilePrefix, final Vector jarFileNames, final JarSuffixHolder suffix,
+                                           final Document appsDocument, final URLClassLoader tempClassLoader) throws JesktopPackagingException {
 
+        Element appsRootElem = appsDocument.getDocumentElement();
         try {
-            Configuration addionalJarsGroup = appsConfig.getChild("additional-jars");
-            Configuration[] additionalJars = addionalJarsGroup.getChildren("jar");
+            NodeList addionalJarsGroup = appsDocument.getElementsByTagName("additional-jars");
+            Element addionalJarsGroupE = (Element) addionalJarsGroup.item(0);
+            if (addionalJarsGroupE != null) {
 
-            for (int q = 0; q < additionalJars.length; q++) {
-                String whereStr = additionalJars[q].getAttribute("where").toLowerCase();
-                String jarStr = additionalJars[q].getValue();
+                NodeList additionalJars = addionalJarsGroupE.getElementsByTagName("jar");
 
-                if (whereStr.equals("remote")) {
+                for (int q = 0; q < additionalJars.getLength(); q++) {
+                    Element additionalJar = (Element) additionalJars.item(q);
+                    String whereStr = additionalJar.getAttribute("where").toLowerCase();
+                    String jarStr = additionalJar.getNodeValue();
 
-                    // this is failing see bugs:
-                    // http://developer.java.sun.com/developer/bugParade/bugs/4388202.html
-                    jarFileNames.add(internJar(false, new URL(jarStr).openStream(),
-                                               appFilePrefix, suffix));
-                } else if (whereStr.equals("contained")) {
-                    URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{
-                        new File((String) jarFileNames.elementAt(0)).toURL() });
-                    URL url = urlClassLoader.getResource(jarStr);
-                    if (url == null) {
-                        System.out.println("No additional Jar - '" + jarStr + "' in jar");
-                    } else {
-                        jarFileNames.add(internJar(false, url.openStream(), appFilePrefix, suffix));
+                    if (whereStr.equals("remote")) {
+
+                        // this is failing see bugs:
+                        // http://developer.java.sun.com/developer/bugParade/bugs/4388202.html
+                        jarFileNames.add(internJar(false, new URL(jarStr).openStream(),
+                                appFilePrefix, suffix));
+                    } else if (whereStr.equals("contained")) {
+                        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{
+                            new File((String) jarFileNames.elementAt(0)).toURL()});
+                        URL url = urlClassLoader.getResource(jarStr);
+                        if (url == null) {
+                            System.out.println("No additional Jar - '" + jarStr + "' in jar");
+                        } else {
+                            jarFileNames.add(internJar(false, url.openStream(), appFilePrefix, suffix));
+                        }
                     }
                 }
             }
-        } catch (ConfigurationException ce) {
-            ce.printStackTrace();
-            // OK, so there were no additional jars
         } catch (MalformedURLException mfue) {
             mfue.printStackTrace();
         } catch (IOException ioe) {
@@ -269,61 +255,70 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
         }
 
         Vector pendingInstalls = new Vector();
-        Configuration[] apps = appsConfig.getChildren("appxml");
+        NodeList apps = appsRootElem.getElementsByTagName("appxml");
 
-        for (int q = 0; q < apps.length; q++) {
+        for (int q = 0; q < apps.getLength(); q++) {
             try {
-                String appSpecificXml = apps[q].getAttribute("locn");
+                Element appE = (Element) apps.item(q);
+                String appSpecificXml = appE.getAttribute("locn");
                 URL url = tempClassLoader.getResource(appSpecificXml);
-                Configuration app = null;
+                Document app = null;
                 try {
-                    app = CONF_BUILDER.build(url.openStream());
+                    app = dbf.newDocumentBuilder().parse(url.openStream());
                 } catch (SAXException e) {
                     throw new JesktopPackagingException(e.getMessage());
+                } catch (ParserConfigurationException e) {
+                    throw new JesktopPackagingException(e.getMessage());
                 }
-                String appType = app.getAttribute("type", "normal");
-                String targetName = app.getAttribute("target");
-                String className = getAppElemValue(app, "class", true);
-                String displayName = getAppElemValue(app, "display-name", true);
-                String singleInstance = app.getAttribute("single-instance", "false");
+                Element rootElem = app.getDocumentElement();
+                String appType = rootElem.getAttribute("type");
+                if (appType == null) {
+                    appType = "normal";
+                }
+                String targetName = rootElem.getAttribute("target");
+                String className = getSingleElemValue(rootElem, "class", true);
+                String displayName = getSingleElemValue(rootElem, "display-name", true);
+                String singleInstance = rootElem.getAttribute("single-instance");
+                if (singleInstance == null) {
+                    singleInstance = "false";
+                }
+
                 LaunchableTarget lt = null;
 
                 if (appType.equals("normal")) {
                     lt = launchableTargetFactory.makeNormalLaunchableTarget(targetName, className,
-                                                                           appFilePrefix,
-                                                                           jarFileNames,
-                                                                           displayName,
-                                                                           singleInstance
-                                                                               .equals("true"));
+                            appFilePrefix,
+                            jarFileNames,
+                            displayName,
+                            singleInstance
+                            .equals("true"));
                 } else if (appType.equals("decorator")) {
                     lt = launchableTargetFactory.makeDecoratorLaunchableTarget(targetName,
-                                                                              className,
-                                                                              appFilePrefix,
-                                                                              jarFileNames,
-                                                                              displayName,
-                                                                              getAppElemValue(app,
-                                                                                  "configpath",
-                                                                                  false));
+                            className,
+                            appFilePrefix,
+                            jarFileNames,
+                            displayName,
+                            getSingleElemValue(rootElem,
+                                    "configpath",
+                                    false));
                 } else if (appType.equals("configlet")) {
                     lt = launchableTargetFactory.makeConfigletLaunchableTarget(targetName,
-                                                                              className,
-                                                                              appFilePrefix,
-                                                                              jarFileNames,
-                                                                              displayName,
-                                                                              getAppElemValue(app,
-                                                                                  "configpath",
-                                                                                  true));
+                            className,
+                            appFilePrefix,
+                            jarFileNames,
+                            displayName,
+                            getSingleElemValue(rootElem,
+                                    "configpath",
+                                    true));
                 } else {
                     throw new JesktopPackagingException("Application type " + appType
-                                                        + " not supported");
+                            + " not supported");
                 }
 
                 pendingInstalls.addElement(lt);
                 createIcons(app, targetName, tempClassLoader);
             } catch (IOException ioe) {
                 ioe.printStackTrace();
-            } catch (ConfigurationException ce) {
-                ce.printStackTrace();
             } finally {
 
                 //System.out.println("App installed OK");
@@ -337,52 +332,38 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
         return pendingInsts;
     }
 
-    private void createIcons(final Configuration app, final String targetName, final URLClassLoader tempClassLoader)
+    private void createIcons(final Document app, final String targetName, final URLClassLoader tempClassLoader)
             throws JesktopPackagingException {
 
-        Configuration icons = app.getChild("icons");
+        NodeList icons = app.getElementsByTagName("icons");
 
-        if (icons.getAttributeNames().length == 0) {
-            return;
+        if (icons.getLength() > 1) {
+            throw new JesktopPackagingException("Only one 'icons' element ");
         }
 
-        URL url = null;
+        Element iconsE = (Element) icons.item(0);
+        if (iconsE != null) {
+            URL url = null;
 
-        try {
-            url = tempClassLoader.getResource(icons.getAttribute("icon16"));
+            try {
+                String attribute = iconsE.getAttribute("icon16");
+                url = tempClassLoader.getResource(attribute);
 
-            imageRepository.setImageIcon(ImageRepository.APP + targetName + "_16x16",
-                                         new ImageIcon(url));
-        } catch (ConfigurationException ce) {
-            throw new JesktopPackagingException("Malformed xml segment for icons in jar");
-        } catch (NullPointerException npe) {
-            throw new JesktopPackagingException("Malformed icon segment in jar =(" + url + ")");
-        }    // no small icon
+                imageRepository.setImageIcon(ImageRepository.APP + targetName + "_16x16",
+                        new ImageIcon(url));
+            } catch (NullPointerException npe) {
+                throw new JesktopPackagingException("Malformed icon segment in jar =(" + url + ")");
+            }    // no small icon
 
-        try {    //todo - method for dupe logic
-            url = tempClassLoader.getResource(icons.getAttribute("icon32"));
+            try {    //todo - method for dupe logic
+                String attribute = iconsE.getAttribute("icon32");
+                url = tempClassLoader.getResource(attribute);
 
-            imageRepository.setImageIcon(ImageRepository.APP + targetName + "_32x32",
-                                         new ImageIcon(url));
-        } catch (ConfigurationException ce) {
-            throw new JesktopPackagingException("Malformed xml segment for icons in jar");
-        } catch (NullPointerException npe) {
-            throw new JesktopPackagingException("Malformed icon segment in jar =(" + url + ")");
-        }        // no large icon
-    }
-
-    private String getAppElemValue(final Configuration app, final String elem, final boolean mandatory)
-            throws JesktopPackagingException {
-
-        try {
-            return app.getChild(elem).getValue();
-        } catch (ConfigurationException ce) {
-            if (mandatory) {
-                throw new JesktopPackagingException("Manadatory element - " + elem
-                                                    + " - missing from app config file");
-            } else {
-                return null;
-            }
+                imageRepository.setImageIcon(ImageRepository.APP + targetName + "_32x32",
+                        new ImageIcon(url));
+            } catch (NullPointerException npe) {
+                throw new JesktopPackagingException("Malformed icon segment in jar =(" + url + ")");
+            }        // no large icon
         }
     }
 }

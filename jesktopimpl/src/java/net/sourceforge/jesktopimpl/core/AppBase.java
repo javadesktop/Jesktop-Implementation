@@ -19,43 +19,43 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
+import org.jesktop.JesktopPackagingException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-import org.jesktop.JesktopPackagingException;
-import org.jesktop.JesktopPackagingException;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 
-import java.net.URLClassLoader;
-import java.net.URL;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.BufferedInputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
  * Class AppBase
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public abstract class AppBase {
 
-    protected static DefaultConfigurationBuilder CONF_BUILDER = null;
-    protected File baseDir;
+    protected final File baseDir;
+    protected final DocumentBuilderFactory dbf;
 
-    static {
-        CONF_BUILDER = new DefaultConfigurationBuilder();
-    }
-
-    protected AppBase(File baseDir) {
+    protected AppBase(DocumentBuilderFactory dbf, File baseDir) {
         this.baseDir = baseDir;
+        this.dbf = dbf;
     }
 
-    protected Configuration getApplicationsDotXML(final String jarName, final URLClassLoader urlClassLoader)
+    protected Document getApplicationsDotXML(final String jarName, final URLClassLoader urlClassLoader)
             throws JesktopPackagingException {
 
         try {
@@ -65,17 +65,18 @@ public abstract class AppBase {
                 throw new JesktopPackagingException("missing JESKTOP-INF/applications.xml in jar " + jarName);
             }
 
-            Configuration appJarApplicationsConf = CONF_BUILDER.build(url.openStream());
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            Document appJarApplicationsConf = db.parse(url.openStream());
 
             return appJarApplicationsConf;
         } catch (SAXException se) {
             se.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
-        } catch (ConfigurationException ce) {
-            ce.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
         }
-
         return null;
     }
 
@@ -125,6 +126,35 @@ public abstract class AppBase {
         return null;
     }
 
+    protected String getSingleElemValue(final Element app, final String elem, final boolean mandatory)
+            throws JesktopPackagingException {
+
+        NodeList elementsByTagName = app.getElementsByTagName(elem);
+
+        if (elementsByTagName.getLength() > 1) {
+             throw new JesktopPackagingException("Manadatory element - " + elem
+                     + " - exists more that once in app config file");
+        }
+
+        for (int p = 0; p < elementsByTagName.getLength(); p++) {
+            Element el = (Element) elementsByTagName.item(p);
+            NodeList nl = el.getChildNodes();
+            if (nl.item(0) != null) {
+                String nodeValue = nl.item(0).getNodeValue();
+                if (nodeValue != null && !nodeValue.trim().equals("")) {
+                    return nodeValue;
+                }
+            }
+        }
+        if (mandatory) {
+            throw new JesktopPackagingException("Manadatory element - " + elem
+                    + " - missing from app config file");
+        } else {
+            return null;
+        }
+
+    }
+
     // this can be used for full installations,
     // or in Temp for uninstalled launches.
 
@@ -133,7 +163,7 @@ public abstract class AppBase {
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.6 $
+     * @version $Revision: 1.7 $
      */
     protected class JarSuffixHolder {
 

@@ -50,7 +50,7 @@ public class Bootstrap {
         WindowManagerService wm = new WindozeWindowManager1(ir);
         ThreadPool tp = new NotReallyAThreadPool();
         MimeManager mm = new MimeManagerImpl(or,ltf);
-        DesktopKernelService kernel = new DesktopKernelImpl(wm, or, tp, cm, ir, ltf, cm, mm, baseDir);
+        DesktopKernelService kernel = new DesktopKernelImpl(wm, or, tp, cm, ir, ltf, cm, mm, dbf, baseDir);
 
     }
 
