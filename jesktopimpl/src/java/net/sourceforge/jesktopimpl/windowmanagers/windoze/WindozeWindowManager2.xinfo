@@ -9,6 +9,6 @@
 	</block>
 	<!-- services that are offered by this block -->
 	<services>
-		<service name="net.sourceforge.jesktopimpl.services.WindowManager" version="1.0"/>
+		<service name="net.sourceforge.jesktopimpl.services.WindowManager"/>
 	</services>
 </blockinfo>

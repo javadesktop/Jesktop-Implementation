@@ -8,11 +8,11 @@
 	</block>
 	<!-- services that are offered by this block -->
 	<services>
-		<service name="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory" version="1.0"/>
+		<service name="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory"/>
 	</services>
 	<dependencies>
 		<dependency>
-			<service name="org.apache.avalon.cornerstone.services.store.Store" version="1.0"/>
+			<service name="org.apache.avalon.cornerstone.services.store.Store"/>
 		</dependency>
 	</dependencies>
 </blockinfo>

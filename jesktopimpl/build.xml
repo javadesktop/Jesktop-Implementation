@@ -153,6 +153,10 @@
         <fileset dir="lib">
           <include name="*.jar"/>
         </fileset>
+        <fileset dir="phoenix-bin/lib">
+          <include name="*.jar"/>
+        </fileset>
+        
       </classpath>
 
 

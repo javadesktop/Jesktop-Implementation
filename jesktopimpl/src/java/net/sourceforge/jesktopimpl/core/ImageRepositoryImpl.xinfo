@@ -9,11 +9,11 @@
 	</block>
 	<!-- services that are offered by this block -->
 	<services>
-		<service name="org.jesktop.api.ImageRepository" version="1.0"/>
+		<service name="org.jesktop.api.ImageRepository"/>
 	</services>
 	<dependencies>
 		<dependency>
-			<service name="org.apache.avalon.cornerstone.services.store.Store" version="1.0"/>
+			<service name="org.apache.avalon.cornerstone.services.store.Store"/>
 		</dependency>
 	</dependencies>
 </blockinfo>

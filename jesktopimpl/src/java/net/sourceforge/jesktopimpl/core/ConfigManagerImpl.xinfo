@@ -9,17 +9,17 @@
 	</block>
 	<!-- services that are offered by this block -->
 	<services>
-		<service name="net.sourceforge.jesktopimpl.services.KernelConfigManager" version="1.0"/>
+		<service name="net.sourceforge.jesktopimpl.services.KernelConfigManager"/>
 	</services>
 	<dependencies>
 		<dependency>
-			<service name="org.apache.avalon.cornerstone.services.store.Store" version="1.0"/>
+			<service name="org.apache.avalon.cornerstone.services.store.Store"/>
 		</dependency>
 		<dependency>
-			<service name="org.apache.avalon.cornerstone.services.dom.DocumentBuilderFactory" version="1.0"/>
+			<service name="org.apache.avalon.cornerstone.services.dom.DocumentBuilderFactory"/>
 		</dependency>
 		<dependency>
-			<service name="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory" version="1.0"/>
+			<service name="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory"/>
 		</dependency>			
 	</dependencies>
 </blockinfo>
