@@ -19,8 +19,8 @@
 
   <property name="name" value="jesktop"/>
   <property name="Name" value="Jesktop"/>
-  <property name="version" value="1.0"/>
-  <property name="year" value="2001"/>
+  <property name="version" value="2.0"/>
+  <property name="year" value="2004"/>
   <property name="jar.name" value="jesktop"/>
 
   <!--
@@ -313,6 +313,9 @@
     <zip zipfile="dist/${dist.name}.zip">
       <fileset dir=".">
         <exclude name="build/**"/>
+        <exclude name="build.xml"/>
+        <exclude name="dist/**"/>
+        <exclude name="src/**"/>
       </fileset>
     </zip>
 
