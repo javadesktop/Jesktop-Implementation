@@ -21,7 +21,6 @@ package net.sourceforge.jesktopimpl.core;
 
 import org.jesktop.ImageRepository;
 import org.jesktop.ObjectRepository;
-import org.jesktop.ImageRepository;
 
 import javax.swing.ImageIcon;
 import java.util.HashMap;
@@ -34,7 +33,7 @@ import java.net.URL;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class ImageRepositoryImpl implements ImageRepository {
 

@@ -22,12 +22,14 @@ import net.sourceforge.jesktopimpl.core.DesktopKernelImpl;
 import net.sourceforge.jesktopimpl.core.ImageRepositoryImpl;
 import net.sourceforge.jesktopimpl.core.LaunchableTargetFactoryImpl;
 import net.sourceforge.jesktopimpl.core.NotReallyAThreadPool;
+import net.sourceforge.jesktopimpl.core.MimeManagerImpl;
 import org.jesktop.services.KernelConfigManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import net.sourceforge.jesktopimpl.windowmanagers.windoze.WindozeWindowManager1;
 import org.jesktop.ImageRepository;
 import org.jesktop.ObjectRepository;
 import org.jesktop.ThreadPool;
+import org.jesktop.mime.MimeManager;
 import org.jesktop.services.DesktopKernelService;
 import org.jesktop.services.WindowManagerService;
 
@@ -47,7 +49,8 @@ public class Bootstrap {
         ImageRepository ir = new ImageRepositoryImpl(or);
         WindowManagerService wm = new WindozeWindowManager1(ir);
         ThreadPool tp = new NotReallyAThreadPool();
-        DesktopKernelService kernel = new DesktopKernelImpl(wm, or, tp, cm, ir, ltf, cm, baseDir);
+        MimeManager mm = new MimeManagerImpl(or,ltf);
+        DesktopKernelService kernel = new DesktopKernelImpl(wm, or, tp, cm, ir, ltf, cm, mm, baseDir);
 
     }
 

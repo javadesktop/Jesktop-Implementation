@@ -19,16 +19,14 @@
  */
 package net.sourceforge.jesktopimpl;
 
-
-
 /**
  * Interface JesktopConstants
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface JesktopConstants {
-    String SOFTWARE_VERSION = "2.0";
+    String SOFTWARE_VERSION = "2.1";
     String SOFTWARE_NAME = "Jesktop";
 }

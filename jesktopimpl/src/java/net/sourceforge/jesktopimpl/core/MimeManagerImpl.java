@@ -48,7 +48,7 @@ public class MimeManagerImpl implements MimeManager, Serializable {
     private static transient LaunchableTargetFactory mLaunchableTargetFactory;
     private HashMap registeredMimes;
 
-    protected MimeManagerImpl(ObjectRepository repository, LaunchableTargetFactory launchableTargetFactory) {
+    public MimeManagerImpl(ObjectRepository repository, LaunchableTargetFactory launchableTargetFactory) {
         mLaunchableTargetFactory = launchableTargetFactory;
 
         registeredMimes = new HashMap();

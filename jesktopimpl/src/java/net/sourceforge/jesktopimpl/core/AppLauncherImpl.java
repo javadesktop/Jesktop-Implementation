@@ -19,21 +19,32 @@
  */
 package net.sourceforge.jesktopimpl.core;
 
-import org.jesktop.services.DesktopKernelService;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
-import org.jesktop.services.KernelConfigManager;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.jesktop.AlreadyLaunchedException;
+import org.jesktop.AppInstaller;
+import org.jesktop.AppLauncher;
+import org.jesktop.Decorator;
+import org.jesktop.JesktopLaunchException;
+import org.jesktop.JesktopPackagingException;
+import org.jesktop.LaunchedTarget;
 import org.jesktop.WindowManager;
+import org.jesktop.DesktopKernel;
+import org.jesktop.mime.MimeManager;
+import org.jesktop.config.ConfigManager;
 import org.jesktop.frimble.Frimble;
 import org.jesktop.frimble.FrimbleAware;
 import org.jesktop.frimble.FrimbleCallback;
 import org.jesktop.frimble.JFrimble;
 import org.jesktop.launchable.LaunchableTarget;
-import org.jesktop.*;
+import org.jesktop.launchable.ConfigletLaunchableTarget;
+import org.jesktop.launchable.DecoratorLaunchableTarget;
 import org.jesktop.services.DesktopKernelService;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.defaults.DefaultPicoContainer;
+import org.jesktop.services.KernelConfigManager;
+import org.nanocontainer.reflection.DefaultSoftCompositionPicoContainer;
+import org.picocontainer.alternatives.ImplementationHidingPicoContainer;
+import org.picocontainer.PicoContainer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +61,7 @@ import java.util.Vector;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
@@ -61,7 +72,10 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
     private Vector launchedTargets;
     private Decorator decorator;
     private KernelConfigManager kernelConfigManager;
-    private MutablePicoContainer picoContainer;
+    private ImplementationHidingPicoContainer configletTargetPicoContainer;
+    private ImplementationHidingPicoContainer decoratorTargetPicoContainer;
+    private ImplementationHidingPicoContainer normalTargetPicoContainer;
+    private ImplementationHidingPicoContainer kernelTargetPicoContainer;
 
     protected AppLauncherImpl(final WindowManager windowManager,
                               final LaunchableTargetFactory launchableTargetFactory,
@@ -70,6 +84,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                               final Decorator decorator,
                               final KernelConfigManager kernelConfigManager,
                               final AppInstaller appInstaller,
+                              final MimeManager mimeManager,
                               final File baseDir) {
         super(baseDir);
         this.launchableTargetFactory = launchableTargetFactory;
@@ -79,14 +94,42 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
         this.decorator = decorator;
         this.kernelConfigManager = kernelConfigManager;
 
-        picoContainer = new DefaultPicoContainer();
-        picoContainer.registerComponentInstance(windowManager);
-        picoContainer.registerComponentInstance(launchableTargetFactory);
-        picoContainer.registerComponentInstance(desktopKernelService);
-        picoContainer.registerComponentInstance(launchedTargets);
-        picoContainer.registerComponentInstance(decorator);
-        picoContainer.registerComponentInstance(kernelConfigManager);
-        picoContainer.registerComponentInstance(appInstaller);
+        configletTargetPicoContainer = new ImplementationHidingPicoContainer();
+        //configletTargetPicoContainer.registerComponentInstance(windowManager);
+        //configletTargetPicoContainer.registerComponentInstance(launchableTargetFactory);
+        //configletTargetPicoContainer.registerComponentInstance(desktopKernelService);
+        //configletTargetPicoContainer.registerComponentInstance(launchedTargets);
+        //configletTargetPicoContainer.registerComponentInstance(decorator);
+        configletTargetPicoContainer.registerComponentInstance(ConfigManager.class, kernelConfigManager);
+        //configletTargetPicoContainer.registerComponentInstance(appInstaller);
+
+        decoratorTargetPicoContainer = new ImplementationHidingPicoContainer();
+        decoratorTargetPicoContainer.registerComponentInstance(WindowManager.class, windowManager);
+        //decoratorTargetPicoContainer.registerComponentInstance(launchableTargetFactory);
+        //decoratorTargetPicoContainer.registerComponentInstance(desktopKernelService);
+        decoratorTargetPicoContainer.registerComponentInstance(launchedTargets);
+        decoratorTargetPicoContainer.registerComponentInstance(Decorator.class, decorator);
+        //decoratorTargetPicoContainer.registerComponentInstance(kernelConfigManager);
+        //decoratorTargetPicoContainer.registerComponentInstance(appInstaller);
+
+        normalTargetPicoContainer = new ImplementationHidingPicoContainer();
+        //normalTargetPicoContainer.registerComponentInstance(windowManager);
+        //normalTargetPicoContainer.registerComponentInstance(LaunchableTargetFactory.class, launchableTargetFactory);
+        //normalTargetPicoContainer.registerComponentInstance(DesktopKernel.class, desktopKernelService);
+        //normalTargetPicoContainer.registerComponentInstance(launchedTargets);
+        //normalTargetPicoContainer.registerComponentInstance(decorator);
+        //normalTargetPicoContainer.registerComponentInstance(KernelConfigManager.class, kernelConfigManager);
+        //normalTargetPicoContainer.registerComponentInstance(AppInstaller.class, appInstaller);
+
+        kernelTargetPicoContainer = new ImplementationHidingPicoContainer();
+        //kernelTargetPicoContainer.registerComponentInstance(windowManager);
+        kernelTargetPicoContainer.registerComponentInstance(LaunchableTargetFactory.class, launchableTargetFactory);
+        kernelTargetPicoContainer.registerComponentInstance(DesktopKernel.class, desktopKernelService);
+        //kernelTargetPicoContainer.registerComponentInstance(launchedTargets);
+        //kernelTargetPicoContainer.registerComponentInstance(decorator);
+        kernelTargetPicoContainer.registerComponentInstance(KernelConfigManager.class, kernelConfigManager);
+        kernelTargetPicoContainer.registerComponentInstance(AppInstaller.class, appInstaller);
+        kernelTargetPicoContainer.registerComponentInstance(MimeManager.class, mimeManager);
 
     }
 
@@ -219,20 +262,23 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
         checkSecondInstance(launchableTarget);
 
         try {
-            Class cl;
-
-            if (classLoader == null) {
-                cl = Class.forName(className);
+            DefaultSoftCompositionPicoContainer defaultPicoContainer = null;
+            if (launchableTarget instanceof ConfigletLaunchableTarget) {
+                defaultPicoContainer = new DefaultSoftCompositionPicoContainer(classLoader, configletTargetPicoContainer);
+            } else if(launchableTarget instanceof DecoratorLaunchableTarget) {
+                defaultPicoContainer = new DefaultSoftCompositionPicoContainer(classLoader, decoratorTargetPicoContainer);
+       //     } else if(launchableTarget instanceof KernelLaunchableTarget) {
+         //       defaultPicoContainer = new DefaultSoftCompositionPicoContainer(classLoader, kernelTargetPicoContainer);
             } else {
-                cl = classLoader.loadClass(className);
+                defaultPicoContainer = new DefaultSoftCompositionPicoContainer(classLoader, kernelTargetPicoContainer);
             }
-
-            DefaultPicoContainer defaultPicoContainer = new DefaultPicoContainer(picoContainer);
-            Object instantiatedApp = defaultPicoContainer.registerComponentImplementation(cl).getComponentInstance();
+            Object instantiatedApp = defaultPicoContainer.registerComponentImplementation(className).getComponentInstance();
 
             return launchApp2(classLoader, instantiatedApp, launchableTarget, inHere,
                               fullClosable);
         } catch (ClassNotFoundException cnfe) {
+            System.out.println("--> " + cnfe.getMessage());
+            cnfe.printStackTrace();
             throw new JesktopLaunchException("App " + launchableTarget.getTargetName()
                                              + " can't launch as class '"
                                              + launchableTarget.getClassName()

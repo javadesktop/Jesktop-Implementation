@@ -179,7 +179,7 @@ public class LaunchableTargetFactoryImpl
     protected synchronized ClassLoader getClassLoader(final String appFilePrefix, final Vector jarNames) {
 
         if (appFilePrefix == null) {
-            return null;
+            return this.getClass().getClassLoader();
         }
 
         if (classloaders == null) {
@@ -249,6 +249,16 @@ public class LaunchableTargetFactoryImpl
                                            String displayName,
                                            boolean singleInstance) {
         LaunchableTarget lt = new NormalLaunchableTargetImpl(targetName, className, displayName,
+                                                             singleInstance);
+        mLaunchableTargetHolder.targets.put(lt.getTargetName(), lt);
+        save();
+    }
+
+    public void makeKernelLaunchableTarget(String targetName,
+                                           String className,
+                                           String displayName,
+                                           boolean singleInstance) {
+        LaunchableTarget lt = new KernelLaunchableTargetImpl(targetName, className, displayName,
                                                              singleInstance);
         mLaunchableTargetHolder.targets.put(lt.getTargetName(), lt);
         save();
@@ -337,22 +347,22 @@ public class LaunchableTargetFactoryImpl
      */
     public void setBuiltInApps() {
 
-        makeNormalLaunchableTarget(
+        makeKernelLaunchableTarget(
             "System/SimpleInstaller", "net.sourceforge.jesktopimpl.builtinapps.installer.SimpleInstaller",
             "Simple Installer Tool", true);
-        makeNormalLaunchableTarget(
+        makeKernelLaunchableTarget(
             "System/ManageInstalled", "net.sourceforge.jesktopimpl.builtinapps.installer.ManageInstalled",
             "Installed App Management Tool", true);
-        makeNormalLaunchableTarget("System/ControlPanel",
+        makeKernelLaunchableTarget("System/ControlPanel",
                                                           "net.sourceforge.jesktopimpl.builtinapps.config.ControlPanel",
                                                           "Control Panel", true);
         makeConfigletLaunchableTarget(
             "System/DecoratorChooser", "net.sourceforge.jesktopimpl.builtinapps.installer.DecoratorChooser",
             "Chooser for Decorators", "decorator/currentDecorator");
-        makeNormalLaunchableTarget(
+        makeKernelLaunchableTarget(
             MimeManagerImpl.ALLOWED_TARGET_NAME, "net.sourceforge.jesktopimpl.builtinapps.mime.MimeConfigurator",
             "Mimes And Extensions Management", true);
-        makeNormalLaunchableTarget(
+        makeKernelLaunchableTarget(
             SHUTDOWN_APP, "net.sourceforge.jesktopimpl.builtinapps.sys.ShutdownConfirmer", "Shutdown", true);
     }
 

@@ -31,6 +31,7 @@ import org.jesktop.appsupport.DraggedItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.picocontainer.Startable;
 
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -69,7 +70,7 @@ import java.net.MalformedURLException;
  *
  */
 public abstract class WindozeWindowManager
-        implements PropertyChangeListener, WindowManagerService {
+        implements PropertyChangeListener, WindowManagerService, Startable {
 
     protected JPanel bottomBar;
     protected JButton startBtn;
@@ -80,8 +81,8 @@ public abstract class WindozeWindowManager
     protected JLabel mLastLaunchableTargetDraggedLabel;
     protected boolean mRenderLaunchableTargetDrag = true;
     protected JLayeredPane mLayeredPane;
-    protected LaunchableTarget[] mLaunchableTargets;
-    protected DesktopKernel mDesktopKernel;
+    protected LaunchableTarget[] launchableTargets;
+    protected DesktopKernel desktopKernel;
     protected ImageRepository imageRepository;
     private AppLauncher appLauncher;
     protected PersistableConfig mPersistableConfig;
@@ -112,6 +113,18 @@ public abstract class WindozeWindowManager
 
     }
 
+    public void start() {
+        //todo - needed for NanoContainer start?
+//        frame.setVisible(true);
+    }
+
+    public void stop() {
+        //todo - needed for NanoContainer start?
+
+//        frame.setVisible(false);
+//        frame.dispose();
+    }
+
     public void setAppLauncher(AppLauncher appLauncher) {
         this.appLauncher = appLauncher;
     }
@@ -125,7 +138,7 @@ public abstract class WindozeWindowManager
      */
     public void addLaunchedTarget(final LaunchedTarget launchedTarget) {
 
-        LaunchedButton btn = new LaunchedButton(launchedTarget, mDesktopKernel, imageRepository);
+        LaunchedButton btn = new LaunchedButton(launchedTarget, desktopKernel, imageRepository);
 
         bottomBar.add(btn);
     }
@@ -174,11 +187,12 @@ public abstract class WindozeWindowManager
      */
     public void setKernelCallback(final DesktopKernel desktopKernel) {
 
-        this.mDesktopKernel = desktopKernel;
-        mLaunchableTargets = desktopKernel.getNormalLaunchableTargets();
+        this.desktopKernel = desktopKernel;
+        launchableTargets = desktopKernel.getNormalLaunchableTargets();
 
-        for (int i = 0; i < mLaunchableTargets.length; i++) {
-            LaunchableTarget target = mLaunchableTargets[i];
+        for (int i = 0; i < launchableTargets.length; i++) {
+            LaunchableTarget target = launchableTargets[i];
+            //System.out.println("--> lt " + target);
         }
 
         desktopKernel.addPropertyChangeListener(this);
@@ -234,7 +248,7 @@ public abstract class WindozeWindowManager
         mPersistableConfig.put("bounds", frame.getBounds());
 
         try {
-            mDesktopKernel.initiateShutdown(DesktopKernel.SHUTDOWN_SHUTDOWN);
+            desktopKernel.initiateShutdown(DesktopKernel.SHUTDOWN_SHUTDOWN);
         } catch (JesktopLaunchException jle) {
             jle.printStackTrace();
         }
@@ -250,7 +264,7 @@ public abstract class WindozeWindowManager
     public void propertyChange(final PropertyChangeEvent evt) {
 
         if (evt.getPropertyName().equals(DesktopKernel.LAUNCHABLE_TARGET_CHANGE)) {
-            mLaunchableTargets = mDesktopKernel.getNormalLaunchableTargets();
+            launchableTargets = desktopKernel.getNormalLaunchableTargets();
         }
         if (ConfigHelper.isConfigPropChange(evt)) {
             this.setConfig(ConfigHelper.getConfigPath(evt), (Document) evt.getNewValue());
@@ -411,11 +425,13 @@ public abstract class WindozeWindowManager
 
             public void actionPerformed(ActionEvent ae) {
 
-                LaunchBar lb = new LaunchBar(mDesktopKernel, mLaunchableTargets, imageRepository,
+                LaunchBar lb = new LaunchBar(desktopKernel, launchableTargets, imageRepository,
                         WindozeWindowManager.this, appLauncher);
 
-                lb.show((java.awt.Component) ae.getSource(), startBtn.getX() + 3,
-                        (startBtn.getY() - (int) lb.getPreferredSize().getHeight()));
+                int height = (int) lb.getPreferredSize().getHeight();
+                int y = startBtn.getY();
+                int x = startBtn.getX() + 3;
+                lb.show((java.awt.Component) ae.getSource(), x, (y - height));
             }
         });
         startBtn.setEnabled(true);

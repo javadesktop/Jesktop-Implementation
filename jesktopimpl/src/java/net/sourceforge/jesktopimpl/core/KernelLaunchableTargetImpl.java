@@ -20,26 +20,27 @@
 package net.sourceforge.jesktopimpl.core;
 
 import org.jesktop.launchable.NormalLaunchableTarget;
+import org.jesktop.launchable.LaunchableTarget;
 
 import java.util.Vector;
 
 
 /**
- * Class NormalLaunchableTargetImpl
+ * Class KernelLaunchableTargetImpl
  *
  *
  * @author  Jul 2001.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.1 $
  */
-public class NormalLaunchableTargetImpl extends LaunchableTargetImpl
-        implements NormalLaunchableTarget {
+public class KernelLaunchableTargetImpl extends NormalLaunchableTargetImpl
+        implements LaunchableTarget {
 
-    protected NormalLaunchableTargetImpl(final String targetName, final String className, final String displayName,
+    protected KernelLaunchableTargetImpl(final String targetName, final String className, final String displayName,
                                          final boolean singleInst) {
         super(targetName, className, displayName, singleInst);
     }
 
-    protected NormalLaunchableTargetImpl(final String targetName, final String className,
+    protected KernelLaunchableTargetImpl(final String targetName, final String className,
                                          final String appFilePrefix, final Vector jarFileNames,
                                          final String displayName, final boolean singleInst) {
         super(targetName, className, appFilePrefix, jarFileNames, displayName, singleInst);

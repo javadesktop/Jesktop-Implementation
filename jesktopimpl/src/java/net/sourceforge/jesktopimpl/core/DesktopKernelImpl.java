@@ -48,6 +48,7 @@ import org.jesktop.ImageRepository;
 import org.jesktop.*;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.Startable;
 
 import javax.swing.JComponent;
 import java.util.Vector;
@@ -68,7 +69,7 @@ import java.net.MalformedURLException;
  */
 public class DesktopKernelImpl
         implements DesktopKernelService, DesktopKernel, ShutdownConfirmer,
-                   PropertyChangeListener {
+                   PropertyChangeListener, Startable {
 
     //private ComponentManager mCompManager;
     //private Configuration phoenixConfiguration;
@@ -88,7 +89,7 @@ public class DesktopKernelImpl
                                                "net.sourceforge.jesktopimpl.builtinapps.sys.NoRegisteredViewer",
                                                "No Register Viewer - Error", true);
     private LaunchableTarget installationConfirmerTarget =
-        new NormalLaunchableTargetImpl("*InstallationConfirmer*",
+        new KernelLaunchableTargetImpl("*InstallationConfirmer*",
                                        "net.sourceforge.jesktopimpl.builtinapps.installer.ConfirmInstallation",
                                        "Please Confirm Installation", false);
     private String DFT_DECORATOR = "*DefaultDecorator*";
@@ -98,10 +99,10 @@ public class DesktopKernelImpl
     private WindowManagerService mWindowManager;
     private DropAware currentDropApp;
     private DraggedItem currentDraggedItem;
-    protected MimeManager mMimeManager;
-    private File mBaseDirectory;
+    private File baseDirectory;
     private ThreadPool threadPool;
     private KernelConfigManager kernelConfigManager;
+    private MimeManager mimeManager;
     private MutablePicoContainer picoContainer;
 
     /**
@@ -112,15 +113,17 @@ public class DesktopKernelImpl
     public DesktopKernelImpl(WindowManagerService windowManager, ObjectRepository repository, ThreadPool threadPool,
                              KernelConfigManager kernelCongigManager, ImageRepository imageRepository,
                              LaunchableTargetFactory launchableTargetFactory, KernelConfigManager kernelConfigManager,
+                             MimeManager mimeManager,
                              File baseDirectory) {
         this.threadPool = threadPool;
         this.kernelConfigManager = kernelConfigManager;
+        this.mimeManager = mimeManager;
         propertyChangeSupport = new PropertyChangeSupport(DesktopKernel.class.getName());
         mWindowManager = windowManager;
         configManager = kernelCongigManager;
         this.imageRepository = imageRepository;
         this.launchableTargetFactory = launchableTargetFactory;
-        mBaseDirectory = baseDirectory;
+        this.baseDirectory = baseDirectory;
 
         picoContainer = new DefaultPicoContainer();
         picoContainer.registerComponentInstance(windowManager);
@@ -135,9 +138,8 @@ public class DesktopKernelImpl
                 DFT_DECORATOR, "net.sourceforge.jesktopimpl.builtinapps.decorators.DefaultDecorator",
                 "Default Decorator", "decorators/default");
 
-        mMimeManager = new MimeManagerImpl(repository, this.launchableTargetFactory);
         appInstaller = new AppInstallerImpl(propertyChangeSupport, this,
-                this.launchableTargetFactory, this.imageRepository, mBaseDirectory);
+                this.launchableTargetFactory, this.imageRepository, this.baseDirectory);
         configManager.registerConfigInterest(this, "decorator/currentDecorator");
         configManager.registerConfigInterest(mWindowManager, "desktop/settings");
         setDecoratorLaunchableTarget(defaultDecorator);
@@ -234,7 +236,7 @@ public class DesktopKernelImpl
      */
     private void installStartupApplications() {
 
-        File dir = new File(mBaseDirectory, "InstallAtStartup");
+        File dir = new File(baseDirectory, "InstallAtStartup");
         String[] jars = dir.list();
         // no pre-install directory.
         if (jars == null) {
@@ -599,7 +601,8 @@ public class DesktopKernelImpl
 
             appLauncher = new AppLauncherImpl(mWindowManager, launchableTargetFactory, this,
                                               launchedTargets,
-                                              currentDecorator, kernelConfigManager , appInstaller, mBaseDirectory);
+                                              currentDecorator, kernelConfigManager ,
+                                              appInstaller, mimeManager, baseDirectory);
 
             mWindowManager.setAppLauncher(appLauncher);
             mWindowManager.updateComponentTreeUI();
@@ -642,6 +645,14 @@ public class DesktopKernelImpl
         return launchableTargetFactory.getConfigletLaunchableTargets();
     }
 
+    public void start() {
+        //TODO - needed for NanoContainer launch ?
+    }
+
+    public void stop() {
+        //TODO - needed for NanoContainer launch ?
+    }
+
     protected void setConfig(final String configPath, final Object config) {
 
         if (config instanceof String) {
@@ -652,6 +663,7 @@ public class DesktopKernelImpl
                     .getLaunchableTarget(cfg));
             }
         }
+
     }
 
     // this class adds some private info to the public class LaunchedTarget so that
@@ -662,7 +674,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.9 $
+     * @version $Revision: 1.10 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -723,7 +735,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.9 $
+     * @version $Revision: 1.10 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 
