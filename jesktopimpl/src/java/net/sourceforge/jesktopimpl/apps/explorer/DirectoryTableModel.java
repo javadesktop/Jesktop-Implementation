@@ -33,8 +33,8 @@ import java.util.Date;
      * Class DirectoryTableModel
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @author Paul Hammant
+     * @version $Revision: 1.3 $
      */
 public class DirectoryTableModel extends AbstractTableModel {
 

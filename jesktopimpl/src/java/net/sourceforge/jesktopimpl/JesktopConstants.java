@@ -25,10 +25,10 @@ package net.sourceforge.jesktopimpl;
  * Interface JesktopConstants
  *
  *
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.2 $
+ * @author Paul Hammant
+ * @version $Revision: 1.3 $
  */
 public interface JesktopConstants {
-    String SOFTWARE_VERSION = "1.0 alpha (build 21)";
+    String SOFTWARE_VERSION = "2.0";
     String SOFTWARE_NAME = "Jesktop";
 }

@@ -27,8 +27,8 @@ import org.jesktop.LaunchedTarget;
  * Class LaunchedTarget
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.3 $
+ * @author  Dec 2000.
+ * @version $Revision: 1.4 $
  */
 public abstract class LaunchedTargetImpl implements LaunchedTarget {
 

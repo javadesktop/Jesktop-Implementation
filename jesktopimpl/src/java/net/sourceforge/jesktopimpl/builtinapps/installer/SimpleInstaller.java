@@ -51,8 +51,8 @@ import java.io.File;
  * Class SimpleInstaller
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.4 $
+ * @author  Dec 2000.
+ * @version $Revision: 1.5 $
  */
 public class SimpleInstaller extends JPanel
         implements FrimbleAware, ActionListener, DropAware {
@@ -297,8 +297,8 @@ public class SimpleInstaller extends JPanel
      * Class JarFilter
      *
      *
-     * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.4 $
+     * @author  Dec 2000.
+     * @version $Revision: 1.5 $
      */
     private class JarFilter extends javax.swing.filechooser.FileFilter {
 
@@ -331,8 +331,8 @@ public class SimpleInstaller extends JPanel
      * Class InstallDoer
      *
      *
-     * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.4 $
+     * @author  Dec 2000.
+     * @version $Revision: 1.5 $
      */
     private class InstallDoer implements Runnable {
 

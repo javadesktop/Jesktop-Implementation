@@ -33,7 +33,7 @@ import java.beans.PropertyVetoException;
  * Class ShutdownConfimer is launched by the Kernel when a suhutdown is requested
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
+ * @author  Dec 2000.
  * @version %I%, %G%
  */
 public class ShutdownConfirmer extends JPanel implements FrimbleAware {

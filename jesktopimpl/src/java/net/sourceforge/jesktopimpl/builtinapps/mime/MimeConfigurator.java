@@ -181,8 +181,8 @@ public class MimeConfigurator extends JPanel
      * Class MimeTableModel
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.4 $
+     * @author Paul Hammant
+     * @version $Revision: 1.5 $
      */
     class MimeTableModel extends AbstractTableModel {
 
@@ -260,8 +260,8 @@ public class MimeConfigurator extends JPanel
      * Class MimeEditor
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.4 $
+     * @author Paul Hammant
+     * @version $Revision: 1.5 $
      */
     class MimeEditor extends JDialog implements ActionListener {
 

@@ -39,8 +39,8 @@ import java.awt.Point;
      * Class LaunchBarMenuItem
      *
      *
-     * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.4 $
+     * @author  Dec 2000.
+     * @version $Revision: 1.5 $
      */
     public class LaunchBarMenuItem extends JMenuItem implements ActionListener {
 

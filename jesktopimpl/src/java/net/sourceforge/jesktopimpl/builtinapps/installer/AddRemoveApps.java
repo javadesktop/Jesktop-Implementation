@@ -28,8 +28,8 @@ import org.jesktop.AppInstaller;
  * Class AddRemoveApps
  * NOTE - to be replaced in the future with a more complete tool
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.4 $
+ * @author  Dec 2000.
+ * @version $Revision: 1.5 $
  */
 public class AddRemoveApps extends JTabbedPane {
 

@@ -62,7 +62,7 @@ import java.net.MalformedURLException;
 
 
 /**
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
+ * @author Paul Hammant
  * @version 1.0
  *
  * This one like Windows...

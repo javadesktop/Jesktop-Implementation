@@ -167,9 +167,9 @@
   
   <target name="jars" depends="compile">
 
-    <mkdir dir="${build.lib}"/>
+    <mkdir dir="${build.lib}/installables"/>
     
-    <jar jarfile="${build.lib}/${jar.name}-explorer.jar">
+    <jar jarfile="${build.lib}/installables/${jar.name}-explorer.jar">
       <zipfileset dir="build/classes">
         <include name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
       </zipfileset>                  
@@ -182,7 +182,7 @@
       </zipfileset>      
     </jar>
 
-    <jar jarfile="${build.lib}/${jar.name}-apps.jar">
+    <jar jarfile="${build.lib}/installables/${jar.name}-apps.jar">
       <zipfileset dir="build/classes">
         <include name="net/sourceforge/jesktopimpl/apps/**"/>
         <exclude name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
@@ -312,7 +312,6 @@
 
     <zip zipfile="dist/${dist.name}.zip">
       <fileset dir=".">
-        <exclude name="apps/jesktop/**"/>
         <exclude name="build/**"/>
       </fileset>
     </zip>
@@ -321,6 +320,7 @@
       <fileset dir=".">
         <include name="src/**"/>
         <include name="lib/*"/>
+        <exclude name="lib/jesktop.jar"/>
         <include name="composition.js"/>
         <include name="run.bat"/>
         <include name="build.xml"/>
@@ -333,6 +333,7 @@
       <tarfileset dir="." username="jesktop" group="jesktop">
         <include name="src/**"/>
         <include name="lib/*"/>
+        <exclude name="lib/jesktop.jar"/>
         <include name="composition.js"/>
         <include name="run.bat"/>
         <include name="build.xml"/>

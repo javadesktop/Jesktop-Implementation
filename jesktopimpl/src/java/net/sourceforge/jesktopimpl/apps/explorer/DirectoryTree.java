@@ -42,7 +42,7 @@ import java.util.Enumeration;
  * Class DirectoryTree
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul Hammant</a> Dec 2000.
+ * @author Paul Hammant Dec 2000.
  * @version V1.0
  */
 public class DirectoryTree extends JPanel implements TreeSelectionListener {

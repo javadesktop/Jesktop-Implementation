@@ -35,8 +35,8 @@ import java.awt.*;
  * Class WindozeWindowManager1
  *
  *
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.5 $
+ * @author Paul Hammant
+ * @version $Revision: 1.6 $
  */
 public class WindozeWindowManager1 extends WindozeWindowManager {
 
@@ -110,8 +110,8 @@ public class WindozeWindowManager1 extends WindozeWindowManager {
      * Class JInternalFrameFrimbleDesktopPane
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.5 $
+     * @author Paul Hammant
+     * @version $Revision: 1.6 $
      */
     class JInternalFrameFrimbleDesktopPane extends JDesktopPane {
 

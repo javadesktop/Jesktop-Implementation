@@ -41,8 +41,8 @@ import java.awt.event.ActionListener;
  * Class ConfirmInstallation
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.4 $
+ * @author  Dec 2000.
+ * @version $Revision: 1.5 $
  */
 public class ConfirmInstallation extends JPanel implements FrimbleAware {
 
@@ -120,8 +120,8 @@ public class ConfirmInstallation extends JPanel implements FrimbleAware {
      * Class ApplyExit
      *
      *
-* @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-* @version $Revision: 1.4 $
+* @author  Dec 2000.
+* @version $Revision: 1.5 $
      */
     private class ApplyExit extends JButton {
 
@@ -150,8 +150,8 @@ public class ConfirmInstallation extends JPanel implements FrimbleAware {
      * Class AppsTableModel
      *
      *
-* @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-* @version $Revision: 1.4 $
+* @author  Dec 2000.
+* @version $Revision: 1.5 $
      */
     private class AppsTableModel extends AbstractTableModel {
 

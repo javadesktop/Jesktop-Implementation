@@ -44,8 +44,8 @@ import java.util.Vector;
  * Class AppInstallerImpl
  *
  *
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.5 $
+ * @author Paul Hammant
+ * @version $Revision: 1.6 $
  */
 public class AppInstallerImpl extends AppBase implements AppInstaller {
 

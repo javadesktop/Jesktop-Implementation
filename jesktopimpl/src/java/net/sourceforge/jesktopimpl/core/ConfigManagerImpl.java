@@ -48,8 +48,8 @@ import java.beans.PropertyChangeSupport;
  * Class ConfigManagerImpl
  *
  *
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.7 $
+ * @author Paul Hammant
+ * @version $Revision: 1.8 $
  */
 public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
 

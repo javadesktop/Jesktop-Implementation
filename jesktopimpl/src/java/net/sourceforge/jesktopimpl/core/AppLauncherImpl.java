@@ -49,8 +49,8 @@ import java.util.Vector;
  * Class AppLauncherImpl
  *
  *
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.8 $
+ * @author Paul Hammant
+ * @version $Revision: 1.9 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 

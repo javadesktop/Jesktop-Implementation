@@ -38,8 +38,8 @@ import java.awt.Graphics;
  * Class WindozeWindowManager2
  *
  *
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.5 $
+ * @author Paul Hammant
+ * @version $Revision: 1.6 $
  */
 public class WindozeWindowManager2 extends WindozeWindowManager {
 
@@ -107,8 +107,8 @@ public class WindozeWindowManager2 extends WindozeWindowManager {
      * Class JFrameFrimblePanel
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.5 $
+     * @author Paul Hammant
+     * @version $Revision: 1.6 $
      */
     class JFrameFrimblePanel extends JPanel {
 

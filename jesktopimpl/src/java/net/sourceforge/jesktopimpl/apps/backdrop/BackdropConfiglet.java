@@ -43,7 +43,7 @@ import java.beans.PropertyChangeEvent;
  * Class BackdropConfiglet allows the setting of the backdrop for the desktop.
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul Hammant</a> July 2001.
+ * @author Paul Hammant July 2001.
  * @version %I%, %G%
  */
 public class BackdropConfiglet extends JPanel implements XMLConfiglet {
@@ -170,8 +170,8 @@ public class BackdropConfiglet extends JPanel implements XMLConfiglet {
      * Class ImageFilter
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.3 $
+     * @author Paul Hammant
+     * @version $Revision: 1.4 $
      */
     private class ImageFilter extends javax.swing.filechooser.FileFilter {
 

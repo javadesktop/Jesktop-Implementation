@@ -194,8 +194,8 @@ public class TextViewer extends JPanel implements ContentViewer, FrimbleAware, A
      * Class PlainTextFilter
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.2 $
+     * @author Paul Hammant
+     * @version $Revision: 1.3 $
      */
     private class PlainTextFilter extends javax.swing.filechooser.FileFilter {
 

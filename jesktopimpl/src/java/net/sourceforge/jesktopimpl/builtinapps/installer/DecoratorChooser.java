@@ -40,8 +40,8 @@ import java.beans.PropertyChangeListener;
  * Class ConfirmInstallation
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.4 $
+ * @author  Dec 2000.
+ * @version $Revision: 1.5 $
  */
 public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyChangeListener {
 
@@ -134,8 +134,8 @@ public class DecoratorChooser extends JPanel implements ObjConfiglet, PropertyCh
      * Class DecComboBoxModel
      *
      *
-     * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.4 $
+     * @author  Dec 2000.
+     * @version $Revision: 1.5 $
      */
     private class DecComboBoxModel extends DefaultListModel implements ComboBoxModel {
 

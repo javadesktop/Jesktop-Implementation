@@ -63,7 +63,7 @@ import java.net.MalformedURLException;
 
 
 /**
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
+ * @author Paul Hammant
  * @version 1.0
  */
 public class DesktopKernelImpl
@@ -661,8 +661,8 @@ public class DesktopKernelImpl
      * Class KernelLaunchedTarget
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.8 $
+     * @author Paul Hammant
+     * @version $Revision: 1.9 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -722,8 +722,8 @@ public class DesktopKernelImpl
      * Class KernelFrimbleListener
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.8 $
+     * @author Paul Hammant
+     * @version $Revision: 1.9 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

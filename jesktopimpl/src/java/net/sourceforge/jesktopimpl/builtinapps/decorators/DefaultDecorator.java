@@ -37,8 +37,8 @@ import javax.swing.UIManager;
  * It renders in Metal and uses small icons for windows.
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.4 $
+ * @author  Dec 2000.
+ * @version $Revision: 1.5 $
  */
 public class DefaultDecorator implements Decorator {
 

@@ -41,7 +41,7 @@ import java.io.File;
  * Class DirectoryPanel
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul Hammant</a> Dec 2000.
+ * @author Paul Hammant Dec 2000.
  * @version V1.0
  */
 public class DirectoryPanel extends JPanel

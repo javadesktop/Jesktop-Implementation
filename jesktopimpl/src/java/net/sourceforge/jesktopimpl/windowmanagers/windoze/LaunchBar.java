@@ -31,8 +31,8 @@ import java.util.HashSet;
 /**
  * Class LaunchBar
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.5 $
+ * @author  Dec 2000.
+ * @version $Revision: 1.6 $
  */
 public class LaunchBar extends JPopupMenu {
 

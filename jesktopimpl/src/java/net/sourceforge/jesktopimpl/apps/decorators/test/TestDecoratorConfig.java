@@ -36,7 +36,7 @@ import java.beans.PropertyChangeEvent;
  * Class TestDecoratorConfig allows the settings to be manipulated for TestDecorator
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul Hammant</a> Dec 2000.
+ * @author Paul Hammant Dec 2000.
  * @version %I%, %G%
  */
 public class TestDecoratorConfig extends JPanel implements ObjConfiglet {

@@ -25,8 +25,8 @@ import org.jesktop.ObjectRepository;
  * Class PersistableConfigImpl
  *
  *
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.3 $
+ * @author Paul Hammant
+ * @version $Revision: 1.4 $
  */
 public class PersistableConfigImpl implements org.jesktop.config.PersistableConfig {
 

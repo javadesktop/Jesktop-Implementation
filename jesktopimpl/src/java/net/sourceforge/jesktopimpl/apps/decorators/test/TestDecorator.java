@@ -35,7 +35,7 @@ import javax.swing.UIManager;
  * as well as Motif (versus Metal) for LnF.  Motif being always available.
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul Hammant</a> Dec 2000.
+ * @author Paul Hammant Dec 2000.
  * @version V1.0
  */
 public class TestDecorator implements Decorator, ObjConfigurable {

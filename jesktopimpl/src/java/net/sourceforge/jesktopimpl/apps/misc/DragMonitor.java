@@ -30,7 +30,7 @@ import java.awt.Point;
 /**
  * This app watches the dragging that is going on.
  *
- * @author  Paul Hammant <Paul_Hammant@yahoo.com>
+ * @author  Paul Hammant
  * @version 1.0
  */
 public class DragMonitor extends JPanel implements DropAware {

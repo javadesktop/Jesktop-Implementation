@@ -28,8 +28,8 @@ import java.util.Vector;
  * Class DecoratorLaunchableTargetImpl
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.2 $
+ * @author  Dec 2000.
+ * @version $Revision: 1.3 $
  */
 public class DecoratorLaunchableTargetImpl extends ConfigurableLaunchableTargetImpl
         implements DecoratorLaunchableTarget {

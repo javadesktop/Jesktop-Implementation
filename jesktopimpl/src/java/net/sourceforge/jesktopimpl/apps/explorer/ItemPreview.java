@@ -36,7 +36,7 @@ import java.awt.Graphics;
  * Class ItemPreview
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul Hammant</a> Dec 2000.
+ * @author Paul Hammant Dec 2000.
  * @version V1.0
  */
 public class ItemPreview extends JPanel {
@@ -85,7 +85,7 @@ public class ItemPreview extends JPanel {
      * Class ActualPreview
      *
      *
-     * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul Hammant</a> Dec 2000.
+     * @author Paul Hammant Dec 2000.
      * @version V1.0
      */
     private class ActualPreview extends JScrollPane {

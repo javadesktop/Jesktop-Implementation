@@ -49,8 +49,8 @@ import java.util.Vector;
  * Class ConfirmInstallation
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
- * @version $Revision: 1.5 $
+ * @author  Dec 2000.
+ * @version $Revision: 1.6 $
  */
 public class ControlPanel extends JFrimble implements PropertyChangeListener {
 
@@ -196,8 +196,8 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      * Class OKBtn
      *
      *
-     * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a> Dec 2000.
-     * @version $Revision: 1.5 $
+     * @author  Dec 2000.
+     * @version $Revision: 1.6 $
      */
     private class OKBtn extends JButton {
 
@@ -231,8 +231,8 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      * Class TryBtn
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.5 $
+     * @author Paul Hammant
+     * @version $Revision: 1.6 $
      */
     private class TryBtn extends JButton {
 
@@ -266,8 +266,8 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      * Class RevertBtn
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.5 $
+     * @author Paul Hammant
+     * @version $Revision: 1.6 $
      */
     private class RevertBtn extends JButton {
 
@@ -310,8 +310,8 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      * Class ControlPanelConfigManager
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.5 $
+     * @author Paul Hammant
+     * @version $Revision: 1.6 $
      */
     private class ControlPanelConfigManager implements ConfigManager {
 

@@ -39,8 +39,8 @@ import java.io.BufferedInputStream;
  * Class AppBase
  *
  *
- * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
- * @version $Revision: 1.5 $
+ * @author Paul Hammant
+ * @version $Revision: 1.6 $
  */
 public abstract class AppBase {
 
@@ -132,8 +132,8 @@ public abstract class AppBase {
      * Class JarSuffixHolder
      *
      *
-     * @author Paul Hammant <a href="mailto:Paul_Hammant@yahoo.com">Paul_Hammant@yahoo.com</a>
-     * @version $Revision: 1.5 $
+     * @author Paul Hammant
+     * @version $Revision: 1.6 $
      */
     protected class JarSuffixHolder {
 

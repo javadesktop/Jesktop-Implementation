@@ -48,7 +48,7 @@ import java.io.File;
  * Class ImageViewer allows the viewing of GIFs and JPGs.  To be replaced by a beefier app later.
  *
  *
- * @author <a href="mailto:Paul_Hammant@yahoo.com">Paul Hammant</a> Dec 2000.
+ * @author Paul Hammant Dec 2000.
  * @version V1.0
  */
 public class ImageViewer extends JPanel implements ContentViewer, FrimbleAware, ActionListener {
