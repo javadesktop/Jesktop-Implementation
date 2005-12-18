@@ -144,7 +144,12 @@
                 </fileset>
                 <fileset dir="lib/hidden">
                     <include name="*.jar"/>
+                    <exclude name="jesktop-impl.jar"/>
                 </fileset>
+                <fileset dir="lib/common">
+                    <include name="*.jar"/>
+                </fileset>
+
             </classpath>
 
 
