@@ -22,7 +22,6 @@ package net.sourceforge.jesktopimpl.builtinapps.config;
 import org.jesktop.services.KernelConfigManager;
 import net.sourceforge.jesktopimpl.services.LaunchableTargetFactory;
 import org.jesktop.DesktopKernel;
-import org.jesktop.services.KernelConfigManager;
 import org.jesktop.config.ConfigManager;
 import org.jesktop.config.Configlet;
 import org.jesktop.config.ObjConfiglet;
@@ -32,6 +31,7 @@ import org.jesktop.launchable.ConfigletLaunchableTarget;
 import org.w3c.dom.Document;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
+import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -50,7 +50,7 @@ import java.util.Vector;
  *
  *
  * @author  Dec 2000.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class ControlPanel extends JFrimble implements PropertyChangeListener {
 
@@ -151,7 +151,7 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
                 }
             }
             if (!present) {
-               Configlet clet = null;
+               Configlet clet;
 
                 try {
                     ClassLoader cLetClassLoader = mLaunchableTargetFactory.getClassLoader(mConfiglets[f]);
@@ -160,9 +160,11 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
                         cLetClassLoader = this.getClass().getClassLoader();
                     }
 
-                    Class cLetClass = cLetClassLoader.loadClass(mConfiglets[f].getClassName());
-
-                    clet = (Configlet) new DefaultPicoContainer(picoContainer).registerComponentImplementation(cLetClass).getComponentInstance();
+                    DefaultNanoPicoContainer defaultPicoContainer = new DefaultNanoPicoContainer(
+                            cLetClassLoader,
+                            picoContainer);
+                    defaultPicoContainer.registerComponentImplementation(Configlet.class, mConfiglets[f].getClassName());
+                    clet = (Configlet) defaultPicoContainer.getComponentInstance(Configlet.class);
 
                     if (clet instanceof ObjConfiglet) {
                         ((ObjConfiglet) clet).setConfig(mConfigManager.getObjConfig(mConfiglets[f].getConfigPath(),
@@ -197,7 +199,7 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      *
      *
      * @author  Dec 2000.
-     * @version $Revision: 1.6 $
+     * @version $Revision: 1.7 $
      */
     private class OKBtn extends JButton {
 
@@ -232,7 +234,7 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.6 $
+     * @version $Revision: 1.7 $
      */
     private class TryBtn extends JButton {
 
@@ -267,7 +269,7 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.6 $
+     * @version $Revision: 1.7 $
      */
     private class RevertBtn extends JButton {
 
@@ -311,7 +313,7 @@ public class ControlPanel extends JFrimble implements PropertyChangeListener {
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.6 $
+     * @version $Revision: 1.7 $
      */
     private class ControlPanelConfigManager implements ConfigManager {
 

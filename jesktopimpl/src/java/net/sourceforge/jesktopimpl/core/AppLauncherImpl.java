@@ -40,7 +40,7 @@ import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.mime.MimeManager;
 import org.jesktop.services.DesktopKernelService;
 import org.jesktop.services.KernelConfigManager;
-import org.nanocontainer.reflection.DefaultSoftCompositionPicoContainer;
+import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 import org.picocontainer.alternatives.ImplementationHidingPicoContainer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -62,7 +62,7 @@ import java.util.Vector;
  * Class AppLauncherImpl
  *
  * @author Paul Hammant
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
@@ -72,7 +72,6 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
     private DesktopKernelService desktopKernelService;
     private Vector launchedTargets;
     private Decorator decorator;
-    private KernelConfigManager kernelConfigManager;
     private ImplementationHidingPicoContainer configletTargetPicoContainer;
     private ImplementationHidingPicoContainer decoratorTargetPicoContainer;
     private ImplementationHidingPicoContainer normalTargetPicoContainer;
@@ -94,7 +93,6 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
         this.desktopKernelService = desktopKernelService;
         this.launchedTargets = launchedTargets;
         this.decorator = decorator;
-        this.kernelConfigManager = kernelConfigManager;
 
         configletTargetPicoContainer = new ImplementationHidingPicoContainer();
         //configletTargetPicoContainer.registerComponentInstance(windowManager);
@@ -161,7 +159,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
             JesktopURLClassLoader jcl = new JesktopURLClassLoader(new URL[]{
                 new File(jarName).toURL()});
             Document appsXml = super.getApplicationsDotXML(jarURL.toExternalForm(), jcl);
-            String defaultApp = null;
+            String defaultApp;
 
             NodeList das = appsXml.getElementsByTagName("default-application");
             Element da = null;
@@ -223,12 +221,10 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
          *
          * @param launchableTarget
          *
-         * @return
+         * @return the launched app.
          *
          */
-        public Object launchApp
-        (
-        final LaunchableTarget launchableTarget) throws JesktopLaunchException
+        public Object launchApp(final LaunchableTarget launchableTarget) throws JesktopLaunchException
         {
             try {
                 return launchApp(launchableTarget, null, true);
@@ -246,7 +242,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
          * @param launchableTarget
          * @param inHere
          *
-         * @return
+         * @return the launched app
          *
          */
         public Object launchApp
@@ -283,17 +279,17 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
             checkSecondInstance(launchableTarget);
 
             try {
-                DefaultSoftCompositionPicoContainer defaultPicoContainer = null;
+                DefaultNanoPicoContainer defaultPicoContainer;
                 if (launchableTarget instanceof ConfigletLaunchableTarget) {
-                    defaultPicoContainer = new DefaultSoftCompositionPicoContainer(classLoader, configletTargetPicoContainer);
+                    defaultPicoContainer = new DefaultNanoPicoContainer(classLoader, configletTargetPicoContainer);
                 } else if (launchableTarget instanceof DecoratorLaunchableTarget) {
-                    defaultPicoContainer = new DefaultSoftCompositionPicoContainer(classLoader, decoratorTargetPicoContainer);
+                    defaultPicoContainer = new DefaultNanoPicoContainer(classLoader, decoratorTargetPicoContainer);
                     //     } else if(launchableTarget instanceof KernelLaunchableTarget) {
                     //       defaultPicoContainer = new DefaultSoftCompositionPicoContainer(classLoader, kernelTargetPicoContainer);
                 } else {
-                    defaultPicoContainer = new DefaultSoftCompositionPicoContainer(classLoader, kernelTargetPicoContainer);
+                    defaultPicoContainer = new DefaultNanoPicoContainer(classLoader, kernelTargetPicoContainer);
                 }
-                Object instantiatedApp = defaultPicoContainer.registerComponentImplementation(className).getComponentInstance();
+                Object instantiatedApp = defaultPicoContainer.registerComponentImplementation(className).getComponentInstance(defaultPicoContainer);
 
                 return launchApp2(classLoader, instantiatedApp, launchableTarget, inHere,
                         fullClosable);
@@ -393,7 +389,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
          *
          * @param frimbleAware
          *
-         * @return
+         * @return the Frimble
          *
          */
         public Frimble makeFrimble
@@ -406,7 +402,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
             if (lt != null) {
                 Frimble frimble = windowManager.createFrimble(lt.getDisplayName());
 
-                launchApp2(launchableTargetFactory.getClassLoader(lt), (JComponent) frimbleAware, lt,
+                launchApp2(launchableTargetFactory.getClassLoader(lt), frimbleAware, lt,
                         null, true);
 
                 return frimble;
@@ -448,7 +444,7 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
          * Method getAllAppList
          *
          *
-         * @return
+         * @return the list of apps
          *
          */
         public String[] getAllAppList

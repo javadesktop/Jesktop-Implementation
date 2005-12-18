@@ -49,7 +49,7 @@ import java.beans.PropertyChangeSupport;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
 
@@ -57,7 +57,6 @@ public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
     private LaunchableTargetFactory launchableTargetFactory;
     private ObjectRepository objectRepository;
     private PropertyChangeSupport propChgSupport = new PropertyChangeSupport("DummyBean");
-    //private HashMap configListeners = new HashMap();
     private DocumentBuilderFactory documentBuilderFactory;
     private DocumentBuilder documentBuilder;
 

@@ -49,6 +49,7 @@ import org.jesktop.*;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Startable;
+import org.nanocontainer.reflection.DefaultNanoPicoContainer;
 
 import javax.swing.JComponent;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -72,10 +73,6 @@ public class DesktopKernelImpl
         implements DesktopKernelService, DesktopKernel, ShutdownConfirmer,
                    PropertyChangeListener, Startable {
 
-    //private ComponentManager mCompManager;
-    //private Configuration phoenixConfiguration;
-
-    //  protected final static Logger LOGGER = LogKit.getLoggerFor("jesktop-kernel");
     private final Vector launchedTargets = new Vector();
     private LaunchableTargetFactory launchableTargetFactory;
     private AppInstallerImpl appInstaller;
@@ -83,6 +80,7 @@ public class DesktopKernelImpl
     private ImageRepository imageRepository;
     private KernelConfigManager configManager;
     private DecoratorLaunchableTarget currentDecoratorLaunchableTarget;
+    private String DFT_DECORATOR = "*DefaultDecorator*";
     private Decorator currentDecorator;
     private final KernelFrimbleListener kernelFrimbleListener = new KernelFrimbleListener();
     private final PropertyChangeSupport propertyChangeSupport;
@@ -93,8 +91,6 @@ public class DesktopKernelImpl
         new KernelLaunchableTargetImpl("*InstallationConfirmer*",
                                        "net.sourceforge.jesktopimpl.builtinapps.installer.ConfirmInstallation",
                                        "Please Confirm Installation", false);
-    private String DFT_DECORATOR = "*DefaultDecorator*";
-    private DecoratorLaunchableTarget defaultDecorator;
     private LaunchableTarget errorAppTarget = new NormalLaunchableTargetImpl("*ErrorApp*",
                                                   "net.sourceforge.jesktopimpl.builtinapps.sys.ErrorApp", "Error", false);
     private WindowManagerService windowManager;
@@ -129,7 +125,6 @@ public class DesktopKernelImpl
         this.documentBuilderFactory = dbf;
         this.baseDirectory = baseDirectory;
 
-
         picoContainer = new DefaultPicoContainer();
         picoContainer.registerComponentInstance(windowManager);
         picoContainer.registerComponentInstance(kernelCongigManager);
@@ -138,8 +133,7 @@ public class DesktopKernelImpl
 
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 
-        defaultDecorator =
-            (DecoratorLaunchableTarget) this.launchableTargetFactory.makeDecoratorLaunchableTarget(
+        DecoratorLaunchableTarget defaultDecorator = this.launchableTargetFactory.makeDecoratorLaunchableTarget(
                 DFT_DECORATOR, "net.sourceforge.jesktopimpl.builtinapps.decorators.DefaultDecorator",
                 "Default Decorator", "decorators/default");
 
@@ -147,9 +141,9 @@ public class DesktopKernelImpl
                 this.launchableTargetFactory, this.imageRepository, dbf, this.baseDirectory);
         configManager.registerConfigInterest(this, "decorator/currentDecorator");
         configManager.registerConfigInterest(this.windowManager, "desktop/settings");
+
         setDecoratorLaunchableTarget(defaultDecorator);
 
-        initializeDecorator();
         configManager.notifyObjConfig("decorator/currentDecorator", getClass().getClassLoader());
         this.windowManager.setKernelCallback(this);
         this.windowManager
@@ -420,9 +414,9 @@ public class DesktopKernelImpl
         LaunchableTarget retval = null;
         // hack hack hack, till Laurent delivers the Mime Registry :-))
         if (url.toExternalForm().toLowerCase().endsWith(".txt")) {
-            retval = (LaunchableTarget) launchableTargetFactory.getLaunchableTarget("Tools/TextViewer");
+            retval = launchableTargetFactory.getLaunchableTarget("Tools/TextViewer");
         } else if (url.toExternalForm().toLowerCase().endsWith(".jpg") | url.toExternalForm().toLowerCase().endsWith(".gif")) {
-            retval = (LaunchableTarget) launchableTargetFactory.getLaunchableTarget("Tools/ImageViewer");
+            retval = launchableTargetFactory.getLaunchableTarget("Tools/ImageViewer");
         }
         if (retval == null) {
             retval = noRegViewer;
@@ -500,7 +494,7 @@ public class DesktopKernelImpl
      * Method getNormalLaunchableTargets
      *
      *
-     * @return
+     * @return array of launchble targets
      *
      */
     public LaunchableTarget[] getNormalLaunchableTargets() {
@@ -511,7 +505,7 @@ public class DesktopKernelImpl
      * Method getAllLaunchableTargets
      *
      *
-     * @return
+     * @return array of launchable targets
      *
      */
     public LaunchableTarget[] getAllLaunchableTargets() {
@@ -572,27 +566,26 @@ public class DesktopKernelImpl
     public void setDecoratorLaunchableTarget(final DecoratorLaunchableTarget dlt) {
 
         try {
-            ClassLoader cLoader;
-            Class cl;
-
-            if (!dlt.canBeUnInstalled()) {
-                cLoader = this.getClass().getClassLoader();
-                cl = cLoader.loadClass(dlt.getClassName());
-            } else {
-                cLoader = launchableTargetFactory.getClassLoader(dlt);
-                cl = cLoader.loadClass(dlt.getClassName());
-            }
 
             Decorator oldDecorator = currentDecorator;
 
             // all fine, put in place decorator
+            ClassLoader classLoader = launchableTargetFactory.getClassLoader(dlt);
+            DefaultNanoPicoContainer defaultPicoContainer = new DefaultNanoPicoContainer(
+                    classLoader,
+                    picoContainer);
+            defaultPicoContainer.registerComponentImplementation(Decorator.class, dlt.getClassName());
+            currentDecorator = (Decorator) defaultPicoContainer.getComponentInstance(Decorator.class);
 
-            currentDecorator = (Decorator) new DefaultPicoContainer(picoContainer).registerComponentImplementation(cl).getComponentInstance();
+            if (currentDecorator == null) {
+                throw new RuntimeException("exit!");
+
+            }
 
             if (currentDecorator instanceof ObjConfigurable) {
                 
                 ((ObjConfigurable) currentDecorator)
-                    .setConfig(configManager.getObjConfig(dlt.getConfigPath(), cLoader));
+                    .setConfig(configManager.getObjConfig(dlt.getConfigPath(), classLoader));
             }
 
             currentDecoratorLaunchableTarget = dlt;
@@ -617,23 +610,11 @@ public class DesktopKernelImpl
         }
     }
 
-    private void initializeDecorator() {
-
-        String targetName = configManager.getStringConfig("decorator/currentDecorator", DFT_DECORATOR);
-
-        //if (targetName.equals(DFT_DECORATOR)) {
-        //    setDecoratorLaunchableTarget(defaultDecorator);
-        //} else {
-        //    setDecoratorLaunchableTarget((DecoratorLaunchableTarget) launchableTargetFactory
-        //        .getLaunchableTarget(targetName));
-        //}
-    }
-
     /**
      * Method getDecoratorLaunchableTargets
      *
      *
-     * @return
+     * @return an array of launchable targets that are decorators
      *
      */
     public DecoratorLaunchableTarget[] getDecoratorLaunchableTargets() {
@@ -644,7 +625,7 @@ public class DesktopKernelImpl
      * Method getConfigletLaunchableTargets
      *
      *
-     * @return
+     * @return an array of launchable targets that are configlets
      *
      */
     public ConfigletLaunchableTarget[] getConfigletLaunchableTargets() {
@@ -680,7 +661,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.13 $
+     * @version $Revision: 1.14 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -702,7 +683,7 @@ public class DesktopKernelImpl
          * Method getInstantiatedApp
          *
          *
-         * @return
+         * @return the instantiated app
          *
          */
         public Object getInstantiatedApp() {
@@ -719,7 +700,7 @@ public class DesktopKernelImpl
          *
          * @param launchableTarget
          *
-         * @return
+         * @return true/false
          *
          */
         public boolean isFromThisLaunchableTarget(final LaunchableTarget launchableTarget) {
@@ -741,7 +722,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.13 $
+     * @version $Revision: 1.14 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

@@ -27,11 +27,11 @@ import java.util.StringTokenizer;
 
 
 /**
- * Class LaunchableTarget
+ * Class LaunchableTargetImpl
  *
  *
  * @author  Dec 2000.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class LaunchableTargetImpl implements LaunchableTarget, Comparable, Serializable {
 
@@ -43,14 +43,6 @@ public abstract class LaunchableTargetImpl implements LaunchableTarget, Comparab
     private String[] targetNameArray;
     private boolean singleInstance;
 
-    /**
-     * Constructor LaunchableTarget
-     *
-     *
-     * @param name
-     * @param className
-     *
-     */
     protected LaunchableTargetImpl(final String targetName, final String className, final String displayName,
                                    final boolean singleInstance) {
         this(targetName, className, null, null, displayName, singleInstance);
@@ -81,57 +73,22 @@ public abstract class LaunchableTargetImpl implements LaunchableTarget, Comparab
         parts.copyInto(targetNameArray);
     }
 
-    /**
-     * Method getTargetName
-     *
-     *
-     * @return
-     *
-     */
     public String getTargetName() {
         return targetName;
     }
 
-    /**
-     * Method getDisplayName
-     *
-     *
-     * @return
-     *
-     */
     public String getDisplayName() {
         return displayName;
     }
 
-    /**
-     * Method toString
-     *
-     *
-     * @return
-     *
-     */
     public String toString() {
         return displayName;
     }
 
-    /**
-     * Method getTargetNameParts
-     *
-     *
-     * @return
-     *
-     */
     public String[] getTargetNameParts() {
         return targetNameArray;
     }
 
-    /**
-     * Method getClassName
-     *
-     *
-     * @return
-     *
-     */
     public String getClassName() {
         return className;
     }
@@ -144,39 +101,16 @@ public abstract class LaunchableTargetImpl implements LaunchableTarget, Comparab
         return jarFileNames;
     }
 
-    /**
-     * Method isSingleInstanceApp
-     *
-     *
-     * @return
-     *
-     */
     public boolean isSingleInstanceApp() {
         return singleInstance;
     }
 
-    /**
-     * Method canBeUnInstalled
-     *
-     *
-     * @return
-     *
-     */
     public boolean canBeUnInstalled() {
 
-        //TODO - over simplifies for the moment.
+        //TODO - over simplified for the moment.
         return (appFilePrefix != null);
     }
 
-    /**
-     * Method compareTo
-     *
-     *
-     * @param o
-     *
-     * @return
-     *
-     */
     public int compareTo(Object o) {
 
         LaunchableTarget other = (LaunchableTarget) o;

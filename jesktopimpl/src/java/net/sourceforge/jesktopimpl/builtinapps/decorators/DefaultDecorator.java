@@ -20,16 +20,10 @@
 package net.sourceforge.jesktopimpl.builtinapps.decorators;
 
 
-
 import org.jesktop.Decorator;
 import org.jesktop.ImageRepository;
 import org.jesktop.launchable.LaunchableTarget;
 import org.jesktop.frimble.Frimble;
-import org.jesktop.ImageRepository;
-import org.jesktop.Decorator;
-
-
-import javax.swing.UIManager;
 
 
 /**
@@ -38,7 +32,7 @@ import javax.swing.UIManager;
  *
  *
  * @author  Dec 2000.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class DefaultDecorator implements Decorator {
 
