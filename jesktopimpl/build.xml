@@ -144,9 +144,11 @@
                 </fileset>
                 <fileset dir="lib/hidden">
                     <include name="*.jar"/>
-                    <exclude name="jesktop-impl.jar"/>
                 </fileset>
                 <fileset dir="lib/common">
+                    <include name="*.jar"/>
+                </fileset>
+                <fileset dir="lib/api">
                     <include name="*.jar"/>
                 </fileset>
 
@@ -202,7 +204,7 @@
             </zipfileset>
         </jar>
 
-        <jar jarfile="lib/hidden/${jar.name}-impl.jar">
+        <jar jarfile="lib/impl/${jar.name}-impl.jar">
             <zipfileset dir="build/classes">
                 <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
             </zipfileset>
