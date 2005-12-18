@@ -1,3 +1,10 @@
-#! /bin/sh
+#!/bin/bash
 
-java -classpath lib/picocontainer-1.2-RC-2.jar:lib/hidden/nanocontainer-1.0-RC-3.jar:lib/hidden/commons-cli-1.0.jar:lib/jesktop-api.jar:lib/jesktop-frimble.jar org.nanocontainer.Standalone -q -n -c composition.xml
+# NanoContainer Booter script v 1.0-RC-3
+# www.nanocontainer.org
+
+EXEC="$JAVA_HOME/bin/java -Djava.security.manager -Djava.security.policy=file:lib/booter.policy -jar lib/nanocontainer-booter-1.0-RC-3.jar $@"
+echo $EXEC
+$EXEC
+
+

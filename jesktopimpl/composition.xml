@@ -1,26 +1,22 @@
 <?xml version="1.0"?>
-<container class="ImplementationHidingSoftCompositionPicoContainer">
-  <classpath>
-    <element file="lib/jesktop.jar"/>
-  </classpath>
-  <component key="java.io.File" 
-             class="net.sourceforge.jesktopimpl.core.RootDirectory"/>
-  <component key="javax.xml.parsers.DocumentBuilderFactory" 
-             class="net.sourceforge.jesktopimpl.core.DefaultDocumentBuilderFactory"/>
-  <component key="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory" 
-             class="net.sourceforge.jesktopimpl.core.LaunchableTargetFactoryImpl"/>
-  <component key="org.jesktop.ImageRepository" 
-             class="net.sourceforge.jesktopimpl.core.ImageRepositoryImpl"/>
-  <component key="org.jesktop.ObjectRepository" 
-             class="net.sourceforge.jesktopimpl.core.DefaultObjectRepository"/>
-  <component key="org.jesktop.ThreadPool" 
-             class="net.sourceforge.jesktopimpl.core.NotReallyAThreadPool"/>
-  <component key="org.jesktop.mime.MimeManager" 
-             class="net.sourceforge.jesktopimpl.core.MimeManagerImpl"/>
-  <component key="org.jesktop.services.DesktopKernelService" 
-             class="net.sourceforge.jesktopimpl.core.DesktopKernelImpl"/>
-  <component key="org.jesktop.services.KernelConfigManager" 
-             class="net.sourceforge.jesktopimpl.core.ConfigManagerImpl"/>
-  <component key="org.jesktop.services.WindowManagerService" 
-             class="net.sourceforge.jesktopimpl.windowmanagers.windoze.WindozeWindowManager1"/>
+
+<container>
+    <classpath>
+        <element file="comps/api.jar"/>
+    </classpath>
+    <classloader>
+        <classpath>
+            <element file="comps/honeyimpl.jar"/>
+        </classpath>
+        <component key="org.nanocontainer.booter.Honey" class="org.nanocontainer.booter.BeeHiveHoney"/>
+    </classloader>
+    <classloader>
+        <classpath>
+            <element file="comps/bearimpl.jar">
+                <grant classname="java.net.SocketPermission" context="yahoo.com:80" value="connect"/>
+            </element>
+        </classpath>
+        <component class="org.nanocontainer.booter.BrownBear"/>
+    </classloader>
+
 </container>

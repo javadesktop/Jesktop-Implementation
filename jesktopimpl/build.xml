@@ -153,7 +153,6 @@
 
         <copy todir="${build.classes}">
             <fileset dir="${java.dir}">
-                <include name="**/*.xinfo"/>
                 <include name="**/*.properties"/>
             </fileset>
         </copy>
@@ -177,7 +176,6 @@
                 <include name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
             </zipfileset>
             <zipfileset dir="src/java">
-                <include name="net/sourceforge/jesktopimpl/apps/explorer/**/*.xinfo"/>
                 <include name="net/sourceforge/jesktopimpl/apps/explorer/**/*.gif"/>
             </zipfileset>
             <zipfileset dir="src/xml/explorer" prefix="JESKTOP-INF">
@@ -191,7 +189,6 @@
                 <exclude name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
             </zipfileset>
             <zipfileset dir="src/java">
-                <include name="net/sourceforge/jesktopimpl/apps/**/*.xinfo"/>
                 <include name="net/sourceforge/jesktopimpl/apps/**/*.gif"/>
                 <exclude name="net/sourceforge/jesktopimpl/apps/explorer/**"/>
             </zipfileset>
@@ -200,7 +197,7 @@
             </zipfileset>
         </jar>
 
-        <jar jarfile="lib/${jar.name}.jar">
+        <jar jarfile="lib/hidden/${jar.name}-impl.jar">
             <zipfileset dir="build/classes">
                 <exclude name="net/sourceforge/jesktopimpl/apps/**"/>
             </zipfileset>
