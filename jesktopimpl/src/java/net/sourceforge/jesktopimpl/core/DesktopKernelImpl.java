@@ -568,13 +568,12 @@ public class DesktopKernelImpl
     public void setDecoratorLaunchableTarget(final DecoratorLaunchableTarget dlt) {
 
 
-        System.out.println("--> 1 F " + Frimble.class.getClassLoader());
-        System.out.println("--> 2 DK " + DesktopKernel.class.getClassLoader());
-        System.out.println("--> 2p DK " + DesktopKernel.class.getClassLoader().getParent());
-        System.out.println("--> 3 PC " + PicoContainer.class.getClassLoader());
-        System.out.println("--> 4 NC " + NanoContainer.class.getClassLoader());
-        System.out.println("--> 4b NC " + NanoContainer.class.getClassLoader().getParent());
-
+//        System.out.println("--> 1 Frimble " + Frimble.class.getClassLoader());
+//        System.out.println("--> 2 DesktopKernel " + DesktopKernel.class.getClassLoader());
+//        System.out.println("--> 2 DesktopKernel Parent " + DesktopKernel.class.getClassLoader().getParent());
+//        System.out.println("--> 3 PicoContainer " + PicoContainer.class.getClassLoader());
+//        System.out.println("--> 4 NanoContainer " + NanoContainer.class.getClassLoader());
+//        System.out.println("--> 4 Nanocontainer Parent " + NanoContainer.class.getClassLoader().getParent());
 
         try {
 
@@ -589,7 +588,7 @@ public class DesktopKernelImpl
             currentDecorator = (Decorator) defaultPicoContainer.getComponentInstance(Decorator.class);
 
             if (currentDecorator == null) {
-                throw new RuntimeException("exit!");
+                throw new RuntimeException("No decorator - exit!");
 
             }
 
@@ -672,7 +671,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.15 $
+     * @version $Revision: 1.16 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -733,7 +732,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.15 $
+     * @version $Revision: 1.16 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

@@ -6,7 +6,7 @@ import java.security.AccessController;
 
 /**
  * @author Paul Hammant
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class RootDirectory extends File {
 
@@ -16,27 +16,27 @@ public class RootDirectory extends File {
 
     private static String getRootDir() {
 
-        ClassLoader foo = RootDirectory.class.getClassLoader();
-        if (foo != null) {
-            System.out.println("--> 1 " + foo);
-            foo = getParentclassLoader(foo);
-            if (foo != null) {
-                System.out.println("--> 2 " + foo);
-                foo = getParentclassLoader(foo);
-                if (foo != null) {
-                    System.out.println("--> 3 " + foo);
-                    foo = getParentclassLoader(foo);
-                    if (foo != null) {
-                        System.out.println("--> 4 " + foo);
-                        foo = getParentclassLoader(foo);
-                        if (foo != null) {
-                            System.out.println("--> 5 " + foo);
-                            foo = getParentclassLoader(foo);
-                        }
-                    }
-                }
-            }
-        }
+//        ClassLoader foo = RootDirectory.class.getClassLoader();
+//        if (foo != null) {
+//            System.out.println("--> 1 " + foo);
+//            foo = getParentclassLoader(foo);
+//            if (foo != null) {
+//                System.out.println("--> 2 " + foo);
+//                foo = getParentclassLoader(foo);
+//                if (foo != null) {
+//                    System.out.println("--> 3 " + foo);
+//                    foo = getParentclassLoader(foo);
+//                    if (foo != null) {
+//                        System.out.println("--> 4 " + foo);
+//                        foo = getParentclassLoader(foo);
+//                        if (foo != null) {
+//                            System.out.println("--> 5 " + foo);
+//                            foo = getParentclassLoader(foo);
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         return new File(".").getAbsolutePath();
     }
