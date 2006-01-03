@@ -49,7 +49,9 @@ import org.jesktop.*;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.Startable;
+import org.picocontainer.PicoContainer;
 import org.nanocontainer.reflection.DefaultNanoPicoContainer;
+import org.nanocontainer.NanoContainer;
 
 import javax.swing.JComponent;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -565,6 +567,15 @@ public class DesktopKernelImpl
      */
     public void setDecoratorLaunchableTarget(final DecoratorLaunchableTarget dlt) {
 
+
+        System.out.println("--> 1 F " + Frimble.class.getClassLoader());
+        System.out.println("--> 2 DK " + DesktopKernel.class.getClassLoader());
+        System.out.println("--> 2p DK " + DesktopKernel.class.getClassLoader().getParent());
+        System.out.println("--> 3 PC " + PicoContainer.class.getClassLoader());
+        System.out.println("--> 4 NC " + NanoContainer.class.getClassLoader());
+        System.out.println("--> 4b NC " + NanoContainer.class.getClassLoader().getParent());
+
+
         try {
 
             Decorator oldDecorator = currentDecorator;
@@ -661,7 +672,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.14 $
+     * @version $Revision: 1.15 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -722,7 +733,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.14 $
+     * @version $Revision: 1.15 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

@@ -1,13 +1,20 @@
 <?xml version="1.0"?>
 
-<container class="org.nanocontainer.reflection.ImplementationHidingNanoPicoContainer">
+<container class="org.nanocontainer.reflection.DefaultNanoPicoContainer" parentclassloader="org.picocontainer.PicoContainer">
     <classpath>
-        <element file="lib/api/jesktop-api.jar"/>
-        <element file="lib/api/jesktop-frimble.jar"/>
+        <element file="lib/api/jesktop-api.jar">
+            <grant classname="java.security.AllPermission"/>
+        </element>
+        <element file="lib/api/jesktop-frimble.jar">
+            <grant classname="java.security.AllPermission"/>
+        </element>
     </classpath>
     <classloader>
         <classpath>
             <element file="lib/impl/jesktop-impl.jar">
+                <grant classname="java.security.AllPermission"/>
+            </element>
+            <element file="lib/hidden/nanocontainer-1.0-RC-3.jar">
                 <grant classname="java.security.AllPermission"/>
             </element>
         </classpath>

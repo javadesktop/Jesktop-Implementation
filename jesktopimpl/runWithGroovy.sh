@@ -1,3 +1,10 @@
-#! /bin/sh
+#!/bin/bash
 
-java -classpath lib/picocontainer-1.1-beta-1.jar:lib/nanocontainer-1.0-beta-2.jar:lib/commons-cli-1.0.jar:lib\groovy-1.0-beta-6.jar:lib/jesktop-api.jar:lib/jesktop-frimble.jar org.nanocontainer.main.Standalone -q -n -c composition.groovy
+# NanoContainer Booter script v 1.0-RC-3
+# www.nanocontainer.org
+
+EXEC="$JAVA_HOME/bin/java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Djava.security.manager -Djava.security.policy=file:lib/booter.policy -jar lib/nanocontainer-booter-1.0-RC-3.jar -c composition.groovy"
+echo $EXEC
+$EXEC
+
+# -q -n -c composition.groovy

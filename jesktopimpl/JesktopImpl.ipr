@@ -179,6 +179,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JesktopImpl.iml" filepath="$PROJECT_DIR$/JesktopImpl.iml" />
+      <module fileurl="file:///Users/paul/scm/oss/pico5/picocontainer/java/nanocontainer/trunk/NanoContainer.iml" filepath="/Users/paul/scm/oss/pico5/picocontainer/java/nanocontainer/trunk/NanoContainer.iml" />
+      <module fileurl="file:///Users/paul/scm/oss/pico5/picocontainer/java/picocontainer/PicoContainer.iml" filepath="/Users/paul/scm/oss/pico5/picocontainer/java/picocontainer/PicoContainer.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="false" project-jdk-name="1.4" />
@@ -194,6 +196,8 @@
     <option name="INSTRUMENT_CLASSES" value="true" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
   </component>
-  <UsedPathMacros />
+  <UsedPathMacros>
+    <macro name="MAVEN_REPOSITORY_LOCAL" />
+  </UsedPathMacros>
 </project>
 
