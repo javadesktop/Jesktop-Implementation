@@ -20,8 +20,6 @@
         </classpath>
         <component key="java.io.File"
                    class="net.sourceforge.jesktopimpl.core.RootDirectory"/>
-        <component key="javax.xml.parsers.DocumentBuilderFactory"
-                   class="net.sourceforge.jesktopimpl.core.DefaultDocumentBuilderFactory"/>
         <component key="net.sourceforge.jesktopimpl.services.LaunchableTargetFactory"
                    class="net.sourceforge.jesktopimpl.core.LaunchableTargetFactoryImpl"/>
         <component key="org.jesktop.ImageRepository"

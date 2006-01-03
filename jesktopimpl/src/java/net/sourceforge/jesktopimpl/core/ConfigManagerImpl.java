@@ -49,7 +49,7 @@ import java.beans.PropertyChangeSupport;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
 
@@ -60,10 +60,10 @@ public class ConfigManagerImpl implements KernelConfigManager, ConfigManager {
     private DocumentBuilderFactory documentBuilderFactory;
     private DocumentBuilder documentBuilder;
 
-    public ConfigManagerImpl(DocumentBuilderFactory documentBuilderFactory, LaunchableTargetFactory launchableTargetFactory,
+    public ConfigManagerImpl(LaunchableTargetFactory launchableTargetFactory,
                              ObjectRepository objectRepository) throws ParserConfigurationException {
 
-        this.documentBuilderFactory = documentBuilderFactory;
+        this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
         this.launchableTargetFactory = launchableTargetFactory;
         this.objectRepository = objectRepository;
         documentBuilder = this.documentBuilderFactory.newDocumentBuilder();

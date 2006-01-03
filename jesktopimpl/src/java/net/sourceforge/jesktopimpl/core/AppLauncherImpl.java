@@ -62,7 +62,7 @@ import java.util.Vector;
  * Class AppLauncherImpl
  *
  * @author Paul Hammant
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCallback {
 
@@ -85,9 +85,8 @@ public class AppLauncherImpl extends AppBase implements AppLauncher, FrimbleCall
                               final KernelConfigManager kernelConfigManager,
                               final AppInstaller appInstaller,
                               final MimeManager mimeManager,
-                              final DocumentBuilderFactory dbf,
                               final File baseDir) {
-        super(dbf, baseDir);
+        super(baseDir);
         this.launchableTargetFactory = launchableTargetFactory;
         this.windowManager = windowManager;
         this.desktopKernelService = desktopKernelService;

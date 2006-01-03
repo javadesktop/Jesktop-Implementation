@@ -114,7 +114,6 @@ public class DesktopKernelImpl
                              KernelConfigManager kernelCongigManager, ImageRepository imageRepository,
                              LaunchableTargetFactory launchableTargetFactory, KernelConfigManager kernelConfigManager,
                              MimeManager mimeManager,
-                             DocumentBuilderFactory dbf,
                              File baseDirectory) {
         this.threadPool = threadPool;
         this.kernelConfigManager = kernelConfigManager;
@@ -124,7 +123,7 @@ public class DesktopKernelImpl
         configManager = kernelCongigManager;
         this.imageRepository = imageRepository;
         this.launchableTargetFactory = launchableTargetFactory;
-        this.documentBuilderFactory = dbf;
+        this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
         this.baseDirectory = baseDirectory;
 
         picoContainer = new DefaultPicoContainer();
@@ -140,7 +139,7 @@ public class DesktopKernelImpl
                 "Default Decorator", "decorators/default");
 
         appInstaller = new AppInstallerImpl(propertyChangeSupport, this,
-                this.launchableTargetFactory, this.imageRepository, dbf, this.baseDirectory);
+                this.launchableTargetFactory, this.imageRepository, this.baseDirectory);
         configManager.registerConfigInterest(this, "decorator/currentDecorator");
         configManager.registerConfigInterest(this.windowManager, "desktop/settings");
 
@@ -611,7 +610,7 @@ public class DesktopKernelImpl
             appLauncher = new AppLauncherImpl(windowManager, launchableTargetFactory, this,
                                               launchedTargets,
                                               currentDecorator, kernelConfigManager ,
-                                              appInstaller, mimeManager, documentBuilderFactory, baseDirectory);
+                                              appInstaller, mimeManager, baseDirectory);
 
             windowManager.setAppLauncher(appLauncher);
             windowManager.updateComponentTreeUI();
@@ -671,7 +670,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.16 $
+     * @version $Revision: 1.17 $
      */
     private class KernelLaunchedTarget extends LaunchedTargetImpl {
 
@@ -732,7 +731,7 @@ public class DesktopKernelImpl
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.16 $
+     * @version $Revision: 1.17 $
      */
     private class KernelFrimbleListener extends FrimbleAdapter {
 

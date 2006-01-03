@@ -48,7 +48,7 @@ import java.util.Vector;
  * Class AppInstallerImpl
  *
  * @author Paul Hammant
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class AppInstallerImpl extends AppBase implements AppInstaller {
 
@@ -62,9 +62,8 @@ public class AppInstallerImpl extends AppBase implements AppInstaller {
                                final DesktopKernelImpl desktopKernelImpl,
                                final LaunchableTargetFactory launchableTargetHolder,
                                final ImageRepository imageRepository,
-                               final DocumentBuilderFactory dbf,
                                final File baseDir) {
-        super(dbf, baseDir);
+        super(baseDir);
         launchableTargetFactory = launchableTargetHolder;
         this.propertyChangeSupport = propertyChangeSupport;
         this.imageRepository = imageRepository;

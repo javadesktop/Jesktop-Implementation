@@ -43,16 +43,16 @@ import java.net.URLClassLoader;
  *
  *
  * @author Paul Hammant
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public abstract class AppBase {
 
     protected final File baseDir;
     protected final DocumentBuilderFactory documentBuilderFactory;
 
-    protected AppBase(DocumentBuilderFactory dbf, File baseDir) {
+    protected AppBase(File baseDir) {
         this.baseDir = baseDir;
-        this.documentBuilderFactory = dbf;
+        this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
     }
 
     protected Document getApplicationsDotXML(final String jarName, final URLClassLoader urlClassLoader)
@@ -163,7 +163,7 @@ public abstract class AppBase {
      *
      *
      * @author Paul Hammant
-     * @version $Revision: 1.8 $
+     * @version $Revision: 1.9 $
      */
     protected class JarSuffixHolder {
 
