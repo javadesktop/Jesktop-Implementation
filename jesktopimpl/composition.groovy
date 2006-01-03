@@ -6,9 +6,9 @@ pico = builder.container(parent:parent, class:org.nanocontainer.reflection.Defau
     classPathElement(path:"lib/impl/jesktop-impl.jar") {
       grant(new java.security.AllPermission())
     }
-    classPathElement(path:"lib/hidden/nanocontainer-1.0-RC-3.jar")    
-    component(classNameKey:"java.io.File", class:"net.sourceforge.jesktopimpl.core.RootDirectory")
-    component(classNameKey:"javax.xml.parsers.DocumentBuilderFactory", instance:javax.xml.parsers.DocumentBuilderFactory.newInstance())
+    classPathElement(path:"lib/hidden/nanocontainer-1.0-RC-3.jar")
+    component(key:java.io.File, class:"net.sourceforge.jesktopimpl.core.RootDirectory")
+    component(key:javax.xml.parsers.DocumentBuilderFactory, instance:javax.xml.parsers.DocumentBuilderFactory.newInstance())
     component(classNameKey:"net.sourceforge.jesktopimpl.services.LaunchableTargetFactory", class:"net.sourceforge.jesktopimpl.core.LaunchableTargetFactoryImpl")
     component(classNameKey:"org.jesktop.ImageRepository", class:"net.sourceforge.jesktopimpl.core.ImageRepositoryImpl")
     component(classNameKey:"org.jesktop.ObjectRepository", class:"net.sourceforge.jesktopimpl.core.DefaultObjectRepository")
